@@ -1,0 +1,6 @@
+env/
+*.pyc
+.DS_Store
+*secret*.sh
+*backlog.*
+*backlog*
