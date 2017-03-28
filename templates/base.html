@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ratings</title>
+</head>
+
+<body>
+  Ratings
+  <hr>
+
+  <!-- Makes flash message to be printed in HTML -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %} put your content here {% endblock %}
+
+  {% if 'user' in session %}
+    <form action="/logout" method="POST">
+      <input type="submit" value="Logout">
+    </form>
+
+  {% endif %}
+
+</body>
+</html>

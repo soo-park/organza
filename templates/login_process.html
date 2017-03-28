@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Registration Form</h2>
+    <form action="/register" method="POST">
+      <input type="text" name="email" placeholder="Email"><br>
+      <!-- TODO: change the type to password before deploying -->
+      <input type="text" name="password" placeholder="Password"><br>
+      <input type="submit" value="Register">
+    </form>
+
+{% endblock %}
