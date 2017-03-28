@@ -1,4 +1,4 @@
-"""Movie Ratings."""
+"""department Ratings."""
 
 from jinja2 import StrictUndefined
 
@@ -6,13 +6,13 @@ from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db, User, Rating, Movie
+from model import Employee, connect_to_db, Office
 
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = 'ABC'
+app.secret_key = 'fygkiybwe468hfjhykutgkjdlkjasll;asdkjfhgfddu8hw9fogiulhfj'
 
 # Normally, if you use an undefined variable in Jinja2, it fails
 # silently. This is horrible. Fix this so that, instead, it raises an
@@ -24,148 +24,123 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template('homepage.html')
+    return render_template('index.html')
 
 
-@app.route('/users')
-def user_list():
-    """Show list of users."""
+@app.route('/employee')
+def employee_list():
+    """Show list of employees."""
 
-    users = User.query.all()
-    return render_template('user_list.html', users=users)
-
-
-@app.route('/register')
-def register():
-    """Register form"""
-
-    return render_template('register_form.html')
-
-
-@app.route('/register', methods=['POST'])
-def process_register():
-    """Process register information"""
-
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    if User.query.filter_by(email=email).all():
-        print "The user is already there."
-    else:
-        db.session.add(User(email=email, password=password))
-        db.session.commit()
-        print "The user email and password has been added to DB."
-
-    print 'Email: {}'.format(request.form.get('email'))
-    return redirect('/')
+    employees = employee.query.all()
+    return render_template('employee_list.html', employees=employees)
 
 
 @app.route('/login')
 def login():
-    """Shows a login form."""
+    """login form"""
 
-    return render_template('/login_form.html')
+    return render_template('login_form.html')
 
 
 @app.route('/login', methods=['POST'])
 def process_login():
     """Process the login form.
 
-    Flash message confirming login. Add user to session.
+    Flash message confirming login. Add employee to session.
     """
 
     email = request.form.get('email')
     password = request.form.get('password')
 
     # TODO : Consider later
-    # Make sure it is first time for the user to login
+    # Make sure it is first time for the employee to login
 
-    # throw an error if the user is not the ('user='' part tried)
+    # throw an error if the employee is not the ('employee='' part tried)
     try:
-        user = User.query.filter_by(email=email).one()
+        employee = employee.query.filter_by(email=email).one()
 
         # if it is first time, then check authentification
-        if password == user.password:
+        if password == employee.password:
             flash(email + ' logged in')
-            session['user'] = email
+            session['employee'] = email
             print session
-            return redirect('/user/' + str(user.user_id))
+            return redirect('/employee/' + str(employee.employee_id))
 
-    # if not authentificated, then do not login the user
+    # if not authentificated, then do not login the employee
     except:
-        flash('User does not exist')
+        flash('employee does not exist')
         return redirect('/')
 
 
 @app.route('/logout', methods=['POST'])
 def process_logout():
-    """Logout the user.
+    """Logout the employee.
 
     Flash a message confirming the logout.
     """
 
-    del session['user']
+    del session['employee']
     flash('You logged out')
 
     return redirect('/')
 
 
-@app.route('/user/<user_id>')
-def user_info(user_id):
-    """Display user information."""
+@app.route('/employee/<employee_id>')
+def employee_info(employee_id):
+    """Display employee information."""
 
     try:
-        user = User.query.filter_by(user_id=user_id).one()
+        employee = employee.query.filter_by(employee_id=employee_id).one()
         # TODO : use query to order by title
-        ratings = sorted(user.ratings, cmp=lambda x, y: cmp(x.movie.title.lower(), y.movie.title.lower()))
-        return render_template('user_profile.html', user=user,
+        ratings = sorted(employee.ratings, cmp=lambda x, y: cmp(x.department.title.lower(), y.department.title.lower()))
+        return render_template('employee_profile.html', employee=employee,
                                                     ratings=ratings)
     except:
-        flash('User does not exist.')
+        flash('employee does not exist.')
         return redirect('/')
 
 
-@app.route('/movies')
-def movies():
-    """List all movies by alphabetical order."""
+@app.route('/departments')
+def departments():
+    """List all departments by alphabetical order."""
 
-    movies = Movie.query.order_by(Movie.title).all()
-    return render_template('movie_list.html', movies=movies)
+    departments = department.query.order_by(department.title).all()
+    return render_template('department_list.html', departments=departments)
 
 
-@app.route('/movie/<movie_id>')
-def movie_info(movie_id):
-    """Display movie information."""
+@app.route('/department/<department_id>')
+def department_info(department_id):
+    """Display department information."""
 
     try:
-        movie = Movie.query.filter_by(movie_id=movie_id).one()
-        return render_template('movie_info.html', movie=movie)
+        department = department.query.filter_by(department_id=department_id).one()
+        return render_template('department_info.html', department=department)
     except:
-        flash('Movie does not exist')
+        flash('department does not exist')
         return redirect('/')
 
 
 @app.route('/update_rating', methods=['POST'])
 def update_rating():
-    """Update rating for movie."""
+    """Update rating for department."""
 
-    movie_id = request.form.get('movie_id')
-    user_id = User.query.filter_by(email=session['user']).one().user_id
+    department_id = request.form.get('department_id')
+    employee_id = employee.query.filter_by(email=session['employee']).one().employee_id
 
     try:
-        rating = Rating.query.filter_by(movie_id=movie_id,
-                                        user_id=user_id).one()
+        rating = Rating.query.filter_by(department_id=department_id,
+                                        employee_id=employee_id).one()
         rating.score = request.form.get('rating')
         db.session.commit()
         flash('Rating updated')
     except:
-        db.session.add(Rating(movie_id=movie_id,
-                              user_id=user_id,
+        db.session.add(Rating(department_id=department_id,
+                              employee_id=employee_id,
                               score=request.form.get('rating')))
         db.session.commit()
         flash('Rating added')
 
-    return redirect('/movie/' + movie_id)
+    return redirect('/department/' + department_id)
 
 
 if __name__ == '__main__':
