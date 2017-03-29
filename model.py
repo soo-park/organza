@@ -12,7 +12,6 @@ db = SQLAlchemy()
 
 
 ### TODO: Foreign keys are set as relationships. See DB model and change.
-##############################################################################
 # Employee definitions
 
 class Employee(db.Model):
@@ -72,9 +71,7 @@ class Nickname(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
-# ##############################################################################
-# # Employee association and middle tables
-
+### Employee association and middle tables
 
 class Employee_phone(db.Model):
     """Middle table btw Employee and Phone."""
@@ -110,8 +107,7 @@ class Emergency_contact_person(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
-# ##############################################################################
-# # Optional information formatting tables (nickname, contact, phone)
+### Optional information formatting tables (nickname, contact, phone)
 
 
 class Contact(db.Model):
@@ -163,8 +159,7 @@ class Address(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
-# ##############################################################################
-# # Office/Company/Title/Department definitions
+### Office/Company/Title/Department definitions
 
 
 class Office(db.Model):
@@ -249,8 +244,7 @@ class Department(db.Model):
 
 
 
-# ##############################################################################
-# # Company association and middle tables
+### Company association and middle tables
 
 
 class Employee_dept_office(db.Model):
@@ -356,8 +350,6 @@ class Office_department(db.Model):
     #                                     %(self.employee_id, self.first_name)
 
 
-
-##############################################################################
 # Helper functions
 
 def connect_to_db(app):

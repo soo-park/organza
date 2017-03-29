@@ -1,7 +1,7 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 from sqlalchemy import func
-from model import User
+from model import employee
 from model import Rating
 from model import Movie
 
@@ -10,26 +10,26 @@ from server import app
 import datetime
 
 
-def load_users():
-    """Load users from u.user into database."""
+def load_employees():
+    """Load employees from u.employee into database."""
 
-    print 'Users'
+    print 'employees'
 
     # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate users
-    User.query.delete()
+    # we won't be trying to add duplicate employees
+    employee.query.delete()
 
-    # Read u.user file and insert data
-    for row in open('seed_data/u.user'):
+    # Read u.employee file and insert data
+    for row in open('seed_data/u.employee'):
         row = row.rstrip()
-        user_id, age, gender, occupation, zipcode = row.split('|')
+        employee_id, age, gender, occupation, zipcode = row.split('|')
 
-        user = User(user_id=user_id,
+        employee = employee(employee_id=employee_id,
                     age=age,
                     zipcode=zipcode)
 
         # We need to add to the session or it won't ever be stored
-        db.session.add(user)
+        db.session.add(employee)
 
     # Once we're done, we should commit our work
     db.session.commit()
@@ -39,7 +39,7 @@ def load_movies():
     """Load movies from u.item into database."""
 
     # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate users
+    # we won't be trying to add duplicate employees
     Movie.query.delete()
 
     for row in open('seed_data/u.item'):
@@ -72,7 +72,7 @@ def load_movies():
                       imdb_url=imdb_url,
                       )
 
-        # Read u.user file and insert data
+        # Read u.employee file and insert data
         # We need to add to the session or it won't ever be stored
         db.session.add(movie)
 
@@ -82,15 +82,15 @@ def load_movies():
 
 def load_ratings():
     """Load ratings from u.data into database."""
-    # user_id \t movie_id \t score \t timestamp.
+    # employee_id \t movie_id \t score \t timestamp.
     Rating.query.delete()
 
     for row in open('seed_data/u.data'):
         row = row.rstrip()
 
-        user_id, movie_id, score = row.split('\t')[:3]
+        employee_id, movie_id, score = row.split('\t')[:3]
 
-        rating = Rating(user_id=user_id,
+        rating = Rating(employee_id=employee_id,
                         movie_id=movie_id,
                         score=score,
                         )
@@ -101,15 +101,15 @@ def load_ratings():
     db.session.commit()
 
 
-def set_val_user_id():
-    """Set value for the next user_id after seeding database"""
+def set_val_employee_id():
+    """Set value for the next employee_id after seeding database"""
 
-    # Get the Max user_id in the database
-    result = db.session.query(func.max(User.user_id)).one()
+    # Get the Max employee_id in the database
+    result = db.session.query(func.max(employee.employee_id)).one()
     max_id = int(result[0])
 
-    # Set the value for the next user_id to be max_id + 1
-    query = "SELECT setval('users_user_id_seq', :new_id)"
+    # Set the value for the next employee_id to be max_id + 1
+    query = "SELECT setval('employees_employee_id_seq', :new_id)"
     db.session.execute(query, {'new_id': max_id + 1})
     db.session.commit()
 
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    load_users()
+    load_employees()
     load_movies()
     load_ratings()
-    set_val_user_id()
+    set_val_employee_id()
