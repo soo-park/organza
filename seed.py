@@ -1,9 +1,20 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 from sqlalchemy import func
-from model import employee
-from model import Rating
-from model import Movie
+
+from model import Employee
+# from model import Nickname
+# from model import Employee_phone
+# from model import Emergency_contact_person
+# from model import Contact
+# from model import Address
+# from model import Office
+# from model import Company
+# from model import Title
+# from model import Department
+# from model import Employee_dept_office
+# from model import Department_title
+# from model import Office_department
 
 from model import connect_to_db, db
 from server import app
@@ -16,17 +27,21 @@ def load_employees():
     print 'employees'
 
     # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate employees
-    employee.query.delete()
+    Employee.query.delete()
 
-    # Read u.employee file and insert data
-    for row in open('seed_data/u.employee'):
+
+    # Set prev_id+1 as a starting point, and add the employees
+    for row in open('static/doc/test.csv'):
         row = row.rstrip()
-        employee_id, age, gender, occupation, zipcode = row.split('|')
+        print row #to see the seed working while adding data
+        first_name, mid_name, last_name, personal_email = row.split(',')
 
-        employee = employee(employee_id=employee_id,
-                    age=age,
-                    zipcode=zipcode)
+        employee = Employee(
+                            first_name=first_name, 
+                            mid_name=mid_name, 
+                            last_name=last_name, 
+                            personal_email=personal_email,
+                            )
 
         # We need to add to the session or it won't ever be stored
         db.session.add(employee)
@@ -35,83 +50,72 @@ def load_employees():
     db.session.commit()
 
 
-def load_movies():
-    """Load movies from u.item into database."""
+# def load_movies():
+#     """Load movies from u.item into database."""
 
-    # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate employees
-    Movie.query.delete()
+#     # Delete all rows in table, so if we need to run this a second time,
+#     # we won't be trying to add duplicate employees
+#     Movie.query.delete()
 
-    for row in open('seed_data/u.item'):
-        row = row.rstrip()
+#     for row in open('seed_data/u.item'):
+#         row = row.rstrip()
 
-        (movie_id,
-         title,
-         released_str,
-         video_release_date,
-         imdb_url,
-         ) = row.split('|')[:5]
+#         (movie_id,
+#          title,
+#          released_str,
+#          video_release_date,
+#          imdb_url,
+#          ) = row.split('|')[:5]
 
-        # Change release_date to Python datetime
-        if released_str:
-            released_at = datetime.datetime.strptime(released_str, '%d-%b-%Y')
-        else:
-            released_at = None
+#         # Change release_date to Python datetime
+#         if released_str:
+#             released_at = datetime.datetime.strptime(released_str, '%d-%b-%Y')
+#         else:
+#             released_at = None
 
-        # Remove parenthetical date from the title.
-        # TODO : remove parenthetical date with regex
-        # TODO : anything that has digits in it
-        # if len(title) <= 7:
-        #     print 'This title is going to disappear: {}'.format(title)
+#         # Remove parenthetical date from the title.
+#         # TODO : remove parenthetical date with regex
+#         # TODO : anything that has digits in it
+#         # if len(title) <= 7:
+#         #     print 'This title is going to disappear: {}'.format(title)
 
-        title = title[:-7].decode('latin-1')
+#         title = title[:-7].decode('latin-1')
 
-        movie = Movie(movie_id=movie_id,
-                      title=title,
-                      released_at=released_at,
-                      imdb_url=imdb_url,
-                      )
+#         movie = Movie(movie_id=movie_id,
+#                       title=title,
+#                       released_at=released_at,
+#                       imdb_url=imdb_url,
+#                       )
 
-        # Read u.employee file and insert data
-        # We need to add to the session or it won't ever be stored
-        db.session.add(movie)
+#         # Read u.employee file and insert data
+#         # We need to add to the session or it won't ever be stored
+#         db.session.add(movie)
 
-    # Once we're done, we should commit our work
-    db.session.commit()
-
-
-def load_ratings():
-    """Load ratings from u.data into database."""
-    # employee_id \t movie_id \t score \t timestamp.
-    Rating.query.delete()
-
-    for row in open('seed_data/u.data'):
-        row = row.rstrip()
-
-        employee_id, movie_id, score = row.split('\t')[:3]
-
-        rating = Rating(employee_id=employee_id,
-                        movie_id=movie_id,
-                        score=score,
-                        )
-
-        db.session.add(rating)
-        # print "Successfully added " + str(rating)
-
-    db.session.commit()
+#     # Once we're done, we should commit our work
+#     db.session.commit()
 
 
-def set_val_employee_id():
-    """Set value for the next employee_id after seeding database"""
+# def load_ratings():
+#     """Load ratings from u.data into database."""
+#     # employee_id \t movie_id \t score \t timestamp.
+#     Rating.query.delete()
 
-    # Get the Max employee_id in the database
-    result = db.session.query(func.max(employee.employee_id)).one()
-    max_id = int(result[0])
+#     for row in open('seed_data/u.data'):
+#         row = row.rstrip()
 
-    # Set the value for the next employee_id to be max_id + 1
-    query = "SELECT setval('employees_employee_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
-    db.session.commit()
+#         employee_id, movie_id, score = row.split('\t')[:3]
+
+#         rating = Rating(employee_id=employee_id,
+#                         movie_id=movie_id,
+#                         score=score,
+#                         )
+
+#         db.session.add(rating)
+#         # print "Successfully added " + str(rating)
+
+#     db.session.commit()
+
+
 
 
 if __name__ == "__main__":
@@ -122,6 +126,6 @@ if __name__ == "__main__":
 
     # Import different types of data
     load_employees()
-    load_movies()
-    load_ratings()
-    set_val_employee_id()
+    # load_movies()
+    # load_ratings()
+    # set_val_employee_id()

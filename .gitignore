@@ -3,4 +3,4 @@ env/
 .DS_Store
 *secret*.sh
 *backlog.*
-*backlog*
+backlog/
