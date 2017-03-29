@@ -11,6 +11,7 @@ openpyxl, virtualenv
 Non-tech:
 Git, GitHub, Jira, Photoshop, Illustrator
 
+
 <<<How to see a test run of this site>>>
 
 1. Open your terminal
