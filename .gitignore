@@ -4,3 +4,5 @@ env/
 *secret*.sh
 *backlog.*
 backlog/
+~$*
+*.xlsx

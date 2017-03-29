@@ -15,6 +15,7 @@ from model import Employee
 # from model import Employee_dept_office
 # from model import Department_title
 # from model import Office_department
+import csv # imports python csv reader
 
 from model import connect_to_db, db
 from server import app
@@ -29,9 +30,11 @@ def load_employees():
     # Delete all rows in table, so if we need to run this a second time,
     Employee.query.delete()
 
+    # Python csv helper better in reading CSV (Hannah Schafer)
+    csv_file = csv.reader(open('static/doc/employee.csv'))
 
     # Set prev_id+1 as a starting point, and add the employees
-    for row in open('static/doc/test.csv'):
+    for row in csv_file:
         row = row.rstrip()
         print row #to see the seed working while adding data
         first_name, mid_name, last_name, personal_email = row.split(',')
@@ -48,6 +51,40 @@ def load_employees():
 
     # Once we're done, we should commit our work
     db.session.commit()
+
+
+
+def load_Nickname():
+    """Load employees from u.employee into database."""
+
+    print 'nicknames'
+
+    # Delete all rows in table, so if we need to run this a second time,
+    Nickname.query.delete()
+
+    # Python csv helper better in reading CSV (Hannah Schafer)
+    #'rU' makes the record unicode
+    csv_file = csv.reader(open('static/doc/nickname.csv', 'rU'))
+
+    # Set prev_id+1 as a starting point, and add the employees
+    for row in csv_file:
+        row = row.rstrip()
+        print row #to see the seed working while adding data
+        first_name, mid_name, last_name, personal_email = row.split(',')
+
+        employee = Employee(
+                            first_name=first_name, 
+                            mid_name=mid_name, 
+                            last_name=last_name, 
+                            personal_email=personal_email,
+                            )
+
+        # We need to add to the session or it won't ever be stored
+        db.session.add(employee)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
+
 
 
 # def load_movies():

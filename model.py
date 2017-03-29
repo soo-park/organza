@@ -35,7 +35,7 @@ class Employee(db.Model):
 
     ### TODO ###
     # Figure out what kind of db.relationship is good
-    # nicknames = db.relationship('Nickname')
+    nicknames = db.relationship('Nickname')
     # home_addresses = db.relationship('Address')
     # employee_phones = db.relationship('Employee_phone')
     # Employee_dept_offices = db.relationship('Employee_dept_office')
@@ -53,23 +53,24 @@ class Employee(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
-# class Nickname(db.Model):
-#     """Nickname for a person."""
+class Nickname(db.Model):
+    """Nickname for a person."""
 
-#     __tablename__ = "nicknames"
+    __tablename__ = "nicknames"
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     k_first_name = db.Column(db.Unicode(50), nullable=True)
-#     k_last_name = db.Column(db.Unicode(50), nullable=True)
-#     nickname = db.Column(db.Unicode(50), nullable=True)
-#     kanji_name = db.Column(db.Unicode(50), nullable=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    k_name = db.Column(db.Unicode(50), nullable=True)
+    nickname = db.Column(db.Unicode(50), nullable=True)
+    kanji_name = db.Column(db.Unicode(50), nullable=True)
+    employee_id = db.Column(ForeignKey('Employee.employee_id'))
 
-#     employees = db.relationship('Employee')
+    employees = db.relationship('Employee')
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Nickname name=%s first_name=%s>" %(self.name, self.first_name)
 
 
 # ### Employee association and middle tables
