@@ -52,6 +52,13 @@ class Employee(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
+    # import openpyxl
+
+    from openpyxl import load_workbook
+    wb2 = load_workbook('static/doc/test.xlsx')
+    print wb2.get_sheet_names()
+
+
 # # TODO: finish unicode problem in seed.py to add these fields
 # class Nickname(db.Model):
 #     """Nickname for a person."""
