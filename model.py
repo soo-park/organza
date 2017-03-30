@@ -55,9 +55,9 @@ class Employee(db.Model):
     # import openpyxl
 
     from openpyxl import load_workbook
-    wb2 = load_workbook('static/doc/test.xlsx')
-    print wb2.get_sheet_names()
-
+    wb = load_workbook(filename = 'static/doc/employee.xlsx')
+    sheet_ranges = wb['test'] #use the workbook tab name
+    print(sheet_ranges['A2'].value)
 
 # # TODO: finish unicode problem in seed.py to add these fields
 # class Nickname(db.Model):

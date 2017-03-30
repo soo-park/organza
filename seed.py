@@ -52,49 +52,6 @@ def load_employees():
         #                     )
         # db.session.add(employee)
         # db.session.commit()
-    
-
-    # ### Unicode issue ###
-    # solution 1
-    # Python csv helper better in reading CSV (Hannah Schafer)
-    # import csv; csv_file = csv.reader(open('static/doc/employee.csv', 'rU'))
-    # Python csv helper better in reading CSV (Hannah Schafer)
-    #'rU' makes the record unicode
-    # import csv
-    # csv_file = csv.reader(open('static/doc/employee.csv'), 'rU')
-
-    # # Set prev_id+1 as a starting point, and add the employees
-    # for row in csv_file:
-    #     first_name, mid_name, last_name, personal_email =\
-    #                 row[0], row[1], row[2], row[3]
-    #     print first_name
-    # problem: csv does not save chinese characters
-
-    # # solution 2
-    # # http://stackoverflow.com/questions/491921/unicode-utf-8-reading-and-writing-to-files-in-python
-    # unicode_file = codecs.open('static/doc/employee.txt', 'r', 'utf-8')
-    # # unicode_file = open('static/doc/employee_nickname.txt',"r").read().decode("utf-8")
-
-    # problem: all of the solutions make one long string, and thus need to get words.
-    # import codecs # imports python codecs for unicode characters
-    # decode_file = open('static/doc/employee_nickname.txt').read().decode('string-escape').decode("utf-8")
-    # print [word for word in decode_file.rstrip()]
-
-    # # problem: retriving word is possible with re, but it also eliminate empty sting
-    # import re
-    # print re.compile('\w+').findall(decode_file)
-
-    # solution 3: TODO
-    # work with openpyxl to use Excel directly
-    # use employee_nickname.txt file
-    # setup nickname, k_name, kanji_name with the employee file
-    # have the employee add commit line by line
-    # have the nickname per person adds after the commit of employee
-
-    from openpyxl import load_workbook
-    wb = load_workbook(filename = 'employee.xlsx')
-    sheet_ranges = wb['test'] #use the workbook tab name
-    print(sheet_ranges['A2'].value)
 
 
 # def load_employee_phones():
