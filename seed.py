@@ -15,7 +15,6 @@ from model import Employee
 # from model import Employee_dept_office
 # from model import Department_title
 # from model import Office_department
-import csv # imports python csv reader
 
 from model import connect_to_db, db
 from server import app
@@ -29,16 +28,11 @@ def load_employees():
 
     # Delete all rows in table, so if we need to run this a second time,
     Employee.query.delete()
+    # Nickname.query.delete()
 
-    # Python csv helper better in reading CSV (Hannah Schafer)
-    csv_file = csv.reader(open('static/doc/employee.csv'))
-
-    # Set prev_id+1 as a starting point, and add the employees
-    for row in csv_file:
-        row = row.rstrip()
-        print row #to see the seed working while adding data
-        first_name, mid_name, last_name, personal_email = row.split(',')
-
+    file = open('static/doc/employee.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
         employee = Employee(
                             first_name=first_name, 
                             mid_name=mid_name, 
@@ -46,49 +40,61 @@ def load_employees():
                             personal_email=personal_email,
                             )
 
-        # We need to add to the session or it won't ever be stored
+        # add to the session and commit the employee line
         db.session.add(employee)
+        db.session.commit()
 
-    # Once we're done, we should commit our work
-    db.session.commit()
+        # # add after unicode issue has been resolved
+        # nickname = Nickname(
+        #                     nickname=nickname,
+        #                     k_name=k_name, 
+        #                     kanji_name=kanji_name
+        #                     )
+        # db.session.add(employee)
+        # db.session.commit()
+    
 
-
-
-def load_Nickname():
-    """Load employees from u.employee into database."""
-
-    print 'nicknames'
-
-    # Delete all rows in table, so if we need to run this a second time,
-    Nickname.query.delete()
-
+    # ### Unicode issue ###
+    # solution 1
+    # Python csv helper better in reading CSV (Hannah Schafer)
+    # import csv; csv_file = csv.reader(open('static/doc/employee.csv', 'rU'))
     # Python csv helper better in reading CSV (Hannah Schafer)
     #'rU' makes the record unicode
-    csv_file = csv.reader(open('static/doc/nickname.csv', 'rU'))
+    # import csv
+    # csv_file = csv.reader(open('static/doc/employee.csv'), 'rU')
 
-    # Set prev_id+1 as a starting point, and add the employees
-    for row in csv_file:
-        row = row.rstrip()
-        print row #to see the seed working while adding data
-        first_name, mid_name, last_name, personal_email = row.split(',')
+    # # Set prev_id+1 as a starting point, and add the employees
+    # for row in csv_file:
+    #     first_name, mid_name, last_name, personal_email =\
+    #                 row[0], row[1], row[2], row[3]
+    #     print first_name
+    # # problem: csv does not save chinese characters
 
-        employee = Employee(
-                            first_name=first_name, 
-                            mid_name=mid_name, 
-                            last_name=last_name, 
-                            personal_email=personal_email,
-                            )
+    # # solution 2
+    # # http://stackoverflow.com/questions/491921/unicode-utf-8-reading-and-writing-to-files-in-python
+    # # unicode_file = codecs.open('static/doc/employee.txt', 'r', 'utf-8')
+    # # unicode_file = open('static/doc/employee_nickname.txt',"r").read().decode("utf-8")
 
-        # We need to add to the session or it won't ever be stored
-        db.session.add(employee)
+    # # problem: all of the solutions make one long string, and thus need to get words.
+    # import codecs # imports python codecs for unicode characters
+    # decode_file = open('static/doc/employee_nickname.txt').read().decode('string-escape').decode("utf-8")
+    # print [word for word in decode_file.rstrip()]
 
-    # Once we're done, we should commit our work
-    db.session.commit()
+    # # problem: retriving word is possible with re, but it also eliminate empty sting
+    # import re
+    # print re.compile('\w+').findall(decode_file)
+
+    # solution 3: TODO
+    # work with openpyxl to use Excel directly
+    # use employee_nickname.txt file
+    # setup nickname, k_name, kanji_name with the employee file
+    # have the employee add commit line by line
+    # have the nickname per person adds after the commit of employee
 
 
 
-# def load_movies():
-#     """Load movies from u.item into database."""
+# def employee_phones():
+#     """Load employee_phones from u.item into database."""
 
 #     # Delete all rows in table, so if we need to run this a second time,
 #     # we won't be trying to add duplicate employees
