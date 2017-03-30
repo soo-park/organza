@@ -73,7 +73,7 @@ class Employee(db.Model):
 #         return "<Nickname k_name=%s kanji_name=%s>" %(self.k_name, self.kanji_name)
 
 
-### Employee association and middle tables
+## Employee association and middle tables
 
 # class Employee_phone(db.Model):
 #     """Middle table btw Employee and Phone."""
@@ -109,7 +109,7 @@ class Employee(db.Model):
 #         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
-# ### Optional information formatting tables (nickname, contact, phone)
+### Optional information formatting tables (nickname, contact, phone)
 
 
 # class Contact(db.Model):
@@ -117,7 +117,7 @@ class Employee(db.Model):
 
 #     __tablename__ = "contacts"
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     contact_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 #     conntry_code = db.Column(db.String, nullable=True)
 #     area_code = db.Column(db.Integer, nullable=True)
 #     number = db.Column(db.Integer, nullable=True)
@@ -129,14 +129,14 @@ class Employee(db.Model):
 #     email = db.Column(db.Unicode(50), nullable=True)
 #     Fax = db.Column(db.Integer, nullable=True)
 
-#     offices = db.relationship('Office')
-#     emergency_contact_people = db.relationship('Emergency_contact_person')
-#     employee_phones = db.relationship('Employee_phone')
+# #     offices = db.relationship('Office')
+# #     emergency_contact_people = db.relationship('Emergency_contact_person')
+# #     employee_phones = db.relationship('Employee_phone')
 
 #     def __repr__(self):
 #         """Provide helpful representation when printed."""
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+#         return "<Contact contact_id=%s email=%s>" %(self.contact_id, self.email)
 
 
 # class Address(db.Model):

@@ -33,12 +33,6 @@ def index():
 def employee_list():
     """Show list of employees."""
 
-    # import openpyxl
-
-    from openpyxl import load_workbook
-    wb2 = load_workbook('static/doc/test.xlsx')
-    print wb2.get_sheet_names()
-
     employees = employees.query.all()
     return render_template('employee_list.html', employees=employees)
 

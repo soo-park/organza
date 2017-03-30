@@ -68,14 +68,14 @@ def load_employees():
     #     first_name, mid_name, last_name, personal_email =\
     #                 row[0], row[1], row[2], row[3]
     #     print first_name
-    # # problem: csv does not save chinese characters
+    # problem: csv does not save chinese characters
 
     # # solution 2
     # # http://stackoverflow.com/questions/491921/unicode-utf-8-reading-and-writing-to-files-in-python
-    # # unicode_file = codecs.open('static/doc/employee.txt', 'r', 'utf-8')
+    # unicode_file = codecs.open('static/doc/employee.txt', 'r', 'utf-8')
     # # unicode_file = open('static/doc/employee_nickname.txt',"r").read().decode("utf-8")
 
-    # # problem: all of the solutions make one long string, and thus need to get words.
+    # problem: all of the solutions make one long string, and thus need to get words.
     # import codecs # imports python codecs for unicode characters
     # decode_file = open('static/doc/employee_nickname.txt').read().decode('string-escape').decode("utf-8")
     # print [word for word in decode_file.rstrip()]
@@ -91,74 +91,19 @@ def load_employees():
     # have the employee add commit line by line
     # have the nickname per person adds after the commit of employee
 
+    from openpyxl import load_workbook
+    wb = load_workbook(filename = 'employee.xlsx')
+    sheet_ranges = wb['test'] #use the workbook tab name
+    print(sheet_ranges['A2'].value)
 
 
-# def employee_phones():
-#     """Load employee_phones from u.item into database."""
+# def load_employee_phones():
+#     """Clean up the middle table"""
+
+#     print 'employee_phones'
 
 #     # Delete all rows in table, so if we need to run this a second time,
-#     # we won't be trying to add duplicate employees
-#     Movie.query.delete()
-
-#     for row in open('seed_data/u.item'):
-#         row = row.rstrip()
-
-#         (movie_id,
-#          title,
-#          released_str,
-#          video_release_date,
-#          imdb_url,
-#          ) = row.split('|')[:5]
-
-#         # Change release_date to Python datetime
-#         if released_str:
-#             released_at = datetime.datetime.strptime(released_str, '%d-%b-%Y')
-#         else:
-#             released_at = None
-
-#         # Remove parenthetical date from the title.
-#         # TODO : remove parenthetical date with regex
-#         # TODO : anything that has digits in it
-#         # if len(title) <= 7:
-#         #     print 'This title is going to disappear: {}'.format(title)
-
-#         title = title[:-7].decode('latin-1')
-
-#         movie = Movie(movie_id=movie_id,
-#                       title=title,
-#                       released_at=released_at,
-#                       imdb_url=imdb_url,
-#                       )
-
-#         # Read u.employee file and insert data
-#         # We need to add to the session or it won't ever be stored
-#         db.session.add(movie)
-
-#     # Once we're done, we should commit our work
-#     db.session.commit()
-
-
-# def load_ratings():
-#     """Load ratings from u.data into database."""
-#     # employee_id \t movie_id \t score \t timestamp.
-#     Rating.query.delete()
-
-#     for row in open('seed_data/u.data'):
-#         row = row.rstrip()
-
-#         employee_id, movie_id, score = row.split('\t')[:3]
-
-#         rating = Rating(employee_id=employee_id,
-#                         movie_id=movie_id,
-#                         score=score,
-#                         )
-
-#         db.session.add(rating)
-#         # print "Successfully added " + str(rating)
-
-#     db.session.commit()
-
-
+#     Employee_phone.query.delete()
 
 
 if __name__ == "__main__":
@@ -169,6 +114,7 @@ if __name__ == "__main__":
 
     # Import different types of data
     load_employees()
+    load_employee_phones()
     # load_movies()
     # load_ratings()
     # set_val_employee_id()
