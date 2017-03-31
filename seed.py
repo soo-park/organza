@@ -1,20 +1,22 @@
-"""Utility file to seed ratings database from MovieLens data in seed_data/"""
+"""Utility file to seed intranet database from initial data file in static/doc folder"""
 
 from sqlalchemy import func
 
+# import employee related models
 from model import Employee
-# from model import Nickname
-# from model import Employee_phone
-# from model import Emergency_contact_person
-# from model import Contact
-# from model import Address
-# from model import Office
-# from model import Company
-# from model import Title
-# from model import Department
-# from model import Employee_dept_office
-# from model import Department_title
-# from model import Office_department
+from model import Nickname
+from model import Emergency_contact
+from model import K_contact
+from model import Employee_department
+
+# import company related models
+from model import Title
+from model import Department_title
+from model import Department
+from model import Company_department
+from model import Company
+from model import Office_department
+from model import Office
 
 from model import connect_to_db, db
 from server import app
@@ -22,13 +24,16 @@ import datetime
 
 
 def load_employees():
-    """Load employees from u.employee into database."""
+    """Load employees from static/doc/employee.csv into database."""
 
-    print 'employees'
+    Employee.query.delete()  # Delete all rows in table in case some data's there
+    Nickname.query.delete()
+    Emergency_contact.delete()
+    K_contact.delete()
+    Employee_department.delete()
 
-    # Delete all rows in table, so if we need to run this a second time,
-    Employee.query.delete()
-    # Nickname.query.delete()
+    # indicates the process
+    print 'Employee related tables cleared. Employees seeding'
 
     file = open('static/doc/employee.csv')
     for row in file:
@@ -54,13 +59,10 @@ def load_employees():
         # db.session.commit()
 
 
-# def load_employee_phones():
-#     """Clean up the middle table"""
+    print 'Employee seeding compeleted.'
 
-#     print 'employee_phones'
 
-#     # Delete all rows in table, so if we need to run this a second time,
-#     Employee_phone.query.delete()
+def load_companies():
 
 
 if __name__ == "__main__":
@@ -71,7 +73,3 @@ if __name__ == "__main__":
 
     # Import different types of data
     load_employees()
-    load_employee_phones()
-    # load_movies()
-    # load_ratings()
-    # set_val_employee_id()

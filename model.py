@@ -1,3 +1,5 @@
+"""Database model file"""
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -118,6 +120,11 @@ class Employee_department(db.Model):
     date_employeed = db.Column(db.DateTime, nullable=True)
     date_departed = db.Column(db.DateTime, nullable=True)
     office_email = db.Column(db.Unicode(50), nullable=True)
+    office_email_password = db.Column(db.Integer, nullable=True)
+    office_pc_id = db.Column(db.String(50), nullable=True)
+    office_pc_password = db.Column(db.String(50), nullable=True)
+    office_phone = db.Column(db.Integer, nullable=True)
+    office_comment = db.Column(db.String(50), nullable=True)
 
     employees = db.relationship('Employee')
     titles = db.relationship('Title')
@@ -226,16 +233,16 @@ class Office(db.Model):
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_name = db.Column(db.String(50))
-    o_conntry_code = db.Column(db.String, nullable=True)
-    o_area_code = db.Column(db.Integer, nullable=True)
-    o_phone = db.Column(db.Integer, nullable=True)
-    o_mobile = db.Column(db.Integer, nullable=True)
-    o_address_1st_line = db.Column(db.String(50), nullable=True)
-    o_address_2nd_line = db.Column(db.String(50), nullable=True)
-    o_country = db.Column(db.String(50), nullable=True)
-    o_postal_code = db.Column(db.Integer, nullable=True)
-    o_fax = db.Column(db.Integer, nullable=True)
-    comment = db.Column(db.String(50), nullable=True)
+    c_conntry_code = db.Column(db.String, nullable=True)
+    c_area_code = db.Column(db.Integer, nullable=True)
+    c_phone = db.Column(db.Integer, nullable=True)
+    c_mobile = db.Column(db.Integer, nullable=True)
+    c_address_1st_line = db.Column(db.String(50), nullable=True)
+    c_address_2nd_line = db.Column(db.String(50), nullable=True)
+    c_country = db.Column(db.String(50), nullable=True)
+    c_postal_code = db.Column(db.Integer, nullable=True)
+    c_fax = db.Column(db.Integer, nullable=True)
+    c_comment = db.Column(db.String(50), nullable=True)
 
     company_offices = db.relationship('Company_office')
 
