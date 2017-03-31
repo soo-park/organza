@@ -1,10 +1,21 @@
 """ Database model file
 
-* General Guide
+* Data Model
+Employee table's id is Nickname, K_contact, Emergency_contact's Foreign Primary Key
+Employee_department table connects Employee to Title and Company
+Employee_department - Title  - Department_title - Department - Company_department - Company
+Employee_department - Title  - Department_title - Department - Office_department - Office
+
+* General Naming Guide
 Table primary key name: tablename_id
 Middle/association table name: table1name_table2name
 Middle/association table primary key name: id
 Order: fields, foreign key (id) fields, relations, repr function
+
+* Construction
+Middle/association tables have foreign keys and relationships
+Other tables have relationships
+No back references were used
 
 """
 
@@ -28,8 +39,7 @@ class Employee(db.Model):
     first_name = db.Column(db.String(50))
     mid_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50))
-    conntry_code = db.Column(db.String, nullable=True)
-    area_code = db.Column(db.Integer, nullable=True)
+    country_code = db.Column(db.Integer, nullable=True)
     phone = db.Column(db.Integer, nullable=True)
     mobile = db.Column(db.Integer, nullable=True)
     address_1st_line = db.Column(db.String(50), nullable=True)
@@ -38,12 +48,6 @@ class Employee(db.Model):
     postal_code = db.Column(db.Integer, nullable=True)
     fax = db.Column(db.Integer, nullable=True)
     comment = db.Column(db.String(50), nullable=True)
-
-    # Foreign keys
-    nickname_id = db.Column(db.Integer, db.ForeignKey('nicknames.nickname_id'))
-    emergency_contact_id = db.Column(db.Integer, db.ForeignKey('emergency_contacts.emergency_contact_id'))
-    k_contact_id = db.Column(db.Integer, db.ForeignKey('k_contacts.k_contact_id'))
-    employee_department_id = db.Column(db.Integer, db.ForeignKey('employee_departments.id'))
 
     # Relations
     nicknames = db.relationship('Nickname')
@@ -65,7 +69,7 @@ class Nickname(db.Model):
 
     # one to one relationship to employee: OK for a ForeignKey as primary key
     # nickname_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
+    nickname_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
     nickname = db.Column(db.Unicode(50), nullable=True)
     k_name = db.Column(db.Unicode(50), nullable=True)
     kanji_name = db.Column(db.Unicode(50), nullable=True)
@@ -73,7 +77,7 @@ class Nickname(db.Model):
     employees = db.relationship('Employee')
 
     def __repr__(self):
-        return "<Nickname k_name=%s kanji_name=%s>" %(self.k_name, self.kanji_name)
+        return "<Nickname nickname_id=%s>" %self.nickname_id
 
 
 class Emergency_contact(db.Model):
@@ -89,7 +93,7 @@ class Emergency_contact(db.Model):
     employees = db.relationship('Employee')
 
     def __repr__(self):
-        return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+        return "<Emergency_contact emergency_conatact_id=%s>" %self.emergency_conatact_id
 
 
 class K_contact(db.Model):
@@ -98,22 +102,21 @@ class K_contact(db.Model):
     __tablename__ = "k_contacts"
 
     k_contact_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
-    k_conntry_code = db.Column(db.String, nullable=True)
-    k_area_code = db.Column(db.Integer, nullable=True)
+    k_country_code = db.Column(db.Integer, nullable=True)
     k_phone = db.Column(db.Integer, nullable=True)
     k_mobile = db.Column(db.Integer, nullable=True)
     k_address_1st_line = db.Column(db.String(50), nullable=True)
     k_address_2nd_line = db.Column(db.String(50), nullable=True)
     k_country = db.Column(db.String(50), nullable=True)
     k_postal_code = db.Column(db.Integer, nullable=True)
-    k_email = db.Column(db.Unicode(50), nullable=True)
+    k_email = db.Column(db.String(50), nullable=True)
     k_fax = db.Column(db.Integer, nullable=True)
-    k_comment = db.Column(db.String(50), nullable=True)
+    k_comment = db.Column(db.Unicode(50), nullable=True)
 
     employees = db.relationship('Employee')
 
     def __repr__(self):
-        return "<K_contact k_contact_id=%s k_mobile=%s>" %(self.k_contact_id, self.k_mobile)
+        return "<K_contact k_contact_id=%s>" %self.k_contact_id
 
 
 class Employee_department(db.Model):
@@ -127,7 +130,7 @@ class Employee_department(db.Model):
     date_departed = db.Column(db.DateTime, nullable=True)
     office_email = db.Column(db.Unicode(50), nullable=True)
     office_email_password = db.Column(db.Integer, nullable=True)
-    office_pc_id = db.Column(db.String(50), nullable=True)
+    office_pc = db.Column(db.String(50), nullable=True)
     office_pc_password = db.Column(db.String(50), nullable=True)
     office_phone = db.Column(db.Integer, nullable=True)
     office_comment = db.Column(db.String(50), nullable=True)
@@ -156,9 +159,6 @@ class Title(db.Model):
     title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(50), nullable=True)
     k_title = db.Column(db.Unicode(50), nullable=True)
-
-    employee_department_id = db.Column(db.Integer, db.ForeignKey('employee_departments.id'))
-    department_title_id = db.Column(db.Integer, db.ForeignKey('department_titles.id'))
 
     employee_departments = db.relationship('Employee_department')
     department_titles = db.relationship('Department_title')
@@ -190,15 +190,11 @@ class Department(db.Model):
     __tablename__ = "departments"
 
     department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(50), nullable=True)
-
-    department_title_id = db.Column(db.Integer, db.ForeignKey('department_titles.id'))
-    company_departments = db.Column(db.Integer, db.ForeignKey('company_departments.id'))
-    company_offices = db.Column(db.Integer, db.ForeignKey('company_offices.id'))
+    department_name = db.Column(db.String(50), nullable=True)
 
     department_titles = db.relationship('Department_title')
+    office_departments = db.relationship('Office_department')
     company_departments = db.relationship('Company_department')
-    company_offices = db.relationship('Company_office')
 
     def __repr__(self):
         return "<Department department_id=%s>" %self.department_id
@@ -212,10 +208,10 @@ class Company_department(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
-    office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))    
 
     departments = db.relationship('Department')
-    offices = db.relationship('Office')
+    companies = db.relationship('Company')
 
     def __repr__(self):
         return "<Company_department id=%s>" %self.id
@@ -229,9 +225,6 @@ class Company(db.Model):
     company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     company_name = db.Column(db.String(50), nullable=True)
     shrot_name = db.Column(db.String(50), nullable=True)
-
-    employee_department_id = db.Column(db.Integer, db.ForeignKey('employee_departments.id'))
-    company_department_id = db.Column(db.Integer, db.ForeignKey('company_departments.id'))
 
     employee_departments = db.relationship('Employee_department')
     company_departments = db.relationship('Company_department')
@@ -247,11 +240,11 @@ class Office_department(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    department = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
-    office = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
+    office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
     
-    department = db.relationship('Department')
-    office = db.relationship('Office')
+    departments = db.relationship('Department')
+    offices = db.relationship('Office')
 
     def __repr__(self):
         return "<Office_department id=%s>" %self.id
@@ -263,9 +256,8 @@ class Office(db.Model):
     __tablename__ = "offices"
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    office_name = db.Column(db.String(50))
-    c_conntry_code = db.Column(db.String, nullable=True)
-    c_area_code = db.Column(db.Integer, nullable=True)
+    office_name = db.Column(db.String(50), nullable=True)
+    c_country_code = db.Column(db.Integer, nullable=True)
     c_phone = db.Column(db.Integer, nullable=True)
     c_mobile = db.Column(db.Integer, nullable=True)
     c_address_1st_line = db.Column(db.String(50), nullable=True)
@@ -275,10 +267,10 @@ class Office(db.Model):
     c_fax = db.Column(db.Integer, nullable=True)
     c_comment = db.Column(db.String(50), nullable=True)
 
-    company_offices = db.relationship('Company_office')
+    office_departments = db.relationship('Office_department')
 
     def __repr__(self):
-        return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+        return "<Office office_id=%s>" %self.office_id
 
 
 # Helper functions

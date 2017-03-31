@@ -74,70 +74,121 @@ def load_employees():
     print 'Employees seeding'
 
         employee = Employee(
-                            first_name=first_name, 
-                            mid_name=mid_name, 
-                            last_name=last_name, 
+                            photo_URL=photo_URL,
+                            birthyear=birthyear,
+                            birthday=birthday,
                             personal_email=personal_email,
+                            first_name=first_name,
+                            mid_name=mid_name,
+                            last_name=last_name,
+                            country_code=country_code,
+                            phone=phone,
+                            mobile=mobile,
+                            address_1st_line=address_1st_line,
+                            address_2nd_line=address_2nd_line,
+                            country=country,
+                            postal_code=postal_code,
+                            fax=fax,
+                            comment=comment
                             )
 
         # add to the session and commit the employee line
         db.session.add(employee)
         db.session.commit()
 
-        # # add after unicode issue has been resolved
+        # # FIXME: test unicode save & import from csv, txt, excel
         nickname = Nickname(
                             nickname=nickname,
-                            k_name=k_name, 
+                            k_name=k_name,
                             kanji_name=kanji_name
                             )
-        db.session.add(employee)
+        db.session.add(nickname)
         db.session.commit()
 
-        emergency_contacts = Emergency_contact(
-                                               nickname=nickname,
-                                               k_name=k_name, 
-                                               kanji_name=kanji_name
+        emergency_contact = Emergency_contact(
+                                               emergency_name=emergency_name,
+                                               emergency_phone=emergency_phone,
+                                               emergency_comment=emergency_comment
                                                )
-        db.session.add(employee)
+        db.session.add(emergency_contact)
         db.session.commit()
 
-        k_contacts = K_contact(
-                               nickname=nickname,
-                               k_name=k_name, 
-                               kanji_name=kanji_name
+        k_contact = K_contact(
+                               k_country_code=k_country_code,
+                               k_phone=k_phone,
+                               k_mobile=k_mobile,
+                               k_address_1st_line=k_address_1st_line,
+                               k_address_2nd_line=k_address_2nd_line,
+                               k_country=k_country,
+                               k_postal_code=k_postal_code,
+                               k_email=k_email,
+                               k_fax=k_fax,
+                               k_title=k_title,
+                               k_comment=k_comment
                                )
-        db.session.add(employee)
+        db.session.add(k_contact)
         db.session.commit()
 
 
-        employee_departments = Employee_department(
-                                                   nickname=nickname,
+        employee_department = Employee_department(
+                                                    job_description=job_description,
+                                                    date_employeed=date_employeed,
+                                                    date_departed=date_departed,
+                                                    office_email=office_email,
+                                                    office_email_password=office_email_password,
+                                                    office_pc=office_pc,
+                                                    office_pc_password=office_pc_password,
+                                                    office_phone=office_phone,
+                                                    office_comment=office_comment
                                                    )
-        db.session.add(employee)
+        db.session.add(employee_department)
         db.session.commit()
 
     print 'Employee seeding compeleted.'
 
 
-def load_company():
+def load_companies():
 
-    # Delete all rows in company related table in case some data's there
+    print 'Company seeding'
 
+        title = Title(
+                      title=title,
+                      k_title=k_title
+                     )
+        db.session.add(title)
+        db.session.commit()
 
+        department = Department(
+                                department_name=department_name
+                               )
+        db.session.add(department)
+        db.session.commit()
 
-def load_relations():
+        company = Company(
+                          company_name=company_name,
+                          shrot_name=shrot_name
+                         )
+        db.session.add(company)
+        db.session.commit()
 
+        office = Office(
+                        Office=Office,
+                        office_name=office_name,
+                        c_country_code=c_country_code,
+                        c_area_code=c_area_code,
+                        c_phone=c_phone,
+                        c_mobile=c_mobile,
+                        c_address_1st_line=c_address_1st_line,
+                        c_address_2nd_line=c_address_2nd_line,
+                        c_country=c_country,
+                        c_postal_code=c_postal_code,
+                        c_fax=c_fax,
+                        c_comment=c_comment
+                       )
+        db.session.add(office)
+        db.session.commit()
 
-    Title
-    Department_title
-    Department
-    Company_department
-    Company
-    Office_department
-    Office
-
-
-
+    print 'Company seeding compeleted.'
 
 
 if __name__ == "__main__":
@@ -150,5 +201,4 @@ if __name__ == "__main__":
     purge_tables()
     read_file_in()
     load_employees()
-    load_company()
-    load_relations()
+    load_companies()
