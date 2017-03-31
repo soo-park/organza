@@ -1,18 +1,9 @@
-"""Models and database functions for intranet project.
-Skeleton codes generated with stacks from Hackbright.
-"""
-
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 # Connection to the PostgreSQL database comes through the Flask-SQLAlchemy
-# helper library. There is a `session` object, where interactions are done.
 db = SQLAlchemy()
 
-
-
-### TODO: Foreign keys are set as relationships. See DB model and change.
-# Employee definitions
 
 class Employee(db.Model):
     """Employee of the group."""
@@ -20,303 +11,240 @@ class Employee(db.Model):
     __tablename__ = "employees"
 
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    photo_URL = db.Column(db.String(100), nullable=True)
+    birthyear = db.Column(db.DateTime, nullable=True)
+    birthday = db.Column(db.DateTime, nullable=True)
+    personal_email = db.Column(db.String(100), nullable=True)
     first_name = db.Column(db.String(50))
     mid_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50))
+    conntry_code = db.Column(db.String, nullable=True)
+    area_code = db.Column(db.Integer, nullable=True)
+    phone = db.Column(db.Integer, nullable=True)
+    mobile = db.Column(db.Integer, nullable=True)
+    address_1st_line = db.Column(db.String(50), nullable=True)
+    address_2nd_line = db.Column(db.String(50), nullable=True)
+    country = db.Column(db.String(50), nullable=True)
+    postal_code = db.Column(db.Integer, nullable=True)
+    fax = db.Column(db.Integer, nullable=True)
+    comment = db.Column(db.String(50), nullable=True)
 
-    ### TODO ###
-    # if the personal email is nullable, 
-    # and the office email belongs to the form
-    # how are you going to log-in and authentificate?
-    personal_email = db.Column(db.String(100), nullable=True)
-    birthyear = db.Column(db.DateTime, nullable=True)
-    birthday = db.Column(db.DateTime, nullable=True)
-    photo_URL = db.Column(db.String(100), nullable=True)
-
-    ### TODO ###
-    # Figure out what kind of db.relationship is good
-    # nicknames = db.relationship('Nickname')
-    # home_addresses = db.relationship('Address')
-    # employee_phones = db.relationship('Employee_phone')
-    # Employee_dept_offices = db.relationship('Employee_dept_office')
-    # emergency_contact_people = db.relationship('Emergency_contact_person')
+    ### TODO: Figure out what kind of db.relationship is good
+    nicknames = db.relationship('Nickname')
+    employee_departments = db.relationship('Employee_department')
+    emergency_contact_people = db.relationship('Emergency_contact_person')
     
-    ### TODO ###
-    # A field that wil be feeding off of email for the employee?
-    # Generate the log_in table?
-    # login = Required('Login')
-
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
+    ### TODO ###
+    # Build helper function for importing Excel (below code imports one cell)
+    # def import_Excel():
+        # import openpyxl
+        # from openpyxl import load_workbook
+        # wb = load_workbook(filename = 'static/doc/employee.xlsx')
+        # sheet_ranges = wb['test'] #use the workbook tab name
+        # print(sheet_ranges['A2'].value)
 
-    # import openpyxl
 
-    from openpyxl import load_workbook
-    wb = load_workbook(filename = 'static/doc/employee.xlsx')
-    sheet_ranges = wb['test'] #use the workbook tab name
-    print(sheet_ranges['A2'].value)
+### TODO: finish unicode problem in seed.py to add these fields
+class Nickname(db.Model):
+    """Nickname for a person."""
 
-# # TODO: finish unicode problem in seed.py to add these fields
-# class Nickname(db.Model):
-#     """Nickname for a person."""
+    __tablename__ = "nicknames"
 
-#     __tablename__ = "nicknames"
+    # one to one relationship to employee: OK for a ForeignKey as primary key
+    # nickname_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
+    nickname = db.Column(db.Unicode(50), nullable=True)
+    k_name = db.Column(db.Unicode(50), nullable=True)
+    kanji_name = db.Column(db.Unicode(50), nullable=True)
 
-#     # one to one relationship to employee: OK for a ForeignKey as primary key
-#     # nickname_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
-#     nickname = db.Column(db.Unicode(50), nullable=True)
-#     k_name = db.Column(db.Unicode(50), nullable=True)
-#     kanji_name = db.Column(db.Unicode(50), nullable=True)
+    employees = db.relationship('Employee')
 
-#     employees = db.relationship('Employee')
+    def __repr__(self):
+        return "<Nickname k_name=%s kanji_name=%s>" %(self.k_name, self.kanji_name)
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
 
-#         return "<Nickname k_name=%s kanji_name=%s>" %(self.k_name, self.kanji_name)
+class Emergency_contact(db.Model):
+    """Emergency contact for an employee."""
 
+    __tablename__ = "emergency_contacts"
 
-## Employee association and middle tables
+    emergency_conatact_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
+    name = db.Column(db.Unicode(50), nullable=True)
+    phone = db.Column(db.Integer, nullable=True)
+    other_contact = db.Column(db.String(100), nullable=True)
 
-# class Employee_phone(db.Model):
-#     """Middle table btw Employee and Phone."""
+    employees = db.relationship('Employee')
 
-#     __tablename__ = "employee_phones"
+    def __repr__(self):
+        return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-#     employees = db.relationship('Employee')
-#     contacts = db.relationship('Contact')
+class K_contact(db.Model):
+    """A table that saves contacts."""
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
+    __tablename__ = "k_contacts"
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+    k_contact_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
+    k_conntry_code = db.Column(db.String, nullable=True)
+    k_area_code = db.Column(db.Integer, nullable=True)
+    k_phone = db.Column(db.Integer, nullable=True)
+    k_mobile = db.Column(db.Integer, nullable=True)
+    k_address_1st_line = db.Column(db.String(50), nullable=True)
+    k_address_2nd_line = db.Column(db.String(50), nullable=True)
+    k_country = db.Column(db.String(50), nullable=True)
+    k_postal_code = db.Column(db.Integer, nullable=True)
+    k_email = db.Column(db.Unicode(50), nullable=True)
+    k_fax = db.Column(db.Integer, nullable=True)
+    k_comment = db.Column(db.String(50), nullable=True)
 
+    employees = db.relationship('Employee')
 
-# class Emergency_contact_person(db.Model):
-#     """Emergency contact for an employee."""
+    def __repr__(self):
+        return "<K_contact k_contact_id=%s k_mobile=%s>" %(self.k_contact_id, self.k_mobile)
 
-#     __tablename__ = "emergency_contact_people"
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     name = db.Column(db.Unicode(50), nullable=True)
+class Employee_department(db.Model):
+    """Middle table between employee, dept, office."""
 
-#     employees = db.relationship('Employee')
-#     contacts = db.relationship('Contact')
-#     addresses = db.relationship('Address')
+    __tablename__ = "Employee_departments"
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    job_description = db.Column(db.TEXT, nullable=True)
+    date_employeed = db.Column(db.DateTime, nullable=True)
+    date_departed = db.Column(db.DateTime, nullable=True)
+    office_email = db.Column(db.Unicode(50), nullable=True)
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+    employees = db.relationship('Employee')
+    titles = db.relationship('Title')
+    offices = db.relationship('Office')
+    companies = db.relationship('Company')
+    departments = db.relationship('Department')
 
+    def __repr__(self):
+        return "<Employee_department id=%s>" %self.id
 
-### Optional information formatting tables (nickname, contact, phone)
 
+class Title(db.Model):
+    """Offices around the globe."""
 
-# class Contact(db.Model):
-#     """A table that saves contacts."""
+    __tablename__ = "titles"
 
-#     __tablename__ = "contacts"
+    title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(50), nullable=True)
+    k_title = db.Column(db.Unicode(50), nullable=True)
 
-#     contact_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     conntry_code = db.Column(db.String, nullable=True)
-#     area_code = db.Column(db.Integer, nullable=True)
-#     number = db.Column(db.Integer, nullable=True)
-#     ## make the form separate the ara codes, and then receive collected input
-#     mobile = db.Column(db.Integer, nullable=True)
-#     k_country_code = db.Column(db.Integer, nullable=True)
-#     k_phone = db.Column(db.Integer, nullable=True)
-#     k_mobile = db.Column(db.Integer, nullable=True)
-#     email = db.Column(db.Unicode(50), nullable=True)
-#     Fax = db.Column(db.Integer, nullable=True)
+    department_titles = db.relationship('Department_title')
+    Employee_dept_office = db.relationship('Employee_dept_office')
 
-# #     offices = db.relationship('Office')
-# #     emergency_contact_people = db.relationship('Emergency_contact_person')
-# #     employee_phones = db.relationship('Employee_phone')
+    def __repr__(self):
+        return "<Title title_id=%s>" %self.title_id
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
 
-#         return "<Contact contact_id=%s email=%s>" %(self.contact_id, self.email)
+class Department_title(db.Model):
+    """Middle table between department and title."""
 
+    __tablename__ = "department_titles"
 
-# class Address(db.Model):
-#     """Offices around the globe."""
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-#     __tablename__ = "addresses"
+    titles = db.relationship('Title')
+    departments = db.relationship('Department')
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     street_number = db.Column(db.Integer, nullable=True)
-#     address_1st_line = db.Column(db.String(50), nullable=True)
-#     address_2nd_line = db.Column(db.String(50), nullable=True)
-#     country = db.Column(db.String(50), nullable=True)
+    def __repr__(self):
+        return "<Department_title id=%s>" %self.id
 
-#     offices = db.relationship('Office')
-#     employee = db.relationship('Employee')
-#     emergency_contact_person = db.relationship('Emergency_contact_person')
 
+class Department(db.Model):
+    """Offices around the globe."""
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
+    __tablename__ = "departments"
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+    department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50), nullable=True)
 
+    department_titles = db.relationship('Department_title')
+    company_departments = db.relationship('Company_department')
+    company_offices = db.relationship('Company_office')
 
-# ### Office/Company/Title/Department definitions
+    def __repr__(self):
+        return "<Department department_id=%s>" %self.department_id
 
 
-# class Office(db.Model):
-#     """Offices around the globe."""
+class Company_department(db.Model):
+    """Middle table between company and department."""
 
-#     __tablename__ = "offices"
+    __tablename__ = "company_departments"
 
-#     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     name = db.Column(db.String(50))
-
-#     Employee_dept_office = db.relationship('Employee_dept_office')
-#     contacts = db.relationship('Contact')
-#     address = db.relationship('Address')
-#     compnay_offices = db.relationship('Office_department')
-#     company = db.relationship('Company')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-
-# class Company(db.Model):
-#     """Offices around the globe."""
-
-#     __tablename__ = "companies"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     name = db.Column(db.String(50), nullable=True)
-#     shrot_name = db.Column(db.String(50), nullable=True)
-
-#     Employee_dept_office = db.relationship('Employee_dept_office')
-#     offices = db.relationship('Office')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-
-# class Title(db.Model):
-#     """Offices around the globe."""
-
-#     __tablename__ = "titles"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     title = db.Column(db.String(50), nullable=True)
-#     k_title = db.Column(db.Unicode(50), nullable=True)
-
-#     department_titles = db.relationship('Department_title')
-#     Employee_dept_office = db.relationship('Employee_dept_office')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-
-# class Department(db.Model):
-#     """Offices around the globe."""
-
-#     __tablename__ = "departments"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     name = db.Column(db.String(50), nullable=True)
-
-#     Employee_dept_office = db.relationship('Employee_dept_office')
-#     department_titles = db.relationship('Department_title')
-#     compnay_offices = db.relationship('Office_department')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-
-# ### Company association and middle tables
-
-
-# class Employee_dept_office(db.Model):
-#     """Middle table between employee, dept, office."""
-
-#     __tablename__ = "Employee_dept_offices"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     job_description = db.Column(db.TEXT, nullable=True)
-#     date_employeed = db.Column(db.DateTime, nullable=True)
-#     date_departed = db.Column(db.DateTime, nullable=True)
-
-#     employee = db.relationship('Employee')
-#     title = db.relationship('Title')
-#     office = db.relationship('Office')
-#     company = db.relationship('Company')
-#     department = db.relationship('Department')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-# class Department_title(db.Model):
-#     """Middle table between department and title."""
-
-#     __tablename__ = "department_titles"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
-#     title = db.relationship('Title')
-#     department = db.relationship('Department')
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-# class Office_department(db.Model):
-#     """Middle table between office and department."""
-
-#     __tablename__ = "office_departments"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     
-#     department = db.relationship('Department')
-#     office = db.relationship('Office')
+    departments = db.relationship('Department')
+    offices = db.relationship('Office')
+
+    def __repr__(self):
+        return "<Company_department id=%s>" %self.id
 
 
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
+class Company(db.Model):
+    """All subsidiaries around the globe."""
 
-#         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+    __tablename__ = "companies"
+
+    company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    company_name = db.Column(db.String(50), nullable=True)
+    shrot_name = db.Column(db.String(50), nullable=True)
+
+    employee_departments = db.relationship('Employee_department')
+    company_departments = db.relationship('Company_department')
+
+    def __repr__(self):
+        return "<Company company_id=%s>" %self.company_id
 
 
-### TODO ###
-# # Build a log-in feature
+class Office_department(db.Model):
+    """Middle table between office and department."""
+
+    __tablename__ = "office_departments"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    
+    department = db.relationship('Department')
+    office = db.relationship('Office')
+
+    def __repr__(self):
+        return "<Office_department id=%s>" %self.id
+
+
+class Office(db.Model):
+    """Offices around the globe."""
+
+    __tablename__ = "offices"
+
+    office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    office_name = db.Column(db.String(50))
+    o_conntry_code = db.Column(db.String, nullable=True)
+    o_area_code = db.Column(db.Integer, nullable=True)
+    o_phone = db.Column(db.Integer, nullable=True)
+    o_mobile = db.Column(db.Integer, nullable=True)
+    o_address_1st_line = db.Column(db.String(50), nullable=True)
+    o_address_2nd_line = db.Column(db.String(50), nullable=True)
+    o_country = db.Column(db.String(50), nullable=True)
+    o_postal_code = db.Column(db.Integer, nullable=True)
+    o_fax = db.Column(db.Integer, nullable=True)
+    comment = db.Column(db.String(50), nullable=True)
+
+    company_offices = db.relationship('Company_office')
+
+    def __repr__(self):
+        return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+
+
 # class Login(db.Model):
-#    """Offices around the globe."""
+#    """TODO:  Build a log-in feature"""
 
 #     __tablename__ = "offices"
 
@@ -327,36 +255,14 @@ class Employee(db.Model):
 
 #     customers = db.relationship('Customer')
 #     employees = db.relationship(Employee)
-
-
-    # def __repr__(self):
-    # """Provide helpful representation when printed."""
-
-    # return "<Employee employee_id=%s first_name=%s>" 
-    #                                     %(self.employee_id, self.first_name)
-
-
-
-### TODO ###
-# # Build customer log-in features
-# class Customer(db.Model):
-#    """Customer log-in."""
-
-#     __tablename__ = "offices"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
 #     login = db.relationship('Login')
 
-# db.bind("postgres", host="", user="", password="", database="")
-# db.generate_mapping(create_tables=True)
+#     db.bind("postgres", host="", user="", password="", database="")
+#     db.generate_mapping(create_tables=True)
 
-
-    # def __repr__(self):
-    # """Provide helpful representation when printed."""
-
-    # return "<Employee employee_id=%s first_name=%s>" 
-    #                                     %(self.employee_id, self.first_name)
+#     def __repr__(self):
+#     return "<Employee employee_id=%s first_name=%s>" 
+#                                         %(self.employee_id, self.first_name)
 
 
 # Helper functions
