@@ -77,57 +77,50 @@ def logging_test():
     return 'end logging'
 
 
-#*# making session work with Flask1
-# rendering the HTML template. The template must be in templates folder
-# must import render_template
-@app.route('/login_form')
-def login_form():
-    return render_template('login_form.html')
-
-# #*# making session work with Flask2
-# # must have session key along with the app.secret_key line above
-# # must import request, session
-# @app.route('/login', methods=['POST'])
-# def login():
-#     if request.method == 'POST':
-#         if (request.form['email'] == 'abc@abc.com'
-#                 and request.form['password'] == '1234'):
-#             session['logged_in'] = True
-#             session['email'] = request.form['email']
-#             return redirect('logged')
-#         else:
-#             return 'Incorrect login information.'
-#     else:
-#         return 'Incorrect method.'
+#*# making session work with Flask2
+# must have session key along with the app.secret_key line above
+# must import request, session
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        if (request.form['email'] == 'abc@abc.com'
+                and request.form['password'] == '1234'):
+            session['logged_in'] = True
+            session['email'] = request.form['email']
+            return redirect('logged')
+        else:
+            return 'Incorrect login information.'
+    else:
+        return 'Incorrect method.'
 
 
-# @app.route('/logged')
-# def logged():
-#     return render_template('index.html')
+@app.route('/logged')
+def logged():
+    return render_template('index.html')
 
 
 #*# Understanding get method 1
 # Due to security reasons, get method should not be used for logins
 # If get were to be used, the code would be as follows
-@app.route('/get_test', methods=['GET'])
-def get_test():
-    if request.method == 'GET':
-        if (request.args.get('email') == 'abc@abc.com'
-                and request.args.get('password') == '1234'):
-            return 'Welcome ' + request.args.get('username') + '!'
-        else:
-            return 'Incorrect login information.'
-    else:
-        return 'Incorrect method'
+# @app.route('/get_test', methods=['GET'])
+# def get_test():
+#     if request.method == 'GET':
+#         if (request.args.get('email') == 'abc@abc.com'
+#                 and request.args.get('password') == '1234'):
+#             return 'Welcome ' + request.args.get('username') + '!'
+#         else:
+#             return 'Incorrect login information.'
+#     else:
+#         return 'Incorrect method'
 
 
 #*# Session log out
 # request, redirect, url_for, session are needed to be imported
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
     session.pop('email', None)
-    return redirect(url_for('index'))
+    return redirect('/')
  
 
 @app.route('/employee')

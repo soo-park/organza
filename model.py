@@ -32,12 +32,12 @@ class Employee(db.Model):
     __tablename__ = "employees"
 
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_URL = db.Column(db.String(1000))
+    photo_URL = db.Column(db.String(100))
     birthday = db.Column(db.DateTime)
     personal_email = db.Column(db.String(100))
-    first_name = db.Column(db.String(50))
+    first_name = db.Column(db.String(50), nullable=False)
     mid_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
 ### FIXME: unicode problem in seed.py & model.py -> after, try seeding db
     nickname = db.Column(db.Unicode(50))
     k_name = db.Column(db.Unicode(50))
@@ -59,6 +59,15 @@ class Employee(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
+
+
+    ### TODO: Build a function for importing Excel (below code imports one cell)
+    # def import_Excel():
+        # import openpyxl
+        # from openpyxl import load_workbook
+        # wb = load_workbook(filename = 'static/doc/employee.xlsx')
+        # sheet_ranges = wb['test'] #use the workbook tab name
+        # print(sheet_ranges['A2'].value)
 
 
 class Employee_company(db.Model):

@@ -19,14 +19,6 @@ from model import connect_to_db, db
 from server import app
 import datetime
 
-### TODO: Build a function for importing Excel (below code imports one cell)
-# def import_Excel():
-    # import openpyxl
-    # from openpyxl import load_workbook
-    # wb = load_workbook(filename = 'static/doc/employee.xlsx')
-    # sheet_ranges = wb['test'] #use the workbook tab name
-    # print(sheet_ranges['A2'].value)
-
 
 def purge_tables():
     """Purges existing data to prevent data overlap."""
@@ -35,30 +27,38 @@ def purge_tables():
     print 'Existing data on tables will be purged.'
 
     # Delete all rows in employee related table in case some data's there
-    Employee.query.delete()  
-    Emergency_contact.delete()
-    K_contact.delete()
-    Employee_department.delete()
-    Title.delete()
+    Employee_company.delete()
     Department_title.delete()
-    Department.delete()
     Company_department.delete()
-    Company.delete()
     Office_department.delete()
+
+    # After middle table, delete the others
+    Employee.query.delete()  
+    Title.delete()
+    Department.delete()
+    Company.delete()
     Office.delete()
+
+    # add to the session and commit the employee line
+    db.session.add(employee)
+    db.session.commit()
 
     print 'Talbes purged.'
 
+# # TODO: finish separating data to seed
+# def open_file():
+#     """FIXME: open as unicode"""
 
-def open_file():
-    """FIXME: open as unicode"""
+#     # list of dictionaries that has 
+#     # [employee1: {first_name, mid_name, last_name, personal_email}, 
+#     # employee2: {first_name, mid_name, last_name, personal_email} ... ]
 
-    result = {}
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+#     result = {}
+#     file = open('static/doc/_employee_seed_sample.csv')
+#     for row in file:
+#         first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
 
-    return result
+#     return result
 
 
 def load_employees():
@@ -68,7 +68,8 @@ def load_employees():
     # indicates the process
     print 'Employees seeding'
 
-    file = open('static/doc/_employee_seed_sample.csv')
+    file = open_file
+    open('static/doc/_employee_seed_sample.csv')
     for row in file:
         first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
         employee = Employee(
@@ -205,6 +206,7 @@ if __name__ == "__main__":
 
     # Import different types of data
     purge_tables()
+    # open_file()
     load_titles()
     load_departments()
     load_companies()

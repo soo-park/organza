@@ -5,8 +5,21 @@
 </head>
 
 <body>
-  Menu bar goes here
-  <hr>
+    {% if session.get('logged_in') %}
+        <form action="/logout" method="POST">
+        <button type="submit" value="Logout">Logout</button>
+    {% else %}
+        <form action="/login" method="POST">
+          <input type="text" name="username" placeholder="Name"/>
+          <input type="text" name="email" placeholder="Email">
+          <!-- The characters in a password field are masked 
+          (shown as asterisks or circles). -->
+          <input type="password" name="password" placeholder="Password">
+          <button type="submit" value="Login">Login</button>
+        </form>
+    {% endif %}
+
+
 
   <!-- Whatever the actual content attatched by Jinja goes here -->
   {% block content %} put your content here {% endblock %}
