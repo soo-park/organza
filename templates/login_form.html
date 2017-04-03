@@ -4,10 +4,12 @@
     <!-- TODO: if user is logged in, disable the login form -->
     <h2>Login Form</h2>
     <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Name"><br>
       <input type="text" name="email" placeholder="Email"><br>
-      <!-- TODO: change the type to password before deploying -->
-      <input type="text" name="password" placeholder="Password"><br>
-      <input type="submit" value="Login">
+      <!-- The characters in a password field are masked 
+      (shown as asterisks or circles). -->
+      <input type="password" name="password" placeholder="Password"><br>
+      <button type="submit" value="Login">Login</button>
     </form>
 
 {% endblock %}

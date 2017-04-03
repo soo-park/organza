@@ -6,7 +6,7 @@ from sqlalchemy import func
 from model import Employee
 from model import Nickname
 from model import Emergency_contact
-from model import K_contact
+from model import K_con tact
 from model import Employee_department
 
 # import company related models
@@ -23,8 +23,7 @@ from server import app
 import datetime
 
 
-### TODO ###
-# Build a function for importing Excel (below code imports one cell)
+### TODO: Build a function for importing Excel (below code imports one cell)
 # def import_Excel():
     # import openpyxl
     # from openpyxl import load_workbook
@@ -56,16 +55,6 @@ def purge_tables():
     print 'Talbes purged.'
 
 
-def read_file_in():
-    """Reads in data file."""
-
-    print 'Reading in the data file.'
-
-    file = open('static/doc/employee.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
-
 # Load employees, nickname, emergency_contact, k_contact, department, 
 def load_employees():
     """Load employees from static/doc/employee.csv into database."""
@@ -73,122 +62,129 @@ def load_employees():
     # indicates the process
     print 'Employees seeding'
 
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
         employee = Employee(
                             photo_URL=photo_URL,
-                            birthyear=birthyear,
                             birthday=birthday,
-                            personal_email=personal_email,
+                            personal_email=personal_email,        
+                            password=password,
                             first_name=first_name,
                             mid_name=mid_name,
                             last_name=last_name,
-                            country_code=country_code,
+                            nickname=nickname,
+        # # FIXME: test unicode save & import from csv, txt, excel
+                            k_name=k_name,
+                            kanji_name=kanji_name,
                             phone=phone,
                             mobile=mobile,
-                            address_1st_line=address_1st_line,
-                            address_2nd_line=address_2nd_line,
+                            address_line1=address_line1,
+                            address_line2=address_line2,
+                            city=city,
                             country=country,
                             postal_code=postal_code,
-                            fax=fax,
-                            comment=comment
+                            emergency_name=emergency_name,
+                            emergency_phone=emergency_phone,
                             )
 
         # add to the session and commit the employee line
         db.session.add(employee)
         db.session.commit()
 
-        # # FIXME: test unicode save & import from csv, txt, excel
-        nickname = Nickname(
-                            nickname=nickname,
-                            k_name=k_name,
-                            kanji_name=kanji_name
-                            )
-        db.session.add(nickname)
-        db.session.commit()
-
-        emergency_contact = Emergency_contact(
-                                               emergency_name=emergency_name,
-                                               emergency_phone=emergency_phone,
-                                               emergency_comment=emergency_comment
-                                               )
-        db.session.add(emergency_contact)
-        db.session.commit()
-
-        k_contact = K_contact(
-                               k_country_code=k_country_code,
-                               k_phone=k_phone,
-                               k_mobile=k_mobile,
-                               k_address_1st_line=k_address_1st_line,
-                               k_address_2nd_line=k_address_2nd_line,
-                               k_country=k_country,
-                               k_postal_code=k_postal_code,
-                               k_email=k_email,
-                               k_fax=k_fax,
-                               k_title=k_title,
-                               k_comment=k_comment
-                               )
-        db.session.add(k_contact)
-        db.session.commit()
-
-
-        employee_department = Employee_department(
-                                                    job_description=job_description,
-                                                    date_employeed=date_employeed,
-                                                    date_departed=date_departed,
-                                                    office_email=office_email,
-                                                    office_email_password=office_email_password,
-                                                    office_pc=office_pc,
-                                                    office_pc_password=office_pc_password,
-                                                    office_phone=office_phone,
-                                                    office_comment=office_comment
-                                                   )
-        db.session.add(employee_department)
+        employee_company = Employee_company(
+                                            office_email=office_email,
+                                            password=office_email_password,
+                                            date_employeed=date_employeed,
+                                            date_departed=date_departed,
+                                            job_description=job_description,
+                                            office_phone=office_phone
+                                            )
+        db.session.add(employee_company)
         db.session.commit()
 
     print 'Employee seeding compeleted.'
 
 
-def load_companies():
+def load_titles():
 
-    print 'Company seeding'
+    print 'title seeding'
 
-        title = Title(
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
+        title = title(
                       title=title,
                       k_title=k_title
                      )
         db.session.add(title)
         db.session.commit()
 
-        department = Department(
-                                department_name=department_name
+    print 'title seeding compeleted.'
+
+
+def load_departments():
+
+    print 'department seeding'
+
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
+        department = department(
+                                name=name
                                )
         db.session.add(department)
         db.session.commit()
 
-        company = Company(
-                          company_name=company_name,
-                          shrot_name=shrot_name
+    print 'department seeding compeleted.'
+
+# get all of the same title and add that to a relationship
+
+
+def load_companies():
+
+    print 'company seeding'
+
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
+        company = company(
+                          name=name,
+                          busniess_doing_as=busniess_doing_as,
+                          abbreviation=abbreviation
                          )
         db.session.add(company)
         db.session.commit()
 
-        office = Office(
-                        Office=Office,
-                        office_name=office_name,
-                        c_country_code=c_country_code,
-                        c_area_code=c_area_code,
-                        c_phone=c_phone,
-                        c_mobile=c_mobile,
-                        c_address_1st_line=c_address_1st_line,
-                        c_address_2nd_line=c_address_2nd_line,
-                        c_country=c_country,
-                        c_postal_code=c_postal_code,
-                        c_fax=c_fax,
-                        c_comment=c_comment
+    print 'company seeding compeleted.'
+
+
+def load_offices():
+
+    print 'office seeding'
+
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
+        office = office(
+                        name=name,
+                        phone=phone,
+                        address_line1=address_line1,
+                        address_line2=address_line2,
+                        city=city,
+                        country=country,
+                        postal_code=postal_code,
+                        fax=fax
                        )
         db.session.add(office)
         db.session.commit()
 
-    print 'Company seeding compeleted.'
+    print 'office seeding compeleted.'
 
 
 if __name__ == "__main__":
@@ -199,6 +195,7 @@ if __name__ == "__main__":
 
     # Import different types of data
     purge_tables()
-    read_file_in()
-    load_employees()
+    load_titles()
+    load_departments()
     load_companies()
+    load_offices()

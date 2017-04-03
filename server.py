@@ -8,17 +8,43 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import Employee, connect_to_db
 
-# from model import Office
+import os
 
+# import employee related models
+from model import Employee
+from model import Nickname
+from model import Emergency_contact
+from model import K_contact
+from model import Employee_department
 
+# import company related models
+from model import Title
+from model import Department_title
+from model import Department
+from model import Company_department
+from model import Company
+from model import Office_department
+from model import Office
+
+from model import connect_to_db, db
+import datetime
+
+#*# the "#*#" marks is thanks to: 
+# https://www.slideshare.net/ssusercf5d12/ss-40104301
+#!/usr/bin/python
+# coding: utf-8 to prevent asian characters from breaking using Flask
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+# Execute Flask object
 app = Flask(__name__)
 
-# Required to use Flask sessions and the debug toolbar
+# when running the environment, the secret key file has to be sourced as well
 app.secret_key = os.environ['secret_key']
 
 # Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
-# error.
+# silently. This is horrible. Fix this so that, instead, it raises an error.
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -28,6 +54,84 @@ def index():
 
     return render_template('index.html')
 
+
+#*# receiving parameter in browser: string
+# receive user name value and print
+@app.route('/user/<username>')
+def show__profile(username):
+    return 'User %s' % username
+
+
+#*# receiving parameter in broweser: integer  
+# <int: post_id> enforces integer value input
+@app.route('/port/<int:post_id>')
+def show_post(post_id):
+    return 'Post %d' % post_id
+
+
+#*# logging
+# used for marking on console for developer to print needed info
+@app.route('/logging')
+def logging_test():
+    test = 1
+    app.logger.debug('debuggin needed')
+    app.logger.warning(str(test) + ' line')
+    app.logger.error('error occured')
+    return 'end logging'
+
+
+#*# making session work with Flask1
+# rendering the HTML template. The template must be in templates folder
+# must import render_template
+@app.route('/login_form')
+def login_form():
+    return render_template('login_form.html')
+
+# #*# making session work with Flask2
+# # must have session key along with the app.secret_key line above
+# # must import request, session
+# @app.route('/login', methods=['POST'])
+# def login():
+#     if request.method == 'POST':
+#         if (request.form['email'] == 'abc@abc.com'
+#                 and request.form['password'] == '1234'):
+#             session['logged_in'] = True
+#             session['email'] = request.form['email']
+#             return redirect('logged')
+#         else:
+#             return 'Incorrect login information.'
+#     else:
+#         return 'Incorrect method.'
+
+
+# @app.route('/logged')
+# def logged():
+#     return render_template('index.html')
+
+
+#*# Understanding get method 1
+# Due to security reasons, get method should not be used for logins
+# If get were to be used, the code would be as follows
+@app.route('/get_test', methods=['GET'])
+def get_test():
+    if request.method == 'GET':
+        if (request.args.get('email') == 'abc@abc.com'
+                and request.args.get('password') == '1234'):
+            return 'Welcome ' + request.args.get('username') + '!'
+        else:
+            return 'Incorrect login information.'
+    else:
+        return 'Incorrect method'
+
+
+#*# Session log out
+# request, redirect, url_for, session are needed to be imported
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    session.pop('email', None)
+    return redirect(url_for('index'))
+ 
 
 @app.route('/employee')
 def employee_list():
@@ -48,4 +152,5 @@ if __name__ == '__main__':
     # Use the DebugToolbar
     DebugToolbarExtension(app)
 
+    # Run internal server
     app.run(port=5000, host='0.0.0.0')

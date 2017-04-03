@@ -26,28 +26,29 @@ from datetime import datetime
 db = SQLAlchemy()
 
 
+### TODO: Use regx to enforce formatting
 class Employee(db.Model):
     """Employee of the group."""
 
     __tablename__ = "employees"
 
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_URL = db.Column(db.String(100), nullable=True)
-    birthyear = db.Column(db.DateTime, nullable=True)
-    birthday = db.Column(db.DateTime, nullable=True)
-    personal_email = db.Column(db.String(100), nullable=True)
+    photo_URL = db.Column(db.String(100))
+    birthyear = db.Column(db.DateTime)
+    birthday = db.Column(db.DateTime)
+    personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50))
-    mid_name = db.Column(db.String(50), nullable=True)
+    mid_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    country_code = db.Column(db.Integer, nullable=True)
-    phone = db.Column(db.Integer, nullable=True)
-    mobile = db.Column(db.Integer, nullable=True)
-    address_1st_line = db.Column(db.String(50), nullable=True)
-    address_2nd_line = db.Column(db.String(50), nullable=True)
-    country = db.Column(db.String(50), nullable=True)
-    postal_code = db.Column(db.Integer, nullable=True)
-    fax = db.Column(db.Integer, nullable=True)
-    comment = db.Column(db.String(50), nullable=True)
+    country_code = db.Column(db.Integer)
+    phone = db.Column(db.Integer)
+    mobile = db.Column(db.Integer)
+    address_1st_line = db.Column(db.String(50))
+    address_2nd_line = db.Column(db.String(50))
+    country = db.Column(db.String(50))
+    postal_code = db.Column(db.Integer)
+    fax = db.Column(db.Integer)
+    comment = db.Column(db.String(50))
 
     # Relations
     nicknames = db.relationship('Nickname')
@@ -60,6 +61,7 @@ class Employee(db.Model):
 
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
+# TODO: into employee table
 
 ### FIXME: unicode problem in seed.py & model.py -> after, try seeding db
 class Nickname(db.Model):
@@ -70,14 +72,15 @@ class Nickname(db.Model):
     # one to one relationship to employee: OK for a ForeignKey as primary key
     # nickname_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     nickname_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
-    nickname = db.Column(db.Unicode(50), nullable=True)
-    k_name = db.Column(db.Unicode(50), nullable=True)
-    kanji_name = db.Column(db.Unicode(50), nullable=True)
+    nickname = db.Column(db.Unicode(50))
+    k_name = db.Column(db.Unicode(50))
+    kanji_name = db.Column(db.Unicode(50))
 
     employees = db.relationship('Employee')
 
     def __repr__(self):
         return "<Nickname nickname_id=%s>" %self.nickname_id
+# TODO: into employee table
 
 
 class Emergency_contact(db.Model):
@@ -86,15 +89,16 @@ class Emergency_contact(db.Model):
     __tablename__ = "emergency_contacts"
 
     emergency_conatact_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
-    emergency_name = db.Column(db.Unicode(50), nullable=True)
-    emergency_phone = db.Column(db.Integer, nullable=True)
-    emergency_comment = db.Column(db.String(100), nullable=True)
+    emergency_name = db.Column(db.Unicode(50))
+    emergency_phone = db.Column(db.Integer)
+    emergency_comment = db.Column(db.String(100))
 
     employees = db.relationship('Employee')
 
     def __repr__(self):
         return "<Emergency_contact emergency_conatact_id=%s>" %self.emergency_conatact_id
 
+# TODO: into employee table
 
 class K_contact(db.Model):
     """A table that saves contacts."""
@@ -102,16 +106,16 @@ class K_contact(db.Model):
     __tablename__ = "k_contacts"
 
     k_contact_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), primary_key=True)
-    k_country_code = db.Column(db.Integer, nullable=True)
-    k_phone = db.Column(db.Integer, nullable=True)
-    k_mobile = db.Column(db.Integer, nullable=True)
-    k_address_1st_line = db.Column(db.String(50), nullable=True)
-    k_address_2nd_line = db.Column(db.String(50), nullable=True)
-    k_country = db.Column(db.String(50), nullable=True)
-    k_postal_code = db.Column(db.Integer, nullable=True)
-    k_email = db.Column(db.String(50), nullable=True)
-    k_fax = db.Column(db.Integer, nullable=True)
-    k_comment = db.Column(db.Unicode(50), nullable=True)
+    k_country_code = db.Column(db.Integer)
+    k_phone = db.Column(db.Integer)
+    k_mobile = db.Column(db.Integer)
+    k_address_1st_line = db.Column(db.String(50))
+    k_address_2nd_line = db.Column(db.String(50))
+    k_country = db.Column(db.String(50))
+    k_postal_code = db.Column(db.Integer)
+    k_email = db.Column(db.String(50))
+    k_fax = db.Column(db.Integer)
+    k_comment = db.Column(db.Unicode(50))
 
     employees = db.relationship('Employee')
 
@@ -125,15 +129,15 @@ class Employee_department(db.Model):
     __tablename__ = "Employee_departments"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    job_description = db.Column(db.TEXT, nullable=True)
-    date_employeed = db.Column(db.DateTime, nullable=True)
-    date_departed = db.Column(db.DateTime, nullable=True)
-    office_email = db.Column(db.Unicode(50), nullable=True)
-    office_email_password = db.Column(db.Integer, nullable=True)
-    office_pc = db.Column(db.String(50), nullable=True)
-    office_pc_password = db.Column(db.String(50), nullable=True)
-    office_phone = db.Column(db.Integer, nullable=True)
-    office_comment = db.Column(db.String(50), nullable=True)
+    job_description = db.Column(db.TEXT)
+    date_employeed = db.Column(db.DateTime)
+    date_departed = db.Column(db.DateTime)
+    email = db.Column(db.Unicode(50))
+    email_password = db.Column(db.Integer)
+    pc = db.Column(db.String(50))
+    pc_password = db.Column(db.String(50))
+    phone = db.Column(db.Integer)
+    comment = db.Column(db.String(50))
 
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
     title_id = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
@@ -150,15 +154,14 @@ class Employee_department(db.Model):
     def __repr__(self):
         return "<Employee_department id=%s>" %self.id
 
-
 class Title(db.Model):
     """Offices around the globe."""
 
     __tablename__ = "titles"
 
     title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String(50), nullable=True)
-    k_title = db.Column(db.Unicode(50), nullable=True)
+    title = db.Column(db.String(50))
+    k_title = db.Column(db.Unicode(50))
 
     employee_departments = db.relationship('Employee_department')
     department_titles = db.relationship('Department_title')
@@ -190,7 +193,7 @@ class Department(db.Model):
     __tablename__ = "departments"
 
     department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    department_name = db.Column(db.String(50), nullable=True)
+    department_name = db.Column(db.String(50))
 
     department_titles = db.relationship('Department_title')
     office_departments = db.relationship('Office_department')
@@ -223,8 +226,8 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    company_name = db.Column(db.String(50), nullable=True)
-    shrot_name = db.Column(db.String(50), nullable=True)
+    company_name = db.Column(db.String(50))
+    shrot_name = db.Column(db.String(50))
 
     employee_departments = db.relationship('Employee_department')
     company_departments = db.relationship('Company_department')
@@ -256,16 +259,16 @@ class Office(db.Model):
     __tablename__ = "offices"
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    office_name = db.Column(db.String(50), nullable=True)
-    c_country_code = db.Column(db.Integer, nullable=True)
-    c_phone = db.Column(db.Integer, nullable=True)
-    c_mobile = db.Column(db.Integer, nullable=True)
-    c_address_1st_line = db.Column(db.String(50), nullable=True)
-    c_address_2nd_line = db.Column(db.String(50), nullable=True)
-    c_country = db.Column(db.String(50), nullable=True)
-    c_postal_code = db.Column(db.Integer, nullable=True)
-    c_fax = db.Column(db.Integer, nullable=True)
-    c_comment = db.Column(db.String(50), nullable=True)
+    office_name = db.Column(db.String(50))
+    c_country_code = db.Column(db.Integer)
+    c_phone = db.Column(db.Integer)
+    c_mobile = db.Column(db.Integer)
+    c_address_1st_line = db.Column(db.String(50))
+    c_address_2nd_line = db.Column(db.String(50))
+    c_country = db.Column(db.String(50))
+    c_postal_code = db.Column(db.Integer)
+    c_fax = db.Column(db.Integer)
+    c_comment = db.Column(db.String(50))
 
     office_departments = db.relationship('Office_department')
 
