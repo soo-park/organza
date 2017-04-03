@@ -12,10 +12,7 @@ import os
 
 # import employee related models
 from model import Employee
-from model import Nickname
-from model import Emergency_contact
-from model import K_contact
-from model import Employee_department
+from model import Employee_company
 
 # import company related models
 from model import Title

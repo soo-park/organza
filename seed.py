@@ -4,10 +4,7 @@ from sqlalchemy import func
 
 # import employee related models
 from model import Employee
-from model import Nickname
-from model import Emergency_contact
-from model import K_con tact
-from model import Employee_department
+from model import Employee_company
 
 # import company related models
 from model import Title
@@ -21,7 +18,6 @@ from model import Office
 from model import connect_to_db, db
 from server import app
 import datetime
-
 
 ### TODO: Build a function for importing Excel (below code imports one cell)
 # def import_Excel():
@@ -40,7 +36,6 @@ def purge_tables():
 
     # Delete all rows in employee related table in case some data's there
     Employee.query.delete()  
-    Nickname.query.delete()
     Emergency_contact.delete()
     K_contact.delete()
     Employee_department.delete()
@@ -55,22 +50,31 @@ def purge_tables():
     print 'Talbes purged.'
 
 
-# Load employees, nickname, emergency_contact, k_contact, department, 
+def open_file():
+    """FIXME: open as unicode"""
+
+    result = {}
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+
+    return result
+
+
 def load_employees():
     """Load employees from static/doc/employee.csv into database."""
 
+    # TODO: bring in open_file to do seeding
     # indicates the process
     print 'Employees seeding'
 
     file = open('static/doc/_employee_seed_sample.csv')
     for row in file:
         first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
         employee = Employee(
                             photo_URL=photo_URL,
                             birthday=birthday,
-                            personal_email=personal_email,        
-                            password=password,
+                            personal_email=personal_email,
                             first_name=first_name,
                             mid_name=mid_name,
                             last_name=last_name,
@@ -93,6 +97,9 @@ def load_employees():
         db.session.add(employee)
         db.session.commit()
 
+    file = open('static/doc/_employee_seed_sample.csv')
+    for row in file:
+        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
         employee_company = Employee_company(
                                             office_email=office_email,
                                             password=office_email_password,
@@ -109,12 +116,12 @@ def load_employees():
 
 def load_titles():
 
+    # TODO: bring in open_file to do seeding
     print 'title seeding'
 
     file = open('static/doc/_employee_seed_sample.csv')
     for row in file:
         first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
         title = title(
                       title=title,
                       k_title=k_title
@@ -127,6 +134,7 @@ def load_titles():
 
 def load_departments():
 
+    # TODO: bring in open_file to do seeding
     print 'department seeding'
 
     file = open('static/doc/_employee_seed_sample.csv')
@@ -146,6 +154,7 @@ def load_departments():
 
 def load_companies():
 
+    # TODO: bring in open_file to do seeding
     print 'company seeding'
 
     file = open('static/doc/_employee_seed_sample.csv')
@@ -154,7 +163,7 @@ def load_companies():
 
         company = company(
                           name=name,
-                          busniess_doing_as=busniess_doing_as,
+                          doing_business_as=doing_busniess_as,
                           abbreviation=abbreviation
                          )
         db.session.add(company)
@@ -165,6 +174,7 @@ def load_companies():
 
 def load_offices():
 
+    # TODO: bring in open_file to do seeding
     print 'office seeding'
 
     file = open('static/doc/_employee_seed_sample.csv')
