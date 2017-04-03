@@ -7,7 +7,8 @@
 <body>
     {% if session.get('logged_in') %}
         <form action="/logout" method="POST">
-        <button type="submit" value="Logout">Logout</button>
+            <button type="submit" value="Logout">Logout</button>
+        </form>
     {% else %}
         <form action="/login" method="POST">
           <input type="text" name="username" placeholder="Name"/>
