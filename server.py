@@ -80,6 +80,7 @@ def logging_test():
 #*# making session work with Flask2
 # must have session key along with the app.secret_key line above
 # must import request, session
+# TODO: query to check if the email is in DB
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
