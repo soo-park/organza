@@ -19,7 +19,15 @@
         </form>
     {% endif %}
 
-
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
   <!-- Whatever the actual content attatched by Jinja goes here -->
   {% block content %} put your content here {% endblock %}

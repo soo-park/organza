@@ -12,11 +12,11 @@ def load_employees():
 
     for i, row in enumerate(open("seed_data/u.employee")):
         row = row.rstrip()
-        (employee_id, photo_URL, birthday, personal_email,
+        (employee_id, photo_url, birthday, personal_email,
             first_name, last_name, k_name) = row.split("|")
 
         employee = Employee(employee_id=employee_id,
-                            photo_URL=photo_URL,
+                            photo_url=photo_url,
                             birthday=birthday,
                             personal_email=personal_email,
                             first_name=first_name,
@@ -101,18 +101,6 @@ def load_employee_companies():
     db.session.commit()
     print "employee_company seeding completed\n"
 
-def set_val_employee_id():
-    """Set value for the next employee_id after seeding database"""
-
-    # Get the Max employee_id in the database
-    result = db.session.query(func.max(Employee.employee_id)).one()
-    max_id = int(result[0])
-
-    # Set the value for the next employee_id to be max_id + 1
-    query = "SELECT setval('employees_employee_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
-    db.session.commit()
-
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -121,4 +109,3 @@ if __name__ == "__main__":
     load_employees()
     load_companies()
     load_employee_companies()
-    set_val_employee_id()

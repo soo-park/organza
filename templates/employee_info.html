@@ -1,25 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>{{ movie.title }}</h2>
-    {% if 'user' in session %}
-      <form action="/update_rating" method="POST">
-        Rating: <input type="number" name="rating">
-        <input type="hidden" name="movie_id" value="{{ movie.movie_id }}">
-        <input type="submit">
-      </form>
-    {% endif %}
-    <ul>
-      <li>Release date: {{ movie.released_at }}</li>
-      <li><a href="{{ movie.imdb_url }}">IMDB</a></li>
-      <li>Ratings:</li>
-      <ul>
-        {% for rating in movie.ratings %}
-          <li>
-            User ID #{{ rating.user.user_id }}: {{ rating.score }}
-          </li>
-        {% endfor %}
-      </ul>
-    </ul>
+  <ul>
+    <!-- TODO: have the field with no input be hidden -->
+    <li>Photo: {{ employee_info.photo_url }}</li>
+    <li>Name: {{ employee_info.first_name }} {{ employee_info.last_name }}</li>
+    <li>Korean name: {{ employee_info.k_name }}</li>
+    <li>Employee ID: {{ employee_info.employee_id }}</li>
+    <li>Birthday: {{ employee_info.birthday }}</li>
+    <li>Work email: {{ employee_company_info.office_email }}</li>
+    <li>Personal email: {{ employee_info.personal_email }}</li>
+  </ul>
+
+  
 
 {% endblock %}

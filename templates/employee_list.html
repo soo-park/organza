@@ -5,9 +5,9 @@
     <ul>
       {% for employee in employees %}
           <li>
-              <a href="/employee/{{ employees.employee_id }}">
-                {{ employee.name }}
-              </a>
+            <a href = '/employee/{{ employee.employee_id }}'>
+              {{ employee.first_name }} {{ employee.last_name }} 
+            </a>
           </li>
       {% endfor %}
     </ul>

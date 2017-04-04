@@ -21,11 +21,11 @@ from model import connect_to_db, db
 # Execute Flask object
 app = Flask(__name__)
 
-# when running the environment, the secret key file has to be sourced as well
+# "source secret.sh" to run flask server prior to "python server.py"
+# content of the sercret.sh: export secret_key="<your secret key>"
 app.secret_key = os.environ['secret_key']
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an error.
+# undefined variable in Jinja2, not fails silently but raises an error
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -34,20 +34,6 @@ def index():
     """Homepage."""
 
     return render_template('index.html')
-
-
-#*# receiving parameter in browser: string
-# receive user name value and print
-@app.route('/user/<username>')
-def show__profile(username):
-    return 'User %s' % username
-
-
-#*# receiving parameter in broweser: integer  
-# <int: post_id> enforces integer value input
-@app.route('/port/<int:post_id>')
-def show_post(post_id):
-    return 'Post %d' % post_id
 
 
 #*# logging
@@ -62,44 +48,35 @@ def logging_test():
 
 
 #*# making session work with Flask2
-# must have session key along with the app.secret_key line above
-# must import request, session
-# TODO: query to check if the email is in
+# have session key along with the app.secret_key line above, import request, session
 @app.route('/login', methods=['POST'])
 def login():
+    """Login user to the user specific information."""
+
     email = request.form.get('email')
     password = request.form.get('password')
-
     db_employees = Employee_company.query.filter_by(office_email=email).all()
 
-    db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
-    db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
-    db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
-    db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
-
-    print email, password, len(db_employees), db_employee_id, db_password, db_employee_id, db_password
-
     if len(db_employees)>1:
+        # TODO: deal with duplicate email issue
         flash("More than one user for the email found. Contact admin.")
-        return redirect("/login")
+        return redirect("/")
     elif len(db_employees) == 1:
-        db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
+        db_employee_id = db_employees[0].employee_id
         db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
-    else:
-        flash("No such user")
-        return redirect("/login")
 
-    if request.method == 'POST':
+        # TODO: change into AJAX for all pages to be able have login without redirect
         if (str(password) == str(db_password)):
             session['logged_in'] = True
             session['email'] = email
             session['password'] = password
-            return redirect('logged')
+            return redirect('/logged')
         else:
-            # TODO: change to JQuery
-            return 'Incorrect login information.'
+            flash('Password incorrect.')
+            return redirect('/')
     else:
-        return 'Incorrect method.'
+        flash("Email and/or password incorrect.")
+        return redirect("/") 
 
 
 @app.route('/logged')
@@ -116,12 +93,26 @@ def logout():
     return redirect('/')
  
 
-@app.route('/employee')
-def employee_list():
+@app.route('/employees')
+def list_employees():
     """Show list of employees."""
 
-    employees = employees.query.all()
+    employees = Employee.query.all()
+    print employees
     return render_template('employee_list.html', employees=employees)
+
+
+#*# receiving parameter in broweser: default <post_info> will be string  
+# <int: post_id> enforces integer value input to be an integer
+@app.route('/employee/<employee_id>')
+def show_employee(employee_id):
+    """Show an individual emp"""
+
+    employee_info = Employee.query.filter_by(employee_id=employee_id).first()
+    employee_company_info = Employee_company.query.filter_by(employee_id=employee_id).first()
+    
+    return render_template('employee_info.html', employee_info=employee_info,
+                                                 employee_company_info=employee_company_info)
 
 
 if __name__ == '__main__':

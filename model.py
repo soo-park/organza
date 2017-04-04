@@ -17,30 +17,21 @@ class Employee(db.Model):
 
     __tablename__ = "employees"
 
+    # TODO: add the extra info needed, especially the phone number with regX
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_URL = db.Column(db.String(100))
+    photo_url = db.Column(db.String(100))
     birthday = db.Column(db.DateTime)
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50))
     k_name = db.Column(db.Unicode(50))
 
-    # Relations
     employee_companies = db.relationship('Employee_company')
     
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
-
-
-    ### TODO: Build a function for importing Excel (below code imports one cell)
-    # def import_Excel():
-        # import openpyxl
-        # from openpyxl import load_workbook
-        # wb = load_workbook(filename = 'static/doc/employee.xlsx')
-        # sheet_ranges = wb['test'] #use the workbook tab name
-        # print(sheet_ranges['A2'].value)
 
 
 class Employee_company(db.Model):
