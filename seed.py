@@ -8,7 +8,7 @@ from server import app
 def load_employees():
     """Load employees from u.employee into database."""
 
-    print "employees"
+    print "\nemployees seeding"
 
     for i, row in enumerate(open("seed_data/u.employee")):
         row = row.rstrip()
@@ -21,23 +21,24 @@ def load_employees():
                             personal_email=personal_email,
                             first_name=first_name,
                             last_name=last_name,
-                            k_name=k_name)
+                            k_name=unicode(k_name))
 
         # We need to add to the session or it won't ever be stored
         db.session.add(employee)
 
         # provide some sense of progress
         if i % 100 == 0:
-            print i
+            print i, "left till completion."
 
     # Once we're done, we should commit our work
     db.session.commit()
+    print "employees seeding completed.\n"
 
 
-def load_companys():
-    """Load companys from u.item into database."""
+def load_companies():
+    """Load companies from u.item into database."""
 
-    print "companys"
+    print "companies"
 
     for i, row in enumerate(open("seed_data/u.company")):
         row = row.rstrip()
@@ -53,16 +54,17 @@ def load_companys():
 
         # provide some sense of progress
         if i % 100 == 0:
-            print i
+            print i, "left till completion."
 
     # Once we're done, we should commit our work
     db.session.commit()
+    print "companies seeding completed.\n"
 
 
-def load_employee_companys():
-    """Load employee_companys from u.data into database."""
+def load_employee_companies():
+    """Load employee_companies from u.data into database."""
 
-    print "employee_companys"
+    print "employee_companies"
 
     for i, row in enumerate(open("seed_data/u.data")):
         row = row.rstrip()
@@ -85,7 +87,7 @@ def load_employee_companys():
 
         # provide some sense of progress
         if i % 1000 == 0:
-            print i
+            print i, "left till completion."
 
             # An optimization: if we commit after every add, the database
             # will do a lot of work committing each record. However, if we
@@ -97,7 +99,7 @@ def load_employee_companys():
 
     # Once we're done, we should commit our work
     db.session.commit()
-
+    print "employee_company seeding completed\n"
 
 def set_val_employee_id():
     """Set value for the next employee_id after seeding database"""
@@ -117,6 +119,6 @@ if __name__ == "__main__":
     db.create_all()
 
     load_employees()
-    load_companys()
-    load_employee_companys()
+    load_companies()
+    load_employee_companies()
     set_val_employee_id()

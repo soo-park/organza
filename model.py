@@ -23,7 +23,7 @@ class Employee(db.Model):
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50))
-    k_name = db.Column(db.String(50))
+    k_name = db.Column(db.Unicode(50))
 
     # Relations
     employee_companies = db.relationship('Employee_company')
@@ -50,7 +50,7 @@ class Employee_company(db.Model):
 
     employee_company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_email = db.Column(db.String(50))
-    password = db.Column(db.Integer)
+    password = db.Column(db.String(50))
 
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
     company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))
