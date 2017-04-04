@@ -1,213 +1,122 @@
-"""Utility file to seed intranet database from initial data file in static/doc folder"""
-
+import datetime
 from sqlalchemy import func
 
-# import employee related models
-from model import Employee
-from model import Employee_company
-
-# import company related models
-from model import Title
-from model import Department_title
-from model import Department
-from model import Company_department
-from model import Company
-from model import Office_department
-from model import Office
-
-from model import connect_to_db, db
+from model import Employee, Employee_company, Company, connect_to_db, db
 from server import app
-import datetime
-
-
-def purge_tables():
-    """Purges existing data to prevent data overlap."""
-
-    # TODO: ask user if the user is sure to purge all data in intranet db
-    print 'Existing data on tables will be purged.'
-
-    # Delete all rows in employee related table in case some data's there
-    Employee_company.delete()
-    Department_title.delete()
-    Company_department.delete()
-    Office_department.delete()
-
-    # After middle table, delete the others
-    Employee.query.delete()  
-    Title.delete()
-    Department.delete()
-    Company.delete()
-    Office.delete()
-
-    # add to the session and commit the employee line
-    db.session.add(employee)
-    db.session.commit()
-
-    print 'Talbes purged.'
-
-# # TODO: finish separating data to seed
-# def open_file():
-#     """FIXME: open as unicode"""
-
-#     # list of dictionaries that has 
-#     # [employee1: {first_name, mid_name, last_name, personal_email}, 
-#     # employee2: {first_name, mid_name, last_name, personal_email} ... ]
-
-#     result = {}
-#     file = open('static/doc/_employee_seed_sample.csv')
-#     for row in file:
-#         first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
-#     return result
 
 
 def load_employees():
-    """Load employees from static/doc/employee.csv into database."""
+    """Load employees from u.employee into database."""
 
-    # TODO: bring in open_file to do seeding
-    # indicates the process
-    print 'Employees seeding'
+    print "employees"
 
-    file = open_file
-    open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-        employee = Employee(
+    for i, row in enumerate(open("seed_data/u.employee")):
+        row = row.rstrip()
+        (employee_id, photo_URL, birthday, personal_email,
+            first_name, last_name, k_name) = row.split("|")
+
+        employee = Employee(employee_id=employee_id,
                             photo_URL=photo_URL,
                             birthday=birthday,
                             personal_email=personal_email,
                             first_name=first_name,
-                            mid_name=mid_name,
                             last_name=last_name,
-                            nickname=nickname,
-        # # FIXME: test unicode save & import from csv, txt, excel
-                            k_name=k_name,
-                            kanji_name=kanji_name,
-                            phone=phone,
-                            mobile=mobile,
-                            address_line1=address_line1,
-                            address_line2=address_line2,
-                            city=city,
-                            country=country,
-                            postal_code=postal_code,
-                            emergency_name=emergency_name,
-                            emergency_phone=emergency_phone,
-                            )
+                            k_name=k_name)
 
-        # add to the session and commit the employee line
+        # We need to add to the session or it won't ever be stored
         db.session.add(employee)
-        db.session.commit()
 
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-        employee_company = Employee_company(
-                                            office_email=office_email,
-                                            password=office_email_password,
-                                            date_employeed=date_employeed,
-                                            date_departed=date_departed,
-                                            job_description=job_description,
-                                            office_phone=office_phone
-                                            )
-        db.session.add(employee_company)
-        db.session.commit()
+        # provide some sense of progress
+        if i % 100 == 0:
+            print i
 
-    print 'Employee seeding compeleted.'
+    # Once we're done, we should commit our work
+    db.session.commit()
 
 
-def load_titles():
+def load_companys():
+    """Load companys from u.item into database."""
 
-    # TODO: bring in open_file to do seeding
-    print 'title seeding'
+    print "companys"
 
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-        title = title(
-                      title=title,
-                      k_title=k_title
-                     )
-        db.session.add(title)
-        db.session.commit()
+    for i, row in enumerate(open("seed_data/u.company")):
+        row = row.rstrip()
 
-    print 'title seeding compeleted.'
+        # clever -- we can unpack part of the row!
+        company_id, name = row.split("|")
 
+        company = Company(company_id=company_id,
+                          name=name)
 
-def load_departments():
-
-    # TODO: bring in open_file to do seeding
-    print 'department seeding'
-
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
-        department = department(
-                                name=name
-                               )
-        db.session.add(department)
-        db.session.commit()
-
-    print 'department seeding compeleted.'
-
-# get all of the same title and add that to a relationship
-
-
-def load_companies():
-
-    # TODO: bring in open_file to do seeding
-    print 'company seeding'
-
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
-
-        company = company(
-                          name=name,
-                          doing_business_as=doing_busniess_as,
-                          abbreviation=abbreviation
-                         )
+        # We need to add to the session or it won't ever be stored
         db.session.add(company)
-        db.session.commit()
 
-    print 'company seeding compeleted.'
+        # provide some sense of progress
+        if i % 100 == 0:
+            print i
+
+    # Once we're done, we should commit our work
+    db.session.commit()
 
 
-def load_offices():
+def load_employee_companys():
+    """Load employee_companys from u.data into database."""
 
-    # TODO: bring in open_file to do seeding
-    print 'office seeding'
+    print "employee_companys"
 
-    file = open('static/doc/_employee_seed_sample.csv')
-    for row in file:
-        first_name, mid_name, last_name, personal_email = row.rstrip().split(',')
+    for i, row in enumerate(open("seed_data/u.data")):
+        row = row.rstrip()
 
-        office = office(
-                        name=name,
-                        phone=phone,
-                        address_line1=address_line1,
-                        address_line2=address_line2,
-                        city=city,
-                        country=country,
-                        postal_code=postal_code,
-                        fax=fax
-                       )
-        db.session.add(office)
-        db.session.commit()
+        (employee_company_id, office_email, password, 
+            employee_id, company_id) = row.split("|")
 
-    print 'office seeding compeleted.'
+        employee_company_id = int(employee_company_id)
+        employee_id = int(employee_id)
+        company_id = int(company_id)
+
+        # We don't care about the timestamp, so we'll ignore this
+
+        employee_company = Employee_company(employee_company_id=employee_company_id,
+         office_email=office_email, password=password, employee_id=employee_id,
+         company_id=company_id)
+
+        # We need to add to the session or it won't ever be stored
+        db.session.add(employee_company)
+
+        # provide some sense of progress
+        if i % 1000 == 0:
+            print i
+
+            # An optimization: if we commit after every add, the database
+            # will do a lot of work committing each record. However, if we
+            # wait until the end, on computers with smaller amounts of
+            # memory, it might thrash around. By committing every 1,000th
+            # add, we'll strike a good balance.
+
+            db.session.commit()
+
+    # Once we're done, we should commit our work
+    db.session.commit()
+
+
+def set_val_employee_id():
+    """Set value for the next employee_id after seeding database"""
+
+    # Get the Max employee_id in the database
+    result = db.session.query(func.max(Employee.employee_id)).one()
+    max_id = int(result[0])
+
+    # Set the value for the next employee_id to be max_id + 1
+    query = "SELECT setval('employees_employee_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
 
 
 if __name__ == "__main__":
     connect_to_db(app)
-
-    # In case tables haven't been created, create them
     db.create_all()
 
-    # Import different types of data
-    purge_tables()
-    # open_file()
-    load_titles()
-    load_departments()
-    load_companies()
-    load_offices()
+    load_employees()
+    load_companys()
+    load_employee_companys()
+    set_val_employee_id()

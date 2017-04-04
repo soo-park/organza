@@ -1,38 +1,22 @@
-"""department Ratings."""
+# -*- coding: utf-8 -*-
+# Line one is necessary to have utf-8 recognized
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 from jinja2 import StrictUndefined
-
 from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import Employee, connect_to_db
-
 import os
+import datetime
 
 # import employee related models
 from model import Employee
 from model import Employee_company
-
-# import company related models
-from model import Title
-from model import Department_title
-from model import Department
-from model import Company_department
 from model import Company
-from model import Office_department
-from model import Office
-
 from model import connect_to_db, db
-import datetime
-
-#*# the "#*#" marks is thanks to: 
-# https://www.slideshare.net/ssusercf5d12/ss-40104301
-#!/usr/bin/python
-# coding: utf-8 to prevent asian characters from breaking using Flask
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 # Execute Flask object
 app = Flask(__name__)
@@ -80,16 +64,39 @@ def logging_test():
 #*# making session work with Flask2
 # must have session key along with the app.secret_key line above
 # must import request, session
-# TODO: query to check if the email is in DB
+# TODO: query to check if the email is in
 @app.route('/login', methods=['POST'])
 def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    db_employees = Employee_company.query.filter_by(office_email=email).all()
+
+    db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
+    db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
+    db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
+    db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
+
+    print email, password, len(db_employees), db_employee_id, db_password, db_employee_id, db_password
+
+    if len(db_employees)>1:
+        flash("More than one user for the email found. Contact admin.")
+        return redirect("/login")
+    elif len(db_employees) == 1:
+        db_employee_id = Employee_company.query.filter_by(office_email=email).first().employee_id
+        db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
+    else:
+        flash("No such user")
+        return redirect("/login")
+
     if request.method == 'POST':
-        if (request.form['email'] == 'abc@abc.com'
-                and request.form['password'] == '1234'):
+        if (str(password) == str(db_password)):
             session['logged_in'] = True
-            session['email'] = request.form['email']
+            session['email'] = email
+            session['password'] = password
             return redirect('logged')
         else:
+            # TODO: change to JQuery
             return 'Incorrect login information.'
     else:
         return 'Incorrect method.'
@@ -98,21 +105,6 @@ def login():
 @app.route('/logged')
 def logged():
     return render_template('index.html')
-
-
-#*# Understanding get method 1
-# Due to security reasons, get method should not be used for logins
-# If get were to be used, the code would be as follows
-# @app.route('/get_test', methods=['GET'])
-# def get_test():
-#     if request.method == 'GET':
-#         if (request.args.get('email') == 'abc@abc.com'
-#                 and request.args.get('password') == '1234'):
-#             return 'Welcome ' + request.args.get('username') + '!'
-#         else:
-#             return 'Incorrect login information.'
-#     else:
-#         return 'Incorrect method'
 
 
 #*# Session log out
