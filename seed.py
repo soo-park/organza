@@ -13,15 +13,32 @@ def load_employees():
     for i, row in enumerate(open("seed_data/u.employee")):
         row = row.rstrip()
         (employee_id, photo_url, birthday, personal_email,
-            first_name, last_name, k_name) = row.split("|")
+            first_name, mid_name, last_name, nickname, k_name,
+            kanji_name, phone, mobile, address_line1,
+            address_line2, city, state, country,
+            postal_code, emergency_name, emergency_phone
+            ) = row.split("|")
 
         employee = Employee(employee_id=employee_id,
                             photo_url=photo_url,
                             birthday=birthday,
                             personal_email=personal_email,
                             first_name=first_name,
+                            mid_name=mid_name,
                             last_name=last_name,
-                            k_name=unicode(k_name))
+                            nickname=nickname,
+                            k_name=unicode(k_name),
+                            kanji_name=unicode(kanji_name),
+                            phone=phone,
+                            mobile=mobile,
+                            address_line1=address_line1,
+                            address_line2=address_line2,
+                            city=city,
+                            state=state,
+                            country=country,
+                            postal_code=postal_code,
+                            emergency_name=emergency_name,
+                            emergency_phone=emergency_phone)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(employee)

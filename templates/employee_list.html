@@ -69,8 +69,8 @@
           // since the entire thing in first par will be returned as one string, treat as one
           // $.get('/search_employees.json?first_name='+firstNameSearch, handleSearchResults);
           // multiple values can be passed to the server side as a dictionary
-          // "companySearch" : companySearch,
-          //                                  "departmentSearch" : departmentSearch,
+          // https://api.jquery.com/jquery.get/
+          // "companySearch" : companySearch, "departmentSearch" : departmentSearch,
           $.get('/search_employees.json', {
                                            "firstNameSearch" : firstNameSearch,
                                            "lastNameSearch" : lastNameSearch
