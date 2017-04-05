@@ -1,36 +1,50 @@
 <!doctype html>
-<html>
-<head>
-  <title>Employee Book</title>
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"> 
 
-<body>
-    {% if session.get('logged_in') %}
-        <form action="/logout" method="POST">
-            <button type="submit" value="Logout">Logout</button>
-        </form>
-    {% else %}
-        <form action="/login" method="POST">
-          <input type="text" name="email" placeholder="Email">
-          <!-- The characters in a password field are masked 
-          (shown as asterisks or circles). -->
-          <input type="password" name="password" placeholder="Password">
-          <button type="submit" value="Login">Login</button>
-        </form>
-    {% endif %}
+    <!-- Makes site mobile friendly through Bootstrap by setting width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Book</title>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <body>
+      {% if session.get('logged_in') %}
+          <form action="/logout" method="POST">
+              <button type="submit" value="Logout">Logout</button>
+          </form>
+      {% else %}
+          <form action="/login" method="POST">
+            <input type="text" name="email" placeholder="Email">
+            <!-- The characters in a password field are masked 
+            (shown as asterisks or circles). -->
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit" value="Login">Login</button>
+          </form>
       {% endif %}
-    {% endwith %}
 
-  <!-- Whatever the actual content attatched by Jinja goes here -->
-  {% block content %} put your content here {% endblock %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
 
-</body>
+    <!-- Whatever the actual content attatched by Jinja goes here -->
+    {% block content %} put your content here {% endblock %}
+
+  </body>
 </html>

@@ -110,9 +110,41 @@ def show_employee(employee_id):
 
     employee_info = Employee.query.filter_by(employee_id=employee_id).first()
     employee_company_info = Employee_company.query.filter_by(employee_id=employee_id).first()
-    
+
     return render_template('employee_info.html', employee_info=employee_info,
                                                  employee_company_info=employee_company_info)
+
+
+# a parameter was saved in DOM, so no need to get par in route
+@app.route('/search_employees.json')
+def search_employees():
+    """Search the query result for the right employees for criteria"""
+
+    result = {}
+    # request.args brings in the arguments that are passed in by AJAX
+    # form result dictionary with key-value-pair items in a list
+    # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
+    # this code will get what is in the dictionary passed in by AJAX
+    for item in request.args:
+        result[item] = request.args[item]
+
+    # query data by search criteria
+    if result['companySearch']:
+        print "company in search criteria"
+
+    if result['departmentSearch']:
+        print "department in search criteria"
+
+    if result['firstNameSearch']:
+        print "first name in search criteria"
+
+    if result['lastNameSearch']:
+        print "last name in search criteria"
+
+
+    # import pdb; pdb.set_trace()
+
+    return jsonify({'employees' : ['asdf','sdfg','fghj']})
 
 
 if __name__ == '__main__':

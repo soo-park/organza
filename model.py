@@ -20,6 +20,7 @@ class Employee(db.Model):
     # TODO: add the extra info needed, especially the phone number with regX
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     photo_url = db.Column(db.String(100))
+    # TODO: change datetime format to regX. currently 2012-05-03 00:00:00 
     birthday = db.Column(db.DateTime)
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50), nullable=False)

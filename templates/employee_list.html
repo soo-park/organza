@@ -2,6 +2,35 @@
 {% block content %}
 
     <h2>Employees</h2>
+
+    <div>
+      <form id='search'>
+        <!-- TODO: make the names of company and department come from DB -->
+        <!-- the input does not have any value assigned, because JQuery is getting result by id -->
+        <!-- style guide: because the names are in HTML space, use camel case with dash-->
+        <select name='company' id='company'>
+          <option disabled selected value> -- select -- </option>
+          <option value='ssa'>SSA</option>
+          <option value='statepipe'>State Pipe</option>
+          <option value='westcoast'>WestCoast</option>
+          <option value='panmeridian'>PanMeridian</option>
+          <option value='globalsteel'>Global Steel</option>
+        </select>
+
+        <select name='department' id='department'>
+          <option disabled selected value> -- select -- </option>
+          <option value='octg'>OCTG</option>
+          <option value='erw'>ERW</option>
+          <option value='line'>Line</option>
+          <option value='bar'>Bar</option>
+          <option value='stainless'>Stainless</option>
+        </select>
+        <input type='text' name='first-name' id='first-name' placeholder="First Name">
+        <input type='text' name='last-name' id='last-name' placeholder="Last Name">
+        <input type='submit'> 
+      </form>
+    </div>
+
     <ul>
       {% for employee in employees %}
           <li>
@@ -11,5 +40,49 @@
           </li>
       {% endfor %}
     </ul>
+
+    <script>
+      // anonimous function of AJAX to avoid a dirty name space 
+      $(function(){
+        // AJAX event handler to attach action onto a ID
+        $('#search').on('submit', function(evt){
+          // to stop going to the server side
+          evt.preventDefault();
+
+          // on browser option command j to keep the console open to have the debugger work
+          debugger; // debugger to check code step by step
+
+          // JQuery gets the submitted value by the id
+          // figure out what the user typed in
+          // not like regular JS the value is not value() but is val() in JQuery
+          var companySearch = $('#company').val();
+          var departmentSearch = $('#department').val();
+          var firstNameSearch = $('#first-name').val();
+          var lastNameSearch = $('#last-name').val();
+
+          // Ajax goes to the server side and make request
+          // style guide: make the route name to be .json to know you are getting JSON
+          // attach the arg in the string as a parameter or have it as a second parameter
+          // finished first option: concat and have function to run as second par
+          // since the entire thing in first par will be returned as one string, treat as one
+          // $.get('/search_employees.json?first_name='+firstNameSearch, handleSearchResults);
+          // multiple values can be passed to the server side as a dictionary
+          $.get('/search_employees.json', {"companySearch" : companySearch,
+                                           "departmentSearch" : departmentSearch,
+                                           "firstNameSearch" : firstNameSearch,
+                                           "lastNameSearch" : lastNameSearch
+                                          }).done(handleSearchResults);
+
+          function handleSearchResults(results){
+            // loop throught the results 
+            // json result 
+            // the old result of entire employee is living in the employee
+            // empty the div and replace it with the new one with search result
+
+          }
+
+        });
+      });
+    </script>
 
 {% endblock %}
