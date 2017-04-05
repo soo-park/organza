@@ -41,6 +41,7 @@ db = SQLAlchemy()
 
 
 ### TODO: Use regx to enforce formatting
+### TODO: check unicode/non unicode data types on server/model 
 class Employee(db.Model):
     """Employee of the group."""
 
