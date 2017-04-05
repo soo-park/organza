@@ -4,11 +4,40 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+""" Database model file
+
+* Data Model
+employee_company table connects Employee to Title and Company
+employee_company - Title  - Department_title - Department - Company_department - Company
+employee_company - Title  - Department_title - Department - Office_department - Office
+
+* General Naming Guide
+Table primary key name: tablename_id
+Middle/association table name: table1name_table2name
+Order: fields, foreign key (id) fields, relations, repr function
+
+* Construction
+Middle/association tables have foreign keys and relationships
+Other tables have relationships
+No back references were used
+
+"""
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 # Connection to the PostgreSQL database comes through the Flask-SQLAlchemy
 db = SQLAlchemy()
+
+
+### TODO: Use regx to enforce formatting
+    ### TODO: Build a function for importing Excel (below code imports one cell)
+    # def import_Excel():
+        # import openpyxl
+        # from openpyxl import load_workbook
+        # wb = load_workbook(filename = 'static/doc/employee.xlsx')
+        # sheet_ranges = wb['test'] #use the workbook tab name
+        # print(sheet_ranges['A2'].value)
 
 
 ### TODO: Use regx to enforce formatting
@@ -48,6 +77,77 @@ class Employee(db.Model):
         return "<Employee employee_id=%s first_name=%s>" %(self.employee_id, self.first_name)
 
 
+class Company(db.Model):
+    """All subsidiaries around the globe."""
+
+    __tablename__ = "companies"
+
+    company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+    dba = db.Column(db.String(50))
+    short_name = db.Column(db.String(50))
+
+    employee_companies = db.relationship('Employee_company')
+    company_departments = db.relationship('Company_department')
+
+    def __repr__(self):
+        return "<Company company_id=%s>" %self.company_id
+
+
+class Department(db.Model):
+    """Departments in companies"""
+
+    __tablename__ = "departments"
+
+    department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+
+    # department_titles = db.relationship('Department_title')
+    # office_departments = db.relationship('Office_department')
+    company_departments = db.relationship('Company_department')
+
+    def __repr__(self):
+        return "<Department department_id=%s>" %self.department_id
+
+
+class Title(db.Model):
+    """Offices around the globe."""
+
+    __tablename__ = "titles"
+
+    title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(50))
+    k_title = db.Column(db.Unicode(50))
+
+    employee_companies = db.relationship('Employee_company')
+    # department_titles = db.relationship('Department_title')
+
+    def __repr__(self):
+        return "<Title title_id=%s>" %self.title_id
+
+
+class Office(db.Model):
+    """Offices around the globe."""
+
+    __tablename__ = "offices"
+
+    office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+    phone = db.Column(db.Unicode(50))
+    address_line1 = db.Column(db.Unicode(50))
+    address_line2 = db.Column(db.Unicode(50))
+    city = db.Column(db.String(30))
+    state = db.Column(db.String(30))
+    country = db.Column(db.String(50))
+    postal_code = db.Column(db.String(50))
+    fax = db.Column(db.Unicode(50))
+
+    office_departments = db.relationship('Office_department')
+
+    def __repr__(self):
+        return "<Office office_id=%s>" %self.office_id
+
+
 class Employee_company(db.Model):
     """Middle table between employee, dept, office."""
 
@@ -56,29 +156,73 @@ class Employee_company(db.Model):
     employee_company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_email = db.Column(db.String(50))
     password = db.Column(db.String(50))
+    date_employeed = db.Column(db.DateTime)
+    date_departed = db.Column(db.DateTime)
+    job_description = db.Column(db.String(200))
+    office_phone = db.Column(db.Unicode(20))
 
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
     company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))
+    title_id = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
 
     employees = db.relationship('Employee')
     companies = db.relationship('Company')
+    titles = db.relationship('Title')
+
 
     def __repr__(self):
         return "<employee_company employee_company_id=%s>" %self.employee_company_id
 
 
-class Company(db.Model):
-    """All subsidiaries around the globe."""
+class Company_department(db.Model):
+    """Middle table between company and department."""
 
-    __tablename__ = "companies"
+    __tablename__ = "company_departments"
 
-    company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(50))
+    company_department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))    
 
-    employee_companies = db.relationship('Employee_company')
+    departments = db.relationship('Department')
+    companies = db.relationship('Company')
 
     def __repr__(self):
-        return "<Company company_id=%s>" %self.company_id
+        return "<Company_department id=%s>" %self.id
+
+
+class Department_title(db.Model):
+    """Middle table between department and title."""
+
+    __tablename__ = "department_titles"
+
+    department_title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+    title_id = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
+
+    titles = db.relationship('Title')
+    departments = db.relationship('Department')
+
+    def __repr__(self):
+        return "<Department_title id=%s>" %self.id
+
+
+class Office_department(db.Model):
+    """Middle table between office and department."""
+
+    __tablename__ = "office_departments"
+
+    office_department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
+    office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
+    
+    departments = db.relationship('Department')
+    offices = db.relationship('Office')
+
+    def __repr__(self):
+        return "<Office_department id=%s>" %self.id
 
 
 # Helper functions
