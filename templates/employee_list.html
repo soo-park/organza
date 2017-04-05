@@ -55,6 +55,8 @@
           // JQuery gets the submitted value by the id
           // figure out what the user typed in
           // not like regular JS the value is not value() but is val() in JQuery
+          // TODO: use regX to allow first_name, last_name, k_name and all combis
+          //       make name field to be only one field
           var companySearch = $('#company').val();
           var departmentSearch = $('#department').val();
           var firstNameSearch = $('#first-name').val();
@@ -67,8 +69,9 @@
           // since the entire thing in first par will be returned as one string, treat as one
           // $.get('/search_employees.json?first_name='+firstNameSearch, handleSearchResults);
           // multiple values can be passed to the server side as a dictionary
-          $.get('/search_employees.json', {"companySearch" : companySearch,
-                                           "departmentSearch" : departmentSearch,
+          // "companySearch" : companySearch,
+          //                                  "departmentSearch" : departmentSearch,
+          $.get('/search_employees.json', {
                                            "firstNameSearch" : firstNameSearch,
                                            "lastNameSearch" : lastNameSearch
                                           }).done(handleSearchResults);

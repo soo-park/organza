@@ -120,26 +120,47 @@ def show_employee(employee_id):
 def search_employees():
     """Search the query result for the right employees for criteria"""
 
-    result = {}
+    kwargs = {}
+    search_criteria = ''
     # request.args brings in the arguments that are passed in by AJAX
     # form result dictionary with key-value-pair items in a list
     # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
     # this code will get what is in the dictionary passed in by AJAX
     for item in request.args:
-        result[item] = request.args[item]
+        if request.args[item]:
+            kwargs[item] = request.args[item]
 
-    # query data by search criteria
-    if result['companySearch']:
-        print "company in search criteria"
+    print kwargs
 
-    if result['departmentSearch']:
-        print "department in search criteria"
+    # # query data by search criteria
+    # if ('companySearch' in kwargs) and (result['companySearch']):
+    #     print "company in search criteria"
+    #     kwargs['company_name'] = kwargs['companySearch']
+    #     kwargs.pop('companySearch')
 
-    if result['firstNameSearch']:
+    # if ('departmentSearch' in kwargs) and (result['departmentSearch']):
+    #     print "department in search criteria"
+    #     kwargs['department'] = kwargs['departmentSearch']
+    #     kwargs.pop('departmentSearch')
+
+    if ('firstNameSearch' in kwargs) and (kwargs['firstNameSearch']):
         print "first name in search criteria"
+        kwargs['first_name'] = kwargs['firstNameSearch']
+        kwargs.pop('firstNameSearch')
 
-    if result['lastNameSearch']:
+    if ('lastNameSearch' in kwargs) and (kwargs['lastNameSearch']):
         print "last name in search criteria"
+        kwargs['last_name'] = kwargs['lastNameSearch']
+        kwargs.pop('lastNameSearch')
+
+    # put whatever that is a search criteria to use as a filter in the query
+    # the criteria will need to be a string used in a query
+    # is it possible to use a criteria concatination as a string?
+
+    # # test
+    # search = 1
+    print Employee.query.filter_by(**kwargs).one()
+
 
 
     # import pdb; pdb.set_trace()
