@@ -30,14 +30,20 @@ from datetime import datetime
 db = SQLAlchemy()
 
 
-### TODO: Use regx to enforce formatting
-    ### TODO: Build a function for importing Excel (below code imports one cell)
-    # def import_Excel():
-        # import openpyxl
-        # from openpyxl import load_workbook
-        # wb = load_workbook(filename = 'static/doc/employee.xlsx')
-        # sheet_ranges = wb['test'] #use the workbook tab name
-        # print(sheet_ranges['A2'].value)
+## TODO: Use regx to enforce formatting
+    ## TODO: Build a function for importing Excel (below code imports one cell)
+# def import_Excel():
+#     """"""
+
+#     # # make route
+#     # # use function in route to call this function
+
+
+#     # import openpyxl
+#     # from openpyxl import load_workbook
+#     # wb = load_workbook(filename = 'static/doc/employee.xlsx')
+#     # sheet_ranges = wb['test'] #use the workbook tab name
+#     # print(sheet_ranges['A2'].value)
 
 
 ### TODO: Use regx to enforce formatting
@@ -84,8 +90,7 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(50))
-    dba = db.Column(db.String(50))
+    company_name = db.Column(db.String(50))
     short_name = db.Column(db.String(50))
 
     employee_companies = db.relationship('Employee_company')
@@ -101,7 +106,7 @@ class Department(db.Model):
     __tablename__ = "departments"
 
     department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(50))
+    department_name = db.Column(db.String(50))
 
     # department_titles = db.relationship('Department_title')
     # office_departments = db.relationship('Office_department')
@@ -133,7 +138,7 @@ class Office(db.Model):
     __tablename__ = "offices"
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(50))
+    office_name = db.Column(db.String(50))
     phone = db.Column(db.Unicode(50))
     address_line1 = db.Column(db.Unicode(50))
     address_line2 = db.Column(db.Unicode(50))

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Line one is necessary to have utf-8 recognized
+from query import *
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -8,15 +9,13 @@ from jinja2 import StrictUndefined
 from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session)
 from flask_debugtoolbar import DebugToolbarExtension
-
 import os
 import datetime
 
 # import employee related models
-from model import Employee
-from model import Employee_company
-from model import Company
-from model import connect_to_db, db
+from model import (Employee, Employee_company, Company, Department,Title,
+                   Office, Company_department, Department_title,
+                   Office_department, connect_to_db, db)
 
 # Execute Flask object
 app = Flask(__name__)
@@ -98,7 +97,6 @@ def list_employees():
     """Show list of employees."""
 
     employees = Employee.query.all()
-    print employees
     return render_template('employee_list.html', employees=employees)
 
 
@@ -120,52 +118,84 @@ def show_employee(employee_id):
 def search_employees():
     """Search the query result for the right employees for criteria"""
 
-    kwargs = {}
-    search_criteria = ''
     # request.args brings in the arguments that are passed in by AJAX
     # form result dictionary with key-value-pair items in a list
     # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
     # this code will get what is in the dictionary passed in by AJAX
+    kwargs = {}
+
     for item in request.args:
         if request.args[item]:
             kwargs[item] = request.args[item]
 
-    print kwargs
+    # depends on the argument received, the dictionary length will differ
+    # because there are multiple tables to join to do query AND
+    # the table name has to be combined into the query name OUTSIDE the HTML
+    # ('Company.company_name' is not accepted as an argument of kwargs)
+    # used funamental theorem of arithmetic to assign different cases to cases
+    rank = 1
 
-    # # query data by search criteria
-    # if ('companySearch' in kwargs) and (result['companySearch']):
-    #     print "company in search criteria"
-    #     kwargs['company_name'] = kwargs['companySearch']
-    #     kwargs.pop('companySearch')
+    if "company_name" in kwargs.keys():
+        rank*=2
+    if "department_name" in kwargs.keys():
+        rank*=3
+    if "first_name" in kwargs.keys():
+        rank*=5
+    if "last_name" in kwargs.keys():
+        rank*=7
 
-    # if ('departmentSearch' in kwargs) and (result['departmentSearch']):
-    #     print "department in search criteria"
-    #     kwargs['department'] = kwargs['departmentSearch']
-    #     kwargs.pop('departmentSearch')
+    queries= {
+             1 : search_no_criteria,
+             2 : search_by_company_name,
+             3 : search_by_department_name,
+             5 : search_by_first_name,
+             7 : search_by_last_name,
+             6 : search_by_company_name_department_name,
+             10 : search_by_company_name_first_name,
+             14 : search_by_company_name_last_name,
+             15 : search_by_department_name_first_name,
+             21 : search_by_department_name_last_name,
+             35 : search_by_first_name_last_name,
+             30 : search_by_company_name_department_name_first_name,
+             42 : search_by_company_name_department_name_last_name,
+             70 : search_by_company_name_first_name_last_name,
+             105 : search_by_department_name_first_name_last_name,
+             210 : search_by_all_four
+             }
 
-    if ('firstNameSearch' in kwargs) and (kwargs['firstNameSearch']):
-        print "first name in search criteria"
-        kwargs['first_name'] = kwargs['firstNameSearch']
-        kwargs.pop('firstNameSearch')
+    employee_queried = queries[rank](**kwargs)
+    employees = {}
 
-    if ('lastNameSearch' in kwargs) and (kwargs['lastNameSearch']):
-        print "last name in search criteria"
-        kwargs['last_name'] = kwargs['lastNameSearch']
-        kwargs.pop('lastNameSearch')
+    for employee in employee_queried:
+        employees[employee] = {''}
+        # I know I can iterate and make dic of data
+        # but is there a way to pass the object, so that the
+        # necessary calculation is done when needed?
 
-    # put whatever that is a search criteria to use as a filter in the query
-    # the criteria will need to be a string used in a query
-    # is it possible to use a criteria concatination as a string?
+        # also, how to "limit data" in login feature
+        # substitute with AJAX? or route to a compeletely dif page?
+        
 
-    # # test
-    # search = 1
-    print Employee.query.filter_by(**kwargs).one()
-
+    return jsonify(employees)
+    # # to display the employees wanted send the result to HTML
+    # # and wipe up / replace the div of DOM there using AJAX callback function
 
 
-    # import pdb; pdb.set_trace()
+@app.route('/employee_excel_loading', methods=['GET'])
+def employee_excel_loading():
+    """"""
 
-    return jsonify({'employees' : ['asdf','sdfg','fghj']})
+    return render_template('employee_excel.html')
+
+
+@app.route('/employee_excel', methods=['POST'])
+def employee_excel():
+    """"""
+
+    # the file object is in python space to be used
+    file = request.files['emp_xls']
+    print file
+    return ""
 
 
 if __name__ == '__main__':

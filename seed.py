@@ -11,6 +11,12 @@ from model import (Employee, Employee_company, Company, Department,
 from server import app
 
 # TODO: find a way to drop and create the table from SQLAlchemy
+def purge_db():
+    """Delete all data from the intranet and recreate"""
+
+    db.drop_all()
+    db.create_all()
+
 
 def load_employees():
     """Load employees from u.employee into database."""
@@ -64,11 +70,10 @@ def load_companies():
         row = row.rstrip()
 
         # clever -- we can unpack part of the row!
-        company_id, name, dba, short_name = row.split("|")
+        company_id, company_name, short_name = row.split("|")
 
         company = Company(company_id=company_id,
-                          name=name,
-                          dba=dba,
+                          company_name=company_name,
                           short_name=short_name)
 
         db.session.add(company)
@@ -83,10 +88,10 @@ def load_department():
     for i, row in enumerate(open("seed_data/u.department")):
         row = row.rstrip()
 
-        department_id, name = row.split("|")
+        department_id, department_name = row.split("|")
 
         department = Department(department_id=department_id,
-                                name=name
+                                department_name=department_name
                                 )
 
         db.session.add(department)
@@ -120,11 +125,11 @@ def load_office():
     for i, row in enumerate(open("seed_data/u.office")):
         row = row.rstrip()
 
-        (office_id, name, phone, address_line1, address_line2,
+        (office_id, office_name, phone, address_line1, address_line2,
         city, state, country, postal_code, fax) = row.split("|")
 
         office = Office(office_id=office_id,
-                        name=name,
+                        office_name=office_name,
                         phone=unicode(phone),
                         address_line1=unicode(address_line1), 
                         address_line2=unicode(address_line2),
@@ -142,16 +147,16 @@ def load_office():
 
 
 def load_employee_companies():
-    """Load employee_companies from u.data into database."""
+    """Load employee_companies from u.employee_company into database."""
 
     print "employee_companies"
 
-    for i, row in enumerate(open("seed_data/u.data")):
+    for i, row in enumerate(open("seed_data/u.employee_company")):
         row = row.rstrip()
 
         (employee_company_id, office_email, password, 
          date_employeed, date_departed, job_description,
-         office_phone, employee_id, company_id, 
+         office_phone, employee_id, company_id, title_id 
         ) = row.split("|")
 
         employee_company_id = int(employee_company_id)
@@ -166,7 +171,8 @@ def load_employee_companies():
                                             job_description=job_description,
                                             office_phone=unicode(office_phone), 
                                             employee_id=employee_id,
-                                            company_id=company_id
+                                            company_id=company_id,
+                                            title_id=title_id
                                             )
 
         db.session.add(employee_company)
@@ -244,8 +250,9 @@ def load_office_department():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    db.create_all()
 
+
+    purge_db()
     load_employees()
     load_companies()
     load_department()
