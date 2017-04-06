@@ -23,10 +23,6 @@ def search_no_criteria(**kwargs):
     return result
 
 
-# def search_by_name(**kwargs):
-#     pass
-#     raise NotImplementedError
-
 def search_by_company_name(**kwargs):
     result = (db.session.query(Employee)
                        .join(Employee_company)
@@ -251,3 +247,8 @@ def search_by_all_four(**kwargs):
                         .distinct()
                         .all())
     return result
+
+
+# def new_search_criteria(**kwargs):
+#     pass
+#     raise NotImplementedError
