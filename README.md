@@ -1,5 +1,6 @@
 A final project at HB to generate an employee roster web app
 
+# Tech used
 Back: Python, JavaScript, SQL
 Front: JavaScript, HTML, CSS
 
@@ -11,8 +12,10 @@ openpyxl, virtualenv
 Non-tech:
 Git, GitHub, Jira, Photoshop, Illustrator
 
+# Data model
+![Alt text](/static/img/model.jpg?raw=true "Optional Title")
 
-<<<How to see a test run of this site>>>
+# How to see a test run of this site
 
 1. Open your terminal
 
@@ -42,8 +45,8 @@ Reason: the model will be a base template for your db
 
 Command: python seed.py
 Reason: generate stating point for your db for testing
-# Caution1: this will delete the existing data from your db. If you want to "add" data, and not start a new, do not do this.
-# Caution2: if you have generated a database previously and want to eliminate all data, you have to "dropdb intranet" before you start all over from 1. This will delete all things in intranet db.
+Caution1: this will delete the existing data from your db. If you want to "add" data, and not start a new, do not do this.
+Caution2: if you have generated a database previously and want to eliminate all data, you have to "dropdb intranet" before you start all over from 1. This will delete all things in intranet db.
 
 7. Check if the db is loaded correctly
 
