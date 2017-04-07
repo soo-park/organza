@@ -1,5 +1,6 @@
 A final project at HB to generate an employee roster web app
 
+# Tech used
 Back: Python, JavaScript, SQL
 Front: JavaScript, HTML, CSS
 
@@ -11,10 +12,10 @@ openpyxl, virtualenv
 Non-tech:
 Git, GitHub, Jira, Photoshop, Illustrator
 
-Data model:
+# Data model
 ![Alt text](/static/img/model.jpg?raw=true "Optional Title")
 
-<<<How to see a test run of this site>>>
+# How to see a test run of this site
 
 1. Open your terminal
 
