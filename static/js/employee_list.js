@@ -48,9 +48,9 @@ $(function(){
       for(var employee in employees){
         for (var item in employee){console.log(item);}
         html_employees += ("<li>"
-                            + "<a href = '/employee/'" // FIXME: send it to @app.route('/employee/<employee_id>')
+                            + "<a href = '/employee/" // FIXME: send it to @app.route('/employee/<employee_id>')
                             + employee
-                            + ">"
+                            + "'>"
                             + employees[employee].first_name
                             + " "
                             + employees[employee].last_name
