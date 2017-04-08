@@ -42,12 +42,17 @@ $(function(){
       // loop inside the query object returned
         // create string that has HTML elements in it
         // the following syntax is sort of like for loop but AJAX
-
+      debugger;
       var html_employees = '';
       console.log(employees);
-      for(var i=0; i<Object.keys(employees).length; i++){
-        html_employees += ("<li><a href = '/employee/searched'></a>" + 
-                            +  + "</li>");
+      for(var employee in employees){
+        html_employees += ("<li>"
+                            + "<a href = '/employee/'" // FIXME: send it to @app.route('/employee/<employee_id>')
+                            + employee
+                            + ">"
+                            + employee // FIXME: Change the list to name
+                            + "</a>"
+                            + "</li>");
       };
       $('#active_search_result').append('<ul>'+ html_employees + '</ul>');
     };

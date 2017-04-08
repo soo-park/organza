@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>Movies</h2>
+    <h2>Employees</h2>
     <ul>
-      {% for movie in movies %}
+      {% for employee in employees %}
           <li>
-              <a href="/movie/{{ movie.movie_id }}">
-                {{ movie.title }}
+              <a href="/employee/{{ employee.employee_id }}">
+                {{ employee.title }}
               </a>
           </li>
       {% endfor %}
