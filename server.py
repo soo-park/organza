@@ -116,11 +116,11 @@ def show_employee(employee_id):
                                                  employee_company_info=employee_company_info)
 
 
-# a parameter was saved in DOM, so no need to get par in route
 @app.route('/search_employees.json')
 def search_employees():
     """Search the query result for the right employees for criteria"""
 
+    # a parameter was saved in DOM, so no need to get par in route
     # request.args brings in the arguments that are passed in by AJAX
     # form result dictionary with key-value-pair items in a list
     # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
@@ -130,6 +130,8 @@ def search_employees():
         if request.args[item]:
             kwargs[item] = request.args[item]
     queried_employees = query_selector(kwargs)
+
+    result = {}
 
     # iterate through the employees to add them one by one to the map format
     for employee in queried_employees:
@@ -141,72 +143,29 @@ def search_employees():
         # # To get something from the joined tables, you have to write the names
         # # Below code will bring the name of the first company the person is working
         # print employee.employee_companies[0].companies.company_name
+        
+        # TODO: iterate through employee_companies to save the company/dep/title of each one
+        # Below code will bring all the iter items from the first company and make a dictionary out of it
         companies_tables = employee.employee_companies[0].companies
         companies_attributes = get_map_from_sqlalchemy(companies_tables)
-        print companies_attributes, 'END OF COMPANIES\n'
-
+        
         departments_tables = companies_tables.company_departments[0].departments
         departments_attributes = get_map_from_sqlalchemy(departments_tables)
-        print departments_attributes, 'END OF DEPARTMENTS\n'
         
         titles_tables = employee.employee_companies[0].titles
         titles_attributes = get_map_from_sqlalchemy(titles_tables)
-        print titles_attributes, 'END OF TITLES\n'
+
+        # if to pass as one dictionary, the following will combine the three dictionaries
+        attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
+        attr_all_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
+
+        # now we add the employee dictionary to the result dictionary
+        # print attr_all_added, '\n\n\n\n'
+        result[employee.employee_id] = attr_all_added
 
 
-    # employees = {'employee_id': employee.employee_id,
-    #              'photo_url': employee.photo_url,
-    #              'birthday': employee.birthday,
-    #              'personal_email': employee.personal_email,
-    #              'first_name': employee.first_name,
-    #              'mid_name': employee.mid_name,
-    #              'last_name': employee.last_name,
-    #              'nickname': employee.nickname,
-    #              'k_name': employee.k_name,
-    #              'kanji_name': employee.kanji_name,
-    #              'phone': employee.phone,
-    #              'mobile': employee.mobile,
-    #              'address_line1': employee.address_line1,
-    #              'address_line2': employee.address_line2,
-    #              'city': employee.city,
-    #              'state': employee.state,
-    #              'country': employee.country,
-    #              'postal_code': employee.postal_code,
-    #              'emergency_name': employee.emergency_name,
-    #              'emergency_phone': employee.emergency_phone,
-                 # 'company_id': employee.company_id,
-                 # 'company_name': employee.employee_companies[0].companies.company_name,
-                 # 'short_name': employee.short_name,
-                 # 'department_id': employee.department_id,
-                 # 'department_name': employee.department_name,
-                 # 'title_id': employee.title_id,
-                 # 'title': employee.title,
-                 # 'k_title': employee.k_title,
-                 # 'office_id': employee.office_id,
-                 # 'office_name': employee.office_name,
-                 # 'phone': employee.phone,
-                 # 'address_line1': employee.address_line1,
-                 # 'address_line2': employee.address_line2,
-                 # 'city': employee.city,
-                 # 'state': employee.state,
-                 # 'country': employee.country,
-                 # 'postal_code': employee.postal_code,
-                 # 'fax': employee.fax,
-                 # 'employee_company_id': employee.employee_company_id,
-                 # 'office_email': employee.office_email,
-                 # 'password': employee.password,
-                 # 'date_employeed': employee.date_employeed,
-                 # 'date_departed': employee.date_departed,
-                 # 'job_description': employee.job_description,
-                 # 'office_phone': employee.office_phone,
-                 # 'company_department_id': employee.company_department_id,
-                 # 'department_title_id': employee.department_title_id,
-                 # 'office_department_id': employee.office_department_id
-              # }
-    print employees
-    return jsonify(employees)
-    # # # to display the employees wanted send the result to HTML
-    # # # and wipe up / replace the div of DOM there using AJAX callback function
+    print result
+    return jsonify(result)
 
 
 @app.route('/employee_excel_loading', methods=['GET'])

@@ -30,22 +30,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 
-## TODO: Use regx to enforce formatting
-    ## TODO: Build a function for importing Excel (below code imports one cell)
-# def import_Excel():
-#     """"""
-
-#     # # make route
-#     # # use function in route to call this function
-
-
-#     # import openpyxl
-#     # from openpyxl import load_workbook
-#     # wb = load_workbook(filename = 'static/doc/employee.xlsx')
-#     # sheet_ranges = wb['test'] #use the workbook tab name
-#     # print(sheet_ranges['A2'].value)
-
-
 ### TODO: Use regx to enforce formatting
 ### TODO: check unicode/non unicode data types on server/model 
 class Employee(db.Model):

@@ -27,6 +27,22 @@ def import_Excel():
     print(sheet_ranges['A2'].value)
 
 
+## TODO: Use regx to enforce formatting
+    ## TODO: Build a function for importing Excel (below code imports one cell)
+# def import_Excel():
+#     """"""
+
+#     # # make route
+#     # # use function in route to call this function
+
+
+#     # import openpyxl
+#     # from openpyxl import load_workbook
+#     # wb = load_workbook(filename = 'static/doc/employee.xlsx')
+#     # sheet_ranges = wb['test'] #use the workbook tab name
+#     # print(sheet_ranges['A2'].value)
+
+
 def set_val_employee_id():
     """Set value for the next employee_id after seeding database"""
 
@@ -49,22 +65,32 @@ if __name__ == "__main__":
 
 
 def get_map_from_sqlalchemy(a_object):
+    """A SQLAlchemy utility to make a dictionary out of an object"""
 
+    # this can be done at the front-end side using node.js and JS
+    # if the programming was done at the front-end
+    from sqlalchemy import inspect
+
+    # A variable assigned to the SQLAlchemy object inspection
+    inst = inspect(a_object)
+
+    # this makes the result a map of all items in SQLAlchemy object
+    obj_dic = inst.dict
+
+    # A code to list all the attributes usable for the object
+    attr_names = [c_attr.key for c_attr in inst.mapper.column_attrs]
+
+    # To eliminate the object nodes and other magic nodes, each key gets
+    # compared to the list of keys
     result = {}
+    for item in obj_dic:
+        if item in attr_names:
+            result[item] = obj_dic[item]
+        else:
+            pass
 
-    # # this can be done at the front-end side using node.js and JS
-    # # if the programming was done at the front-end
-    # from sqlalchemy import inspect
-    print a_object
-    # for a_object in objects:
+    return result
 
-    #     # A code to let you see all the attributes usable for the item
-    #     print "\nObject", a_object
-    #     inst = inspect(a_object)
-    #     attr_names = [c_attr.key for c_attr in inst.mapper.column_attrs]
-        
-    #     for i in attr_names:
-    #         result[i] = "testing"
 
-    return a_object
+
 
