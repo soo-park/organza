@@ -84,6 +84,9 @@ def login():
 @app.route('/logged')
 def logged():
     return render_template('index.html')
+    # TODO: add a "status" into model, and assign default='user'
+    # TODO: generate non default status of admin
+    # TODO: have certain qualities AJAXed into DOM if admin
 
 
 #*# Session log out
@@ -109,6 +112,8 @@ def list_employees():
 def show_employee(employee_id):
     """Show an individual emp"""
 
+    # TODO: find a way to refactor active search result not to re-query for individual data page
+    # TODO: Have this pass all the qualities already combined/assembled
     employee_info = Employee.query.filter_by(employee_id=employee_id).first()
     employee_company_info = Employee_company.query.filter_by(employee_id=employee_id).first()
 
@@ -136,12 +141,10 @@ def search_employees():
     # iterate through the employees to add them one by one to the map format
     for employee in queried_employees:
 
-
         # # To get something from the joined tables, you have to write the names
         # # Below code will bring the name of the first company the person is working
         # print employee.employee_companies[0].companies.company_name
         
-        # TODO: iterate through employee_companies to save the company/dep/title of each one
         # Below code will bring all the iter items from the first company and make a dictionary out of it
         # Here the attributes of the employees from each tables are retrieved 
         employees_tables = employee
@@ -156,7 +159,9 @@ def search_employees():
         titles_tables = employee.employee_companies[0].titles
         titles_attributes = get_map_from_sqlalchemy(titles_tables)
 
-        # if to pass as one dictionary, the following will combine the three dictionaries
+        # if to pass as one dictionary, the following will combine the for dictionaries
+        # TODO: make lists of things to be combined, and for loop them
+        # TODO: refactor separate display module from server into utilities.py
         attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
         attr_three_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
         attr_all_added =  dict(list(attr_three_added.items()) + list(employees_attributes.items()))
@@ -164,7 +169,6 @@ def search_employees():
         # now we add the employee dictionary to the result dictionary
         # print attr_all_added, '\n\n\n\n'
         result[employee.employee_id] = attr_all_added
-
 
     print result
     return jsonify(result)
