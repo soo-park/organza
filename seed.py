@@ -10,7 +10,8 @@ from model import (Employee, Employee_company, Company, Department,
                    Office_department, connect_to_db, db)
 from server import app
 
-# TODO: find a way to drop and create the table from SQLAlchemy
+# TODO: put seed.py into seed_data folder and test the code
+
 def purge_db():
     """Delete all data from the intranet and recreate"""
 
