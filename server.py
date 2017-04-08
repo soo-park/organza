@@ -136,9 +136,6 @@ def search_employees():
     # iterate through the employees to add them one by one to the map format
     for employee in queried_employees:
 
-        # Here the attributes of the employees from each tables are retrieved 
-        employees_tables = employee
-        employees_attributes = get_map_from_sqlalchemy(employee)
 
         # # To get something from the joined tables, you have to write the names
         # # Below code will bring the name of the first company the person is working
@@ -146,6 +143,10 @@ def search_employees():
         
         # TODO: iterate through employee_companies to save the company/dep/title of each one
         # Below code will bring all the iter items from the first company and make a dictionary out of it
+        # Here the attributes of the employees from each tables are retrieved 
+        employees_tables = employee
+        employees_attributes = get_map_from_sqlalchemy(employee)
+
         companies_tables = employee.employee_companies[0].companies
         companies_attributes = get_map_from_sqlalchemy(companies_tables)
         
@@ -157,7 +158,8 @@ def search_employees():
 
         # if to pass as one dictionary, the following will combine the three dictionaries
         attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
-        attr_all_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
+        attr_three_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
+        attr_all_added =  dict(list(attr_three_added.items()) + list(employees_attributes.items()))
 
         # now we add the employee dictionary to the result dictionary
         # print attr_all_added, '\n\n\n\n'
