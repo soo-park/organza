@@ -46,7 +46,8 @@ $(function(){
       var html_employees = '';
       console.log(employees);
       for(var i=0; i<Object.keys(employees).length; i++){
-        html_employees += ("<li><a href = '/employee/searched'></a></li>");
+        html_employees += ("<li><a href = '/employee/searched'></a>" + 
+                            +  + "</li>");
       };
       $('#active_search_result').append('<ul>'+ html_employees + '</ul>');
     };

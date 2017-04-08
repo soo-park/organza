@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Line one is necessary to have utf-8 recognized
-from query import *
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -16,9 +15,13 @@ import datetime
 from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
+from employee_query import *
+from utilities import *
+
 
 # Execute Flask object
 app = Flask(__name__)
+
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -123,114 +126,83 @@ def search_employees():
     # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
     # this code will get what is in the dictionary passed in by AJAX
     kwargs = {}
-
     for item in request.args:
         if request.args[item]:
             kwargs[item] = request.args[item]
+    queried_employees = query_selector(kwargs)
 
-    # depends on the argument received, the dictionary length will differ
-    # because there are multiple tables to join to do query AND
-    # the table name has to be combined into the query name OUTSIDE the HTML
-    # ('Company.company_name' is not accepted as an argument of kwargs)
-    # used funamental theorem of arithmetic to assign different cases to cases
-    rank = 1
-
-    if "company_name" in kwargs.keys():
-        rank*=2
-    if "department_name" in kwargs.keys():
-        rank*=3
-    if "first_name" in kwargs.keys():
-        rank*=5
-    if "last_name" in kwargs.keys():
-        rank*=7
-
-    queries= {
-             1 : search_no_criteria,
-             2 : search_by_company_name,
-             3 : search_by_department_name,
-             5 : search_by_first_name,
-             7 : search_by_last_name,
-             6 : search_by_company_name_department_name,
-             10 : search_by_company_name_first_name,
-             14 : search_by_company_name_last_name,
-             15 : search_by_department_name_first_name,
-             21 : search_by_department_name_last_name,
-             35 : search_by_first_name_last_name,
-             30 : search_by_company_name_department_name_first_name,
-             42 : search_by_company_name_department_name_last_name,
-             70 : search_by_company_name_first_name_last_name,
-             105 : search_by_department_name_first_name_last_name,
-             210 : search_by_all_four
-             }
-
-    # returns list of query objects
-    queried_employees = queries[rank](**kwargs)
-    # print queried_employees
-
-    employees = []
-
-    # this can be done at the front-end side using node.js and JS
-    # if the programming was done at the front-end
-
-    from sqlalchemy import inspect
-
+    # iterate through the employees to add them one by one to the map format
     for employee in queried_employees:
-        print "\n\n\n\n\n"
-        print employee.employee_id, employee.departments.department_id
 
-        inst = inspect(employee)
-        attr_names = [c_attr.key for c_attr in inst.mapper.column_attrs]
-        print attr_names
+        # Here the attributes of the employees from each tables are retrieved 
+        employees_tables = employee
+        employees_attributes = get_map_from_sqlalchemy(employee)
 
-        employees[employee.employee_id] = {'employee_id': employee.employee_id,
-                                           'photo_url': employee.photo_url,
-                                           'birthday': employee.birthday,
-                                           'personal_email': employee.personal_email,
-                                           'first_name': employee.first_name,
-                                           'mid_name': employee.mid_name,
-                                           'last_name': employee.last_name,
-                                           'nickname': employee.nickname,
-                                           'k_name': employee.k_name,
-                                           'kanji_name': employee.kanji_name,
-                                           'phone': employee.phone,
-                                           'mobile': employee.mobile,
-                                           'address_line1': employee.address_line1,
-                                           'address_line2': employee.address_line2,
-                                           'city': employee.city,
-                                           'state': employee.state,
-                                           'country': employee.country,
-                                           'postal_code': employee.postal_code,
-                                           'emergency_name': employee.emergency_name,
-                                           'emergency_phone': employee.emergency_phone,
-                                           # 'company_id': employee.company_id,
-                                           # 'company_name': employee.company_name,
-                                           # 'short_name': employee.short_name,
-                                           # 'department_id': employee.department_id,
-                                           # 'department_name': employee.department_name,
-                                           # 'title_id': employee.title_id,
-                                           # 'title': employee.title,
-                                           # 'k_title': employee.k_title,
-                                           # 'office_id': employee.office_id,
-                                           # 'office_name': employee.office_name,
-                                           # 'phone': employee.phone,
-                                           # 'address_line1': employee.address_line1,
-                                           # 'address_line2': employee.address_line2,
-                                           # 'city': employee.city,
-                                           # 'state': employee.state,
-                                           # 'country': employee.country,
-                                           # 'postal_code': employee.postal_code,
-                                           # 'fax': employee.fax,
-                                           # 'employee_company_id': employee.employee_company_id,
-                                           # 'office_email': employee.office_email,
-                                           # 'password': employee.password,
-                                           # 'date_employeed': employee.date_employeed,
-                                           # 'date_departed': employee.date_departed,
-                                           # 'job_description': employee.job_description,
-                                           # 'office_phone': employee.office_phone,
-                                           # 'company_department_id': employee.company_department_id,
-                                           # 'department_title_id': employee.department_title_id,
-                                           # 'office_department_id': employee.office_department_id
-                                          }
+        # # To get something from the joined tables, you have to write the names
+        # # Below code will bring the name of the first company the person is working
+        # print employee.employee_companies[0].companies.company_name
+        companies_tables = employee.employee_companies[0].companies
+        companies_attributes = get_map_from_sqlalchemy(companies_tables)
+        print companies_attributes, 'END OF COMPANIES\n'
+
+        departments_tables = companies_tables.company_departments[0].departments
+        departments_attributes = get_map_from_sqlalchemy(departments_tables)
+        print departments_attributes, 'END OF DEPARTMENTS\n'
+        
+        titles_tables = employee.employee_companies[0].titles
+        titles_attributes = get_map_from_sqlalchemy(titles_tables)
+        print titles_attributes, 'END OF TITLES\n'
+
+
+    # employees = {'employee_id': employee.employee_id,
+    #              'photo_url': employee.photo_url,
+    #              'birthday': employee.birthday,
+    #              'personal_email': employee.personal_email,
+    #              'first_name': employee.first_name,
+    #              'mid_name': employee.mid_name,
+    #              'last_name': employee.last_name,
+    #              'nickname': employee.nickname,
+    #              'k_name': employee.k_name,
+    #              'kanji_name': employee.kanji_name,
+    #              'phone': employee.phone,
+    #              'mobile': employee.mobile,
+    #              'address_line1': employee.address_line1,
+    #              'address_line2': employee.address_line2,
+    #              'city': employee.city,
+    #              'state': employee.state,
+    #              'country': employee.country,
+    #              'postal_code': employee.postal_code,
+    #              'emergency_name': employee.emergency_name,
+    #              'emergency_phone': employee.emergency_phone,
+                 # 'company_id': employee.company_id,
+                 # 'company_name': employee.employee_companies[0].companies.company_name,
+                 # 'short_name': employee.short_name,
+                 # 'department_id': employee.department_id,
+                 # 'department_name': employee.department_name,
+                 # 'title_id': employee.title_id,
+                 # 'title': employee.title,
+                 # 'k_title': employee.k_title,
+                 # 'office_id': employee.office_id,
+                 # 'office_name': employee.office_name,
+                 # 'phone': employee.phone,
+                 # 'address_line1': employee.address_line1,
+                 # 'address_line2': employee.address_line2,
+                 # 'city': employee.city,
+                 # 'state': employee.state,
+                 # 'country': employee.country,
+                 # 'postal_code': employee.postal_code,
+                 # 'fax': employee.fax,
+                 # 'employee_company_id': employee.employee_company_id,
+                 # 'office_email': employee.office_email,
+                 # 'password': employee.password,
+                 # 'date_employeed': employee.date_employeed,
+                 # 'date_departed': employee.date_departed,
+                 # 'job_description': employee.job_description,
+                 # 'office_phone': employee.office_phone,
+                 # 'company_department_id': employee.company_department_id,
+                 # 'department_title_id': employee.department_title_id,
+                 # 'office_department_id': employee.office_department_id
+              # }
     print employees
     return jsonify(employees)
     # # # to display the employees wanted send the result to HTML

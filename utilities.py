@@ -46,3 +46,25 @@ if __name__ == "__main__":
 
     import_Excel()
     set_val_employee_id()
+
+
+def get_map_from_sqlalchemy(a_object):
+
+    result = {}
+
+    # # this can be done at the front-end side using node.js and JS
+    # # if the programming was done at the front-end
+    # from sqlalchemy import inspect
+    print a_object
+    # for a_object in objects:
+
+    #     # A code to let you see all the attributes usable for the item
+    #     print "\nObject", a_object
+    #     inst = inspect(a_object)
+    #     attr_names = [c_attr.key for c_attr in inst.mapper.column_attrs]
+        
+    #     for i in attr_names:
+    #         result[i] = "testing"
+
+    return a_object
+
