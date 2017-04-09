@@ -9,7 +9,6 @@ from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session)
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy import func
-from server import app
 
 import os
 import datetime

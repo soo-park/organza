@@ -16,7 +16,7 @@ from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import *
+from utilities import get_map_from_sqlalchemy
 
 
 # Execute Flask object

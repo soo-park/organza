@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# Line one is necessary to have utf-8 recognized
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 """ Database model file
 
 * Data Model
@@ -22,7 +16,6 @@ Other tables have relationships
 No back references were used
 
 """
-
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
