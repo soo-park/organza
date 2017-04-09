@@ -42,7 +42,6 @@ $(function(){
       // Loop inside the query object returned, create name list HTML
       var html_employees = '';
       for(var employee in employees){
-        for (var item in employee){console.log(item);}
         html_employees += ("<li><a href = '/employee/"
                             + employee
                             + "'>"

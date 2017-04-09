@@ -83,10 +83,12 @@ def login():
 
 @app.route('/logged')
 def logged():
-    return render_template('index.html')
+    """"""
+
     # TODO: add a "status" into model, and assign default='user'
     # TODO: generate non default status of admin
     # TODO: have certain qualities AJAXed into DOM if admin
+    return render_template('index.html')
 
 
 #*# Session log out
@@ -150,6 +152,8 @@ def search_employees():
         employees_tables = employee
         employees_attributes = get_map_from_sqlalchemy(employee)
 
+        # TODO: make it possible for the employee info to contain
+        # all companies the person is working for by iterating 0
         companies_tables = employee.employee_companies[0].companies
         companies_attributes = get_map_from_sqlalchemy(companies_tables)
         

@@ -19,12 +19,12 @@ from model import Employee, Employee_company, Company, connect_to_db, db
 
 
 ## TODO: Build a function for importing Excel (below code imports one cell)
-def import_Excel():
-    import openpyxl
-    from openpyxl import load_workbook
-    wb = load_workbook(filename = 'static/doc/employee.xlsx')
-    sheet_ranges = wb['test'] #use the workbook tab name
-    print(sheet_ranges['A2'].value)
+# def import_Excel():
+#     import openpyxl
+#     from openpyxl import load_workbook
+#     wb = load_workbook(filename = 'static/doc/employee.xlsx')
+#     sheet_ranges = wb['test'] #use the workbook tab name
+#     print(sheet_ranges['A2'].value)
 
 
 ## TODO: Use regx to enforce formatting

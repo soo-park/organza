@@ -1,11 +1,8 @@
 env/
 backlog/
-test/
 *.pyc
 .DS_Store
 *secret*.sh
 *backlog.*
 ~$*
 *.xlsx
-*test*
-*test*/
