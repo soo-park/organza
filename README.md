@@ -3,14 +3,13 @@ A final project at HB to generate an employee roster web app
 ### Languages
 Python, JavaScript, SQL, HTML, CSS
 
-### Technology
-Flask, PostgreSQL, SQLAlchemy
-Jinja, JQuery, AJAX, Angular
-openpyxl, virtualenv
+### Technologies
+Flask, PostgreSQL, SQLAlchemy, JQuery, AJAX, Jinja
+Angular, Bootstrap, openpyxl, virtualenv
 
 ### Industry
-Git, GitHub, Jira
-Photoshop, Illustrator
+Git, GitHub, Jira, Photoshop, Illustrator
+Ponyorm online editor, Balsamiq Mockups3
 
 ## Data model
 ![Alt text](/static/img/model.jpg?raw=true "Optional Title")
@@ -81,4 +80,3 @@ Reason: Because your server is running, you can see the site
 
 ### Employee information
 ![Alt text](/production_screen_shots/employees1_employee_info.png?raw=true "Optional Title")
-
