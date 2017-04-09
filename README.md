@@ -64,3 +64,12 @@ Reason: have your server running, so that what you interact with server-client w
 Command: localhost:5000 on your browser address bar
 Reason: Because your server is running, you can see the site
 
+
+# Production Screen Shots
+
+![Alt text](/production_screen_shots/localhost5000.png?raw=true "Optional Title")
+![Alt text](/static/img/employees.png?raw=true "Optional Title")
+![Alt text](/production_screen_shots/employees_multiple_search.png?raw=true "Optional Title")
+![Alt text](/static/img/employees1_employee_info?raw=true "Optional Title")
+
+
