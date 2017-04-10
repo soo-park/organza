@@ -9,6 +9,8 @@ from model import (Employee, Employee_company, Company, Department,Title,
 #                                         .join(Employee_company)
 #                                         .all())[0].employee_id
 
+# keyword arguments must come in the form of 
+# {'email' : 'a@seahusa.com', 'first_name': 'firsta'}
 
 # depends on the argument received, the dictionary length will differ
 # because there are multiple tables to join to do query AND

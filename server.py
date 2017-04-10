@@ -81,8 +81,6 @@ def login():
                 # if db_employee.admin == 'true':
                 #     return redirect('/admin_logged')
                 # else:
-                print '\n\n\n'
-                print dir(db_employee)
                 return redirect("/employee_logged")
             elif db_employee.date_employeed and db_employee.date_departed:
                 flash('No date employeed found. Please contact the admin for more information.')
