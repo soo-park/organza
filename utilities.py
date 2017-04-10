@@ -90,6 +90,3 @@ def get_map_from_sqlalchemy(a_object):
 
     return result
 
-
-
-

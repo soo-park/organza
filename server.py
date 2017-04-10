@@ -31,6 +31,7 @@ app.secret_key = os.environ['secret_key']
 app.jinja_env.undefined = StrictUndefined
 
 
+### TODO: Use regx to enforce formatting
 @app.route('/')
 def index():
     """Homepage."""
@@ -64,15 +65,30 @@ def login():
         flash("More than one user for the email found. Contact admin.")
         return redirect("/")
     elif len(db_employees) == 1:
-        db_employee_id = db_employees[0].employee_id
-        db_password = Employee_company.query.filter_by(employee_id=db_employee_id).first().password
-
-        # TODO: change into AJAX for all pages to be able have login without redirect
+        db_employee = db_employees[0]
+        db_employee_id = db_employee.employee_id
+        db_employee_company = Employee_company.query.filter_by(employee_id=db_employee_id).first()
+        db_password = db_employee_company.password
         if (str(password) == str(db_password)):
             session['logged_in'] = True
             session['email'] = email
             session['password'] = password
-            return redirect('/logged')
+
+            # TODO: add a "status" into model, and assign default='user', available 'employee', 'admin'
+
+            # .strftime("%Y%m%d")
+            if db_employee.date_employeed and not db_employee.date_departed:
+                # if db_employee.admin == 'true':
+                #     return redirect('/admin_logged')
+                # else:
+                print '\n\n\n'
+                print dir(db_employee)
+                return redirect("/employee_logged")
+            elif db_employee.date_employeed and db_employee.date_departed:
+                flash('No date employeed found. Please contact the admin for more information.')
+                return redirect("/logged") #  direct to user
+            else:
+                return redirect('/logged')
         else:
             flash('Password incorrect.')
             return redirect('/')
@@ -83,14 +99,14 @@ def login():
 
 @app.route('/logged')
 def logged():
-    """"""
-    
+    """Login as a regular user"""
+
     return render_template('index.html') # (date_employeed and date_departed)
 
 
 @app.route('/admin_logged')
 def admin_logged():
-    """"""
+    """Login as an admin"""
 
     return render_template('admin_index.html')
     # TODO: generate non default status of admin
@@ -98,7 +114,7 @@ def admin_logged():
 
 @app.route('/employee_logged')
 def employee_logged():
-    """"""
+    """Login as an employee"""
 
     # TODO: have certain qualities AJAXed into DOM if employee
     return render_template('employee_index.html')

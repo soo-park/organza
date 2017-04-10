@@ -27,6 +27,8 @@ def query_selector(kwargs):
         rank*=5
     if "last_name" in kwargs.keys():
         rank*=7
+    if "email" in kwargs.keys():
+        rank*=11
 
     queries= {
              1 : search_no_criteria,
@@ -34,6 +36,7 @@ def query_selector(kwargs):
              3 : search_by_department_name,
              5 : search_by_first_name,
              7 : search_by_last_name,
+             11 : search_by_email,
              6 : search_by_company_name_department_name,
              10 : search_by_company_name_first_name,
              14 : search_by_company_name_last_name,
@@ -122,7 +125,20 @@ def search_by_last_name(**kwargs):
     return result
 
 
-#need work
+def search_by_email(**kwargs):
+    result = (db.session.query(Employee)
+                         .filter_by(email = kwargs['email'])
+                         .join(Employee_company)
+                         .join(Company)
+                         .join(Company_department)
+                         .join(Department)
+                         .join(Department_title)
+                         .join(Title)
+                         .distinct()
+                         .all())
+    return result
+
+
 def search_by_company_name_department_name(**kwargs):
     result = (db.session.query(Employee)
                          .join(Employee_company)

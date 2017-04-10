@@ -1,9 +1,28 @@
 {% extends 'base.html' %}
+{% block head %}
+  <script src="https://maps.googleapis.com/maps/api/js"></script>
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script type="text/javascript">
+    var companyLocations = {lat: 33.681902, lng: -117.852098}
+
+    var map = new google.maps.Map(document.getElementById('map'),{
+              center: companyLocations,
+              zoom: 8
+              });
+  </script>
+  <style>
+  #map {
+      height: 800px;
+  } 
+  </style>
+{% endblock %}
+
+
 {% block title %}Corporate Location{% endblock %}
+
 
 {% block content %}
 
-The google map goes here
-
+<div id='map'></div>
 
 {% endblock %}

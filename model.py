@@ -23,7 +23,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 
-### TODO: Use regx to enforce formatting
 ### TODO: check unicode/non unicode data types on server/model 
 class Employee(db.Model):
     """Employee of the group."""
@@ -32,8 +31,7 @@ class Employee(db.Model):
 
     # TODO: add the extra info needed, especially the phone number with regX
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_url = db.Column(db.String(100))
-    # TODO: change datetime format to regX. currently 2012-05-03 00:00:00 
+    photo_url = db.Column(db.String(100), nullable=True)
     birthday = db.Column(db.DateTime)
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50), nullable=False)
@@ -52,6 +50,7 @@ class Employee(db.Model):
     postal_code = db.Column(db.String(50))
     emergency_name = db.Column(db.Unicode(50))
     emergency_phone = db.Column(db.Integer)
+    admin = db.Column(db.Boolean, server_default=u'false')
 
     employee_companies = db.relationship('Employee_company')
     
@@ -85,8 +84,8 @@ class Department(db.Model):
     department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     department_name = db.Column(db.String(50))
 
-    # department_titles = db.relationship('Department_title')
-    # office_departments = db.relationship('Office_department')
+    department_titles = db.relationship('Department_title')
+    office_departments = db.relationship('Office_department')
     company_departments = db.relationship('Company_department')
 
     def __repr__(self):
@@ -103,7 +102,7 @@ class Title(db.Model):
     k_title = db.Column(db.Unicode(50))
 
     employee_companies = db.relationship('Employee_company')
-    # department_titles = db.relationship('Department_title')
+    department_titles = db.relationship('Department_title')
 
     def __repr__(self):
         return "<Title title_id=%s>" %self.title_id

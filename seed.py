@@ -11,7 +11,6 @@ from model import (Employee, Employee_company, Company, Department,
 from server import app
 
 # TODO: put seed.py into seed_data folder and test the code
-
 def purge_db():
     """Delete all data from the intranet and recreate"""
 
@@ -25,13 +24,21 @@ def load_employees():
     print "\nemployees seeding"
 
     for i, row in enumerate(open("seed_data/u.employee")):
-        row = row.rstrip()
+
+        # Because there are datetime objects, the empty string will throw an error
+        # Thus, it is necessary to make things None when seeding to prevent the error
+        # Strings and integers will now throw any error
+        row = row.rstrip().split("|")
+        for j, k in enumerate(row):
+            if k == '':
+                row[j] = None
+
         (employee_id, photo_url, birthday, personal_email,
             first_name, mid_name, last_name, nickname, k_name,
             kanji_name, phone, mobile, address_line1,
             address_line2, city, state, country,
-            postal_code, emergency_name, emergency_phone
-            ) = row.split("|")
+            postal_code, emergency_name, emergency_phone, admin
+            ) = row
 
         employee = Employee(employee_id=employee_id,
                             photo_url=photo_url,
@@ -52,7 +59,8 @@ def load_employees():
                             country=country,
                             postal_code=postal_code,
                             emergency_name=unicode(emergency_name),
-                            emergency_phone=emergency_phone)
+                            emergency_phone=emergency_phone,
+                            admin=admin)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(employee)
@@ -153,12 +161,16 @@ def load_employee_companies():
     print "employee_companies"
 
     for i, row in enumerate(open("seed_data/u.employee_company")):
-        row = row.rstrip()
+        row = row.rstrip().split("|")
+
+        for j, k in enumerate(row):
+            if k == '':
+                row[j] = None
 
         (employee_company_id, office_email, password, 
          date_employeed, date_departed, job_description,
          office_phone, employee_id, company_id, title_id 
-        ) = row.split("|")
+        ) = row
 
         employee_company_id = int(employee_company_id)
         employee_id = int(employee_id)
