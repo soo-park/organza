@@ -1,15 +1,123 @@
 {% extends 'base.html' %}
+
+{% block head %}
+
+<!-- TODO: change behavior - decide on how to display page  -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
+  <link type="text/css" rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+  <style>
+    .btn { color:#fff;}
+    .container { margin:150px auto;}
+  </style>
+
+{% endblock %}
+
 {% block content %}
 
-    <h2>Employees</h2>
-    <ul>
-      {% for employee in employees %}
-          <li>
-              <a href="/employee/{{ employee.employee_id }}">
-                {{ employee.title }}
-              </a>
-          </li>
-      {% endfor %}
-    </ul>
+  <div class="container">
+    <h3>Name of the company</h3>
+    <div class="row">
+      <div class="col-lg-3">
+        <div id="treeview-container">
+            <ul>
+              <li data-value="1">Subsidiary 1
+                 <ul>
+                    <li data-value="1.1">Department 1.1
+                      <ul>
+                          <li data-value="1.1.1">Title 1.1.1</li>
+                          <li data-value="1.1.2">Title 1.1.2</li>
+                          <li data-value="1.1.3">Title 1.1.3</li>
+                      </ul>
+                    </li>
+                    <li data-value="1.2">Department 1.2
+                      <ul>
+                          <li data-value="1.2.1">Title 1.2.1</li>
+                          <li data-value="1.2.2">Title 1.2.2</li>
+                          <li data-value="1.2.3">Title 1.2.3</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            <li data-value="2">Subsidiary 2
+              <ul>
+                <li data-value="2.1">Department 2.1
+                  <ul>
+                    <li data-value="2.1.1">Title 2.1.1</li>
+                    <li data-value="2.1.2">Title 2.1.2</li>
+                    <li data-value="2.1.3">Title 2.1.3</li>
+                  </ul>
+                </li>
+                <li data-value="2.2">Department 2.2
+                  <ul>
+                    <li data-value="2.2.1">Title 2.2.1</li>
+                    <li data-value="2.2.2">Title 2.2.2</li>
+                    <li data-value="2.2.3">Title 2.2.3</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li data-value="3">Subsidiary 3
+              <ul>
+                <li data-value="3.1">Department 3.1
+                  <ul>
+                    <li data-value="3.1.1">Title 3.1.1</li>
+                    <li data-value="3.1.2">Title 3.1.2</li>
+                    <li data-value="3.1.3">Title 3.1.3</li>
+                  </ul>
+                </li>
+                <li data-value="3.2">Department 3.2
+                  <ul>
+                    <li data-value="3.2.1">Title 3.2.1</li>
+                    <li data-value="3.2.2">Title 3.2.2</li>
+                    <li data-value="3.2.3">Title 3.2.3</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <button type="button" id="show-values" class="btn btn-danger">Get Values</button><br>
+        <br>
+        <pre id="values" class="well"></pre>
+      </div>
+    </div>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/static/js/org_chart/logger.js"></script>
+    <script src="/static/js/org_chart/treeview.js"></script>
+
+    <script>
+
+        $('#treeview-container').treeview({
+            debug : true,
+            // test if the selection works
+            // data : ['3.2', '2.2.3']
+        });
+        $('#show-values').on('click', function(){
+            $('#values').text(
+                $('#treeview-container').treeview('selectedValues')
+            );
+        });
+    </script>
+  </div>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36251023-1']);
+    _gaq.push(['_setDomainName', 'jqueryscript.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
 
 {% endblock %}

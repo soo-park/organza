@@ -19,7 +19,7 @@
 # So if the browser will be running, you will get a page
 
 # TODO: write some unit tests. Currently it is all integration tests
-
+import unittest
 from unittest import TestCase
 from server import app
 
@@ -47,13 +47,48 @@ class HomepageIntegrationTest(TestCase):
         # '/' page to check. In this case, something from index.html
         self.assertIn("Employee Roster", resp.data)
 
+    def tearDown(self):
+        """Clean up"""
 
-    def test_brands(self):
+        db.session.close()
+        db.drop_all()
 
+
+Class DatabaseIntegrationTest(TestCase):
+
+    def setUp(self):
+        # Connect to our testdb
+        connect_to_db(app, "postgresql:///testdb")
+        db.create_all()
+
+        # possibly seed it with example_data()
+
+        # make test_client
+
+    def tearDown(self):
+        """Clean up"""
+
+        db.session.close()
+        db.drop_all()
+
+    def test_login(self):
+        """Tests if the login/logout is working"""
+
+        rest = self.client.get('/logged')
+
+    def test_employees(self):
         # make request to /employees route
 
-        pass
+        resp = self.client.get('/employees')
+        self.assertEqual(200, resp.status_code)
+        self.assertNotEqual(404, resp.status_code)
+        self.assertIn("Employee Search", resp.data)
 
 
+
+
+
+if __name__ == "__main__":
+    unittest.main()
 
         

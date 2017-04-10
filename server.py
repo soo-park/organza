@@ -35,8 +35,8 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template('index.html')
-
+    # return render_template('index.html')
+    return render_template('admin_index.html')
 
 #*# logging
 # used for marking on console for developer to print needed info
@@ -84,11 +84,24 @@ def login():
 @app.route('/logged')
 def logged():
     """"""
+    
+    return render_template('index.html') # (date_employeed and date_departed)
 
-    # TODO: add a "status" into model, and assign default='user'
+
+@app.route('/admin_logged')
+def admin_logged():
+    """"""
+
+    return render_template('admin_index.html')
     # TODO: generate non default status of admin
-    # TODO: have certain qualities AJAXed into DOM if admin
-    return render_template('index.html')
+    
+
+@app.route('/employee_logged')
+def employee_logged():
+    """"""
+
+    # TODO: have certain qualities AJAXed into DOM if employee
+    return render_template('employee_index.html')
 
 
 #*# Session log out
@@ -100,7 +113,7 @@ def logout():
     return redirect('/')
  
 
-@app.route('/employees')
+@app.route('/employee/all')
 def list_employees():
     """Show list of employees."""
 
@@ -193,6 +206,28 @@ def employee_excel():
     file = request.files['emp_xls']
     print file
     return ""
+
+
+@app.route('/company/all')
+def list_companies():
+    """Show organizational structure."""
+
+    companies = Company.query.all()
+    return render_template('org_chart.html', companies=companies)
+
+
+@app.route('/map')
+def map():
+    """Show organizational structure."""
+
+    return render_template('map.html')
+
+
+@app.route('/analysis')
+def analysis():
+    """Show organizational structure."""
+
+    return render_template('analysis.html')
 
 
 if __name__ == '__main__':

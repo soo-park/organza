@@ -16,6 +16,8 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+    {% block head %}{% endblock %}
+
   </head>
 
   <body>
@@ -29,7 +31,7 @@
             <!-- The characters in a password field are masked 
             (shown as asterisks or circles). -->
             <input type="password" name="password" placeholder="Password">
-            <button type="submit" value="Login">Login</button>
+            <button type="submit" value="Login" id="login">Login</button>
           </form>
       {% endif %}
 
@@ -42,9 +44,10 @@
           </ul>
         {% endif %}
       {% endwith %}
-
+      
     <!-- Whatever the actual content attatched by Jinja goes here -->
-    {% block content %} put your content here {% endblock %}
+    {% block content %}{% endblock %}
+
 
   </body>
 </html>

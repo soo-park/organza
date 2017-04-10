@@ -210,10 +210,35 @@ class Office_department(db.Model):
 
 # Helper functions
 
-def connect_to_db(app):
+# TODO: finish writing integration test sample data
+# def example_data():
+#     """generates sample data for tests.py """
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///intranet'
+#     e1 = Employee()
+#     e2 = Employee()
+
+#     d1 = Department()
+#     d2 = Department()
+
+#     c1 = Company()
+#     c2 = Company()
+
+#     t1 = Title()
+#     t2 = Title()
+
+#     o1 = Office()
+#     o2 = Office()
+
+#     db.session.add_all([e1, e2, ...])
+#     db.session.commit()
+
+
+def connect_to_db(app, db_url='postgresql:///intranet'):
+    """Connect to db. default let the tests.py to connect to test db by input par"""
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = False
     db.app = app
     db.init_app(app)
 

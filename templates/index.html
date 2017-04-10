@@ -2,16 +2,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1> your_company_name Employee Roster</h1>
+  <h1> your_company_name Employee Roster</h1>
 
-    <h2>Employees</h2>
-    <p><a href="/employees">Employee data</a></p>
-
-    <h2>Companies</h2>
-    <p><a href="/company">Company data</a></p>
-
+  <div id='user'>
     <h2>Offices</h2>
-    <p></p> <!-- use google map to show locations -->
-    <!-- add functionality to download the map -->
+    <p><a href="/map">Corporate map</a></p>
+  </div>
+
+  <div id='logged_index'></div>
 
 {% endblock %}
