@@ -37,7 +37,7 @@ def index():
     """Homepage."""
 
     # return render_template('index.html')
-    return render_template('admin_index.html')
+    return render_template('index.html')
 
 #*# logging
 # used for marking on console for developer to print needed info
@@ -58,33 +58,36 @@ def login():
 
     email = request.form.get('email')
     password = request.form.get('password')
-    db_employees = Employee_company.query.filter_by(office_email=email).all()
+    db_employees = query_selector({'email': email})
 
-    if len(db_employees)>1:
-        # TODO: deal with duplicate email issue
+    if len(db_employees) > 1:
         flash("More than one user for the email found. Contact admin.")
         return redirect("/")
     elif len(db_employees) == 1:
         db_employee = db_employees[0]
         db_employee_id = db_employee.employee_id
-        db_employee_company = Employee_company.query.filter_by(employee_id=db_employee_id).first()
-        db_password = db_employee_company.password
+        db_employee_company_info = db_employee.employee_companies[0]
+        db_password = db_employee_company_info.password
+
         if (str(password) == str(db_password)):
             session['logged_in'] = True
             session['email'] = email
             session['password'] = password
 
-            # TODO: add a "status" into model, and assign default='user', available 'employee', 'admin'
-
+            date_employeed = db_employee_company_info.date_employeed
+            date_departed = db_employee_company_info.date_departed
             # .strftime("%Y%m%d")
-            if db_employee.date_employeed and not db_employee.date_departed:
-                # if db_employee.admin == 'true':
-                #     return redirect('/admin_logged')
-                # else:
+
+            # TODO: When an employee departure date is added, check if admin
+            #       if admin, ask if want to delete the admin status
+            if db_employee.admin == True:
+                return redirect('/admin_logged')
+
+            if date_employeed and not date_departed:
                 return redirect("/employee_logged")
-            elif db_employee.date_employeed and db_employee.date_departed:
+            elif date_employeed and date_departed:
                 flash('No date employeed found. Please contact the admin for more information.')
-                return redirect("/logged") #  direct to user
+                return redirect("/logged")
             else:
                 return redirect('/logged')
         else:
@@ -92,7 +95,7 @@ def login():
             return redirect('/')
     else:
         flash("Email and/or password incorrect.")
-        return redirect("/") 
+    return redirect("/") 
 
 
 @app.route('/logged')
@@ -148,6 +151,13 @@ def show_employee(employee_id):
 
     return render_template('employee_info.html', employee_info=employee_info,
                                                  employee_company_info=employee_company_info)
+
+
+@app.route('/user/add')
+def add_employee():
+    """Add user to the db."""
+
+    return render_template('user_add.html')
 
 
 @app.route('/search_employees.json')
@@ -233,6 +243,14 @@ def list_companies():
 @app.route('/map')
 def map():
     """Show organizational structure."""
+
+    # # Practice: Using global varialbe 
+    # # Google Map key secret. import os is used with this code.
+    # # Also, in terminal, use the following command to make sure you have the key 
+    # # source <the file that contanins GOOGLE_MAP_KEY variable>
+    # api_key = os.environ['GOOGLE_MAP_KEY']
+    # # Passing secret key to the html
+    # return render_template('map.html', api_key=api_key)
 
     return render_template('map.html')
 
