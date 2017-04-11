@@ -197,11 +197,11 @@ class Office_department(db.Model):
 
     office_department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
     office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
     
-    departments = db.relationship('Department')
     offices = db.relationship('Office')
+    departments = db.relationship('Department')
 
     def __repr__(self):
         return "<Office_department id=%s>" %self.id
