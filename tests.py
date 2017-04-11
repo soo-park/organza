@@ -85,7 +85,11 @@ Class DatabaseIntegrationTest(TestCase):
         self.assertIn("Employee Search", resp.data)
 
 
-
+# For login feature, user the following id & password to check the model.
+# a@seahusa.com pass: aaa123 (admin=’true’)
+# b@seahusa.com pass: bbb123 (yes date_employeed, no date_departed, admin=’false’)
+# c@seahusa.com pass: ccc123 (yes date_employeed, no date_departed, admin=’false’)
+# d@seahusa.com pass: ddd123(yes date_employeed, no date_departed, admin=’false’)
 
 
 if __name__ == "__main__":
