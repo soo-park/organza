@@ -153,13 +153,6 @@ def show_employee(employee_id):
                                                  employee_company_info=employee_company_info)
 
 
-@app.route('/user/add')
-def add_employee():
-    """Add user to the db."""
-
-    return render_template('user_add.html')
-
-
 @app.route('/search_employees.json')
 def search_employees():
     """Search the query result for the right employees for criteria"""
@@ -215,9 +208,94 @@ def search_employees():
     return jsonify(result)
 
 
+@app.route('/employee/add')
+def add_employee_page():
+    """Load add_employee page db."""
+
+    return render_template('employee_add.html')
+
+
+# TODO: In homepage, add sign-up page that uses this + session[email] to 
+# generate new user AND log into session right away
+# TODO: separate generate new person page into two, and have "User"
+# Thant has nothing to do with the deep details into company - have this form as sign-up
+@app.route('/add_employee.json')
+def add_employee():
+    """Add employee to the db."""
+
+    ############## BLOCKER ###################
+    # The employee not adding
+    # # how to you assign multiple keyword arguments as the attributes
+    # # Or should I receive them individually, and there is no other way
+    # kwargs = {}
+    # for item in request.args:
+    #     print item
+    #     if request.args[item]:
+    #         kwargs[item] = request.args[item]
+    # new_employee = Employee(**kwargs.keys()=**kwargs.values())
+
+    # TODO: limit the form input format
+    birthday= request.form.get('birthday')
+    personal_email= request.form.get('personal_email')
+    first_name= request.form.get('first_name')
+    mid_name= request.form.get('mid_name')
+    last_name= request.form.get('last_name')
+    nickname= request.form.get('nickname')
+    k_name= request.form.get('k_name')
+    kanji_name= request.form.get('kanji_name')
+    phone= request.form.get('phone')
+    mobile= request.form.get('mobile')
+    address_line1= request.form.get('address_line1')
+    address_line2= request.form.get('address_line2')
+    city= request.form.get('city')
+    state= request.form.get('state')
+    country= request.form.get('country')
+    postal_code= request.form.get('postal_code')
+    emergency_name= request.form.get('emergency_name')
+    emergency_phone= request.form.get('emergency_phone')
+    admin= request.form.get('admin')
+    # TODO: change the hardcode below to have a correct input
+    employee_companies = 1
+
+    new_employee = Employee(birthday=birthday,
+                            personal_email=personal_email,
+                            first_name=first_name,
+                            mid_name=mid_name,
+                            last_name=last_name,
+                            nickname=nickname,
+                            k_name=k_name,
+                            kanji_name=kanji_name,
+                            phone=phone,
+                            mobile=mobile,
+                            address_line1=address_line1,
+                            address_line2=address_line2,
+                            city=city,
+                            state=state,
+                            country=country,
+                            postal_code=postal_code,
+                            emergency_name=emergency_name,
+                            emergency_phone=emergency_phone,
+                            admin=admin)
+    print '\n\n\n\n\n'
+    print first_name
+    print '\n\n\n\n\n'
+    # add employee to db
+    db.session.add(new_employee)
+    db.session.commit()
+
+    result = {"first_name": new_employee.first_name, 
+              "last_name": new_employee.last_name,
+              "employee_id": new_employee.employee_id
+              }
+    # iterate through the employees to add them one by one to the map format
+    # print result
+    return jsonify(result)
+
+
 @app.route('/employee_excel_loading', methods=['GET'])
 def employee_excel_loading():
     """"""
+
 
     return render_template('employee_excel.html')
 

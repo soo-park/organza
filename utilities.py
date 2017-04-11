@@ -90,3 +90,8 @@ def get_map_from_sqlalchemy(a_object):
 
     return result
 
+
+# TODO: add a function to show if the employee has web access
+# by calculating if the person has email and password.
+# display that information only on admin side information page
+
