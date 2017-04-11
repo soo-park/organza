@@ -84,10 +84,10 @@ class DatabaseIntegrationTest(TestCase):
         self.assertNotEqual(404, resp.status_code)
         self.assertIn("Employee Search", resp.data)
 
-    def test_some_db_thing(self):
 
+# "add emloyee" test
 
-
+# before change, make tests & commit before 
 
 # For login feature, user the following id & password to check the model.
 # a@seahusa.com pass: aaa123 (admin=’true’)

@@ -1,36 +1,9 @@
 function initMap() {
 
-//########## Blocker: multiple marker not working
-    // var markerArray = [
-    //                   { lat: 33.681735, lng: -117.852191 }  //LA OFFICE(HEADQUARTERS)
-    //                 , { lat: 29.989029, lng: -95.491080}   //HOUSTON(TEXAS)
-    //                 , { lat: 29.989029, lng: -95.491080}   //PANMERIDIAN TUBULAR-TEXAS
-    //                 , { lat: 39.744950, lng: -104.987832}  //PANMERIDIAN TUBULAR-COLORADO
-    //                 , { lat: 34.098870, lng: -117.395786}  //STATE PIPE & SUPPLY
-    //                 ];
-
-    // var markerTitleArray = [
-    //                        'LA OFFICE(HEADQUARTERS)'
-    //                       ,'HOUSTON(TEXAS)'
-    //                       ,'PANMERIDIAN TUBULAR-TEXAS'
-    //                       ,'PANMERIDIAN TUBULAR-COLORADO'
-    //                       ,'STATE PIPE & SUPPLY'
-    //                       ];
-
-    // for (var i = 0; i < markerArray.length; i++) {
-
-    //     var marker = new google.maps.Marker({
-    //         position: markerArray[i],
-    //         map: map,
-    //         });
-    //     marker.setMap(map);
-    //     marker.setTitle(marketTitleArray[i]);
-    // }
-
-    var center = {lat: 35.514534, lng: -98.173220};
+    var center = {lat: 30.514534, lng: -106.173220};
     var map = new google.maps.Map(document.getElementById('map'),{
                 center: center,
-                zoom: 2,
+                zoom: 4,
                 // Map style from
                 // https://snazzymaps.com/style/100182/new-artium
                 styles: [
@@ -123,9 +96,45 @@ function initMap() {
                         }
                     ]
               });
+
+    var locations = [
+            { 
+                name: 'LA OFFICE(HEADQUARTERS)',
+                latlng: { 
+                    lat: 33.681735, lng: -117.852191 
+                }
+            },
+            { 
+                name: 'HOUSTON(TEXAS)',
+                latlng: { 
+                    lat: 29.989029, lng: -95.491080
+                }
+            },
+            { 
+                name: 'PANMERIDIAN TUBULAR-TEXAS',
+                latlng: { 
+                    lat: 29.989029, lng: -95.491080
+                }
+            },
+            { 
+                name: 'PANMERIDIAN TUBULAR-COLORADO',
+                latlng: { 
+                    lat: 39.744950, lng: -104.987832
+                }
+            },
+            { 
+                name: 'STATE PIPE & SUPPLY',
+                latlng: { 
+                    lat: 34.098870, lng: -117.395786
+                }
+            }
+        ]
+
+    for (var i = 0; i < locations.length; i++) {
+        var marker = new google.maps.Marker({
+            position: locations[i].latlng,
+            title: locations[i].name,
+            map: map
+            });
+    }
 }
-
-
-
-
-// google.maps.event.addDomListener(window, 'load', initMap);

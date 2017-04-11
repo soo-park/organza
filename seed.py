@@ -40,7 +40,7 @@ def load_employees():
             postal_code, emergency_name, emergency_phone, admin
             ) = row
 
-        employee = Employee(employee_id=employee_id,
+        employee = Employee(
                             photo_url=photo_url,
                             birthday=birthday,
                             personal_email=personal_email,
@@ -60,7 +60,8 @@ def load_employees():
                             postal_code=postal_code,
                             emergency_name=unicode(emergency_name),
                             emergency_phone=emergency_phone,
-                            admin=admin)
+                            admin=admin
+                            )
 
         # We need to add to the session or it won't ever be stored
         db.session.add(employee)
@@ -81,7 +82,7 @@ def load_companies():
         # clever -- we can unpack part of the row!
         company_id, company_name, short_name = row.split("|")
 
-        company = Company(company_id=company_id,
+        company = Company(
                           company_name=company_name,
                           short_name=short_name)
 
@@ -99,7 +100,7 @@ def load_department():
 
         department_id, department_name = row.split("|")
 
-        department = Department(department_id=department_id,
+        department = Department(
                                 department_name=department_name
                                 )
 
@@ -117,10 +118,10 @@ def load_title():
 
         title_id, title, k_title = row.split("|")
 
-        title = Title(title_id=title_id,
+        title = Title(
                       title=title,
                       k_title=unicode(k_title)
-                                )
+                     )
 
         db.session.add(title)
 
@@ -137,7 +138,7 @@ def load_office():
         (office_id, office_name, phone, address_line1, address_line2,
         city, state, country, postal_code, fax) = row.split("|")
 
-        office = Office(office_id=office_id,
+        office = Office(
                         office_name=office_name,
                         phone=unicode(phone),
                         address_line1=unicode(address_line1), 
@@ -176,7 +177,7 @@ def load_employee_companies():
         employee_id = int(employee_id)
         company_id = int(company_id)
 
-        employee_company = Employee_company(employee_company_id=employee_company_id,
+        employee_company = Employee_company(
                                             office_email=office_email,
                                             password=password,
                                             date_employeed=date_employeed,
@@ -212,7 +213,7 @@ def load_company_department():
 
         company_department_id, company_id, department_id = row.split("|")
 
-        company_department = Company_department(company_department_id=company_department_id,
+        company_department = Company_department(
                                                 company_id=company_id,
                                                 department_id=department_id
                                                 )
@@ -231,7 +232,7 @@ def load_department_title():
 
         department_title_id, title_id, department_id = row.split("|")
 
-        department_title = Department_title(department_title_id=department_title_id,
+        department_title = Department_title(
                                             title_id=title_id,
                                             department_id=department_id
                                             )
@@ -250,7 +251,7 @@ def load_office_department():
 
         office_department_id, office_id, department_id = row.split("|")
 
-        office_department = Office_department(office_department_id=office_department_id,
+        office_department = Office_department(
                                               office_id=office_id,
                                               department_id=department_id
                                               )

@@ -32,7 +32,7 @@ class Employee(db.Model):
     # TODO: add the extra info needed, especially the phone number with regX
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     photo_url = db.Column(db.String(100), nullable=True)
-    birthday = db.Column(db.DateTime)
+    birthday = db.Column(db.Date)
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.String(50), nullable=False)
     mid_name = db.Column(db.String(50))
@@ -49,7 +49,7 @@ class Employee(db.Model):
     country = db.Column(db.String(50))
     postal_code = db.Column(db.String(50))
     emergency_name = db.Column(db.Unicode(50))
-    emergency_phone = db.Column(db.Integer)
+    emergency_phone = db.Column(db.Unicode(20))
     admin = db.Column(db.Boolean, server_default=u'false')
 
     employee_companies = db.relationship('Employee_company')
@@ -138,8 +138,8 @@ class Employee_company(db.Model):
     employee_company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_email = db.Column(db.String(50))
     password = db.Column(db.String(50))
-    date_employeed = db.Column(db.DateTime)
-    date_departed = db.Column(db.DateTime)
+    date_employeed = db.Column(db.Date)
+    date_departed = db.Column(db.Date)
     job_description = db.Column(db.String(200))
     office_phone = db.Column(db.Unicode(20))
 

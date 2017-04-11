@@ -1,8 +1,8 @@
 function initMap() {
-  var latlng = new google.maps.LatLng(35.514534, -98.173220); // center coordinate picked
+  var mapCenter = new google.maps.LatLng(90, -102); // center coordinate picked
   var map = new google.maps.Map(document.getElementById('map'),{
                             zoom: 4,
-                            center:latlng,
+                            center:mapCenter
                             // Map style from
                             // https://snazzymaps.com/style/100182/new-artium
                             styles: [

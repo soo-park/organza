@@ -5,49 +5,99 @@
 <!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='employee_add'>
     <h3>Employee Add</h3>
-    <form action='add_employee' method="POST">
+    <form action='/add_employee' method="POST">
       * fields are required.</br> 
       </br>
-      Name:</br>
-      <!-- TODO: use list of attributes and jinha  -->
+      <fieldset>
+        <!-- TODO: photo upload -->
+        <!-- Other option is to use list of attributes and jinha, but placeholder will be row name  -->
+        <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
+        <input type='text' name='mid_name' id='mid_name' placeholder="Middle name">
+        <input type='text' name='last_name' id='last_name' placeholder="Last Name">*</br>
+        <input type='text' name='k_name' id='k_name' placeholder="Korean name">
+        <input type='text' name='kanji_name' id='kanji_name' placeholder="Kanji Name"></br>
+        </br>
 
-      <input type='text' name='first_name' id='first_name' placeholder="First Name">*
-      <input type='text' name='mid_name' id='mid_name' placeholder="mid_name">
-      <input type='text' name='last_name' id='last_name' placeholder="Last Name">*</br>
+        <label>Company:</label>
+        <input list="companies" name="company_name" placeholder="Select or input">
+        <datalist id="companies">
+          {% for company in companies %}
+            <option value="{{ company.company_name }}">
+          {% endfor %}
+        </datalist>
+
+        <label>Department:</label>
+        <input list="departments" name="department_name" placeholder="Select or input">
+        <datalist id="departments">
+          {% for department in departments %}
+            <option value="{{ department.department_name }}">
+          {% endfor %}
+        </datalist></br>
+
+        <label>Title:</label>
+        <input list="title" name="title" placeholder="Select or input">
+        <datalist id="title">
+          {% for title in titles %}
+            <option value="{{ title.title }}">
+          {% endfor %}
+        </datalist>
+
+        <label>Office:</label>
+        <input list="offices" name="office_name" placeholder="Select or input">
+        <datalist id="offices">
+          {% for office in offices %}
+            <option value="{{ office.office_name }}">
+          {% endfor %}
+        </datalist></br>
+        </br>
+      </fieldset>
+      <fieldset>
+
+        <label>Office Contacts:</label></br>
+        <input type='tel' name='office_phone' id='office_phone' placeholder='Office Phone'>
+        <input type='email' name='office_email' id='office_email' placeholder='Office Email'>
+        <input type='text' name='password' id='password' placeholder='Password'></br>
       </br>
-      <input type='text' name='k_name' id='k_name' placeholder="k_name">
-      <input type='text' name='kanji_name' id='kanji_name' placeholder="kanji_name">
-      <input type='text' name='birthday' id='birthday' placeholder="birthday"></br>
-      </br>
-      Contact Info:</br>
-      <input type='text' name='personal_email' id='personal_email' placeholder="personal_email">
-      <input type='text' name='phone' id='phone' placeholder="phone">
-      <input type='text' name='mobile' id='mobile' placeholder="mobile"></br>
-      </br>
-      Address:</br>
-      <input type='text' name='address_line1' id='address_line1' placeholder="address_line1">
-      <input type='text' name='address_line2' id='address_line2' placeholder="address_line2"></br>
-      <input type='text' name='city' id='city' placeholder="city">, 
-      <input type='text' name='state' id='state' placeholder="state">,
-      <input type='text' name='postal_code' id='postal_code' placeholder="postal_code"></br>
-      <input type='text' name='country' id='country' placeholder="country"></br>
-      </br>
-      Emergency Contact:</br>
-      <input type='text' name='emergency_name' id='emergency_name' placeholder="emergency_name">
-      <input type='text' name='emergency_phone' id='emergency_phone' placeholder="emergency_phone"></br>
-      </br>
-      system admin <input type='checkbox' name='admin' id='admin' placeholder="admin"></br>
+      <label>Personal Contact:</label></br>
+        <input type='tel' name='mobile' id='mobile' placeholder="Mobile">
+        <input type='tel' name='phone' id='phone' placeholder="Home Phone">
+        <input type='email' name='personal_email' id='personal_email' placeholder="Personal Email"></br>
+        </br>
+
+      <label>Home Address:</label></br>
+        <input type='text' name='address_line1' id='address_line1' placeholder="Line 1">
+        <input type='text' name='address_line2' id='address_line2' placeholder="Line 2"></br>
+        <input type='text' name='city' id='city' placeholder="City">
+        <input type='text' name='state' id='state' placeholder="State"></br>
+        <input type='text' name='postal_code' id='postal_code' placeholder="Postal Code">
+        <input type='text' name='country' id='country' placeholder="Country"></br>
+        </br>
+
+      <label>Emergency Contact:</label></br>
+        <input type='text' name='emergency_name' id='emergency_name' placeholder="Emergency Name">
+        <input type='tel' name='emergency_phone' id='emergency_phone' placeholder="Emergency Phone"></br>
+        </br>
+      </fieldset>
+
+      <label>Job Description:</label></br>
+        <textarea name='job_description' id='job_description' rows="5" cols="50" placeholder=''></textarea></br>
+
+
+
+
+      <label>History:</label></br>
+        Birthday: <input type='date' name='birthday' id='birthday' placeholder="Birthday"></br>
+        Date Employeed: <input type='date' name='date_employeed' id='date_employeed' placeholder='Date Employeed'></br>
+        Date Departed: <input type='date' name='date_departed' id='date_departed' placeholder='Date Departed'></br>
+
+        system admin <input type='checkbox' name='admin' id='admin'></br>
+        
+      </fieldset>
+
+      
       <input type='submit'> 
+    
     </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for category, message in messages %}
-          <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
   </div>
 
   <!-- <script src="static/js/employee_add.js" type="text/javascript"></script> -->

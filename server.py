@@ -210,7 +210,15 @@ def search_employees():
 def add_employee_page():
     """Load add_employee page db."""
 
-    return render_template('employee_add.html')
+    companies = Company.query.all()
+    departments = Department.query.all()
+    titles = Title.query.all()
+    offices = Office.query.all()
+
+    return render_template('employee_add.html', companies=companies,
+                                                departments=departments,
+                                                titles=titles,
+                                                offices=offices)
 
 
 # TODO: In homepage, add sign-up page that uses this + session[email] to 
@@ -234,50 +242,70 @@ def add_employee():
 
     # TODO: limit the form input format
     # TODO: change the hardcode below to have a correct input
-    employee_companies = 1
 
-    print '\n\n\n\n\n'
-    print first_name
-    print '\n\n\n\n\n'
+    # to calculate
+    # employee_id: check office email is there
+    #              if not there next to last one
 
-    new_employee = Employee(birthday=request.form.get('birthday'),
-                            personal_email=request.form.get('personal_email'),
-                            first_name=request.form.get('first_name'),
-                            mid_name=request.form.get('mid_name'),
-                            last_name=request.form.get('last_name'),
-                            nickname=request.form.get('nickname'),
-                            k_name=request.form.get('k_name'),
-                            kanji_name=request.form.get('kanji_name'),
-                            phone=request.form.get('phone'),
-                            mobile=request.form.get('mobile'),
-                            address_line1=request.form.get('address_line1'),
-                            address_line2=request.form.get('address_line2'),
-                            city=request.form.get('city'),
-                            state=request.form.get('state'),
-                            country=request.form.get('country'),
-                            postal_code=request.form.get('postal_code'),
-                            emergency_name=request.form.get('emergency_name'),
-                            emergency_phone=request.form.get('emergency_phone'),
-                            admin=request.form.get('admin')
+    # check if the relation is there if not there next to last one
+    #    employee_company_id 
+    #    employee_company_id
+    #    company_department_id
+    # office_department_id
+
+    # query from name
+    #    company_id 
+    #    department_id
+    #    title_id
+    print type(request.form.get('emergency_phone'))
+    new_employee = Employee(
+                            birthday= request.form.get('birthday'),
+                            personal_email= request.form.get('personal_email'),
+                            first_name= request.form.get('first_name'),
+                            mid_name= request.form.get('mid_name'),
+                            last_name= request.form.get('last_name'),
+                            nickname= request.form.get('nickname'),
+                            k_name= request.form.get('k_name'),
+                            kanji_name= request.form.get('kanji_name'),
+                            phone= request.form.get('phone'),
+                            mobile= request.form.get('mobile'),
+                            address_line1= request.form.get('address_line1'),
+                            address_line2= request.form.get('address_line2'),
+                            city= request.form.get('city'),
+                            state= request.form.get('state'),
+                            country= request.form.get('country'),
+                            postal_code= request.form.get('postal_code'),
+                            emergency_name= request.form.get('emergency_name'),
+                            emergency_phone= request.form.get('emergency_phone'),
+                            admin= request.form.get('admin')
                             )
 
-    session['first_name'] = first_name
-    session['last_name'] = last_name
+    # middle_employee_company = Employee_company(
+    #                         company_name= request.form.get('company_name'),
+    #                         department_name= request.form.get('department_name'),
+    #                         title= request.form.get('title'),
+    #                         office_name= request.form.get('office_name'),
+    #                         office_email= request.form.get('office_email'),
+    #                         password= request.form.get('password'),
+    #                         date_employeed= request.form.get('date_employeed'),
+    #                         date_departed= request.form.get('date_departed'),
+    #                         job_description= request.form.get('job_description'),
+    #                         office_phone= request.form.get('office_phone'),
+    #                         title_id= request.form.get('title_id'),
+    #                         department_id= request.form.get('department_id'),
+    #                         office_id= request.form.get('office_id'),
+    #                         department_id= request.form.get('department_id')
+    #                         )
+
     # add user id by query
-
-
 
     # add employee to db
     db.session.add(new_employee)
     db.session.commit()
 
-    result = {"first_name": new_employee.first_name, 
-              "last_name": new_employee.last_name,
-              "employee_id": new_employee.employee_id
-              }
     # iterate through the employees to add them one by one to the map format
     # print result
-    flash(u"User %s %s added."%(first_name, last_name), 'error')
+    # flash(u"User %s %s added."%(first_name, last_name), 'error')
     return redirect("/employee/add")
 
 
