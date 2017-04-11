@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>Employee Search</h2>
-
-    <div>
+    <div id='employee_search'>
+      <h3>Employee Search</h3>
       <form id='search'>
         <!-- TODO: make the names of company and department come from DB -->
         <!-- TODO: make disable select value to be possible to be selected for null -->
@@ -43,6 +42,7 @@
         {% endfor %}
       </ul>
     </div>
+
 
     <script src="static/js/employee_list.js" type="text/javascript"></script>
 
