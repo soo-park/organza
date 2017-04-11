@@ -248,11 +248,11 @@ def load_office_department():
     for i, row in enumerate(open("seed_data/u.office_department")):
         row = row.rstrip()
 
-        office_department_id, department_id, office_id = row.split("|")
+        office_department_id, office_id, department_id = row.split("|")
 
         office_department = Office_department(office_department_id=office_department_id,
-                                              department_id=department_id,
-                                              office_id=office_id
+                                              office_id=office_id,
+                                              department_id=department_id
                                               )
 
         db.session.add(office_department)
