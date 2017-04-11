@@ -11,6 +11,8 @@ from model import (Employee, Employee_company, Company, Department,Title,
 
 # keyword arguments must come in the form of 
 # {'email' : 'a@seahusa.com', 'first_name': 'firsta'}
+# the result will be a list of query object of the employee of that criteria
+# [<Employee employee_id=1, first_name=firsta>, <Employee employee_id=2, first_name=firstb>]
 
 # depends on the argument received, the dictionary length will differ
 # because there are multiple tables to join to do query AND
@@ -129,8 +131,8 @@ def search_by_last_name(**kwargs):
 
 def search_by_email(**kwargs):
     result = (db.session.query(Employee)
-                         .filter_by(email = kwargs['email'])
                          .join(Employee_company)
+                         .filter_by(office_email = kwargs['email'])
                          .join(Company)
                          .join(Company_department)
                          .join(Department)
