@@ -233,25 +233,6 @@ def add_employee():
     # new_employee = Employee(**kwargs.keys()=**kwargs.values())
 
     # TODO: limit the form input format
-    birthday= request.form.get('birthday')
-    personal_email= request.form.get('personal_email')
-    first_name= request.form.get('first_name')
-    mid_name= request.form.get('mid_name')
-    last_name= request.form.get('last_name')
-    nickname= request.form.get('nickname')
-    k_name= request.form.get('k_name')
-    kanji_name= request.form.get('kanji_name')
-    phone= request.form.get('phone')
-    mobile= request.form.get('mobile')
-    address_line1= request.form.get('address_line1')
-    address_line2= request.form.get('address_line2')
-    city= request.form.get('city')
-    state= request.form.get('state')
-    country= request.form.get('country')
-    postal_code= request.form.get('postal_code')
-    emergency_name= request.form.get('emergency_name')
-    emergency_phone= request.form.get('emergency_phone')
-    admin= request.form.get('admin')
     # TODO: change the hardcode below to have a correct input
     employee_companies = 1
 
@@ -259,25 +240,26 @@ def add_employee():
     print first_name
     print '\n\n\n\n\n'
 
-    new_employee = Employee(birthday=birthday,
-                            personal_email=personal_email,
-                            first_name=first_name,
-                            mid_name=mid_name,
-                            last_name=last_name,
-                            nickname=nickname,
-                            k_name=k_name,
-                            kanji_name=kanji_name,
-                            phone=phone,
-                            mobile=mobile,
-                            address_line1=address_line1,
-                            address_line2=address_line2,
-                            city=city,
-                            state=state,
-                            country=country,
-                            postal_code=postal_code,
-                            emergency_name=emergency_name,
-                            emergency_phone=emergency_phone,
-                            admin=admin)
+    new_employee = Employee(birthday=request.form.get('birthday'),
+                            personal_email=request.form.get('personal_email'),
+                            first_name=request.form.get('first_name'),
+                            mid_name=request.form.get('mid_name'),
+                            last_name=request.form.get('last_name'),
+                            nickname=request.form.get('nickname'),
+                            k_name=request.form.get('k_name'),
+                            kanji_name=request.form.get('kanji_name'),
+                            phone=request.form.get('phone'),
+                            mobile=request.form.get('mobile'),
+                            address_line1=request.form.get('address_line1'),
+                            address_line2=request.form.get('address_line2'),
+                            city=request.form.get('city'),
+                            state=request.form.get('state'),
+                            country=request.form.get('country'),
+                            postal_code=request.form.get('postal_code'),
+                            emergency_name=request.form.get('emergency_name'),
+                            emergency_phone=request.form.get('emergency_phone'),
+                            admin=request.form.get('admin')
+                            )
 
     session['first_name'] = first_name
     session['last_name'] = last_name

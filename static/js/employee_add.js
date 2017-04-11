@@ -5,48 +5,32 @@
 $(function(){
   $('#add').on('submit', function(evt){
     evt.preventDefault();
-    // receives data from user_add.html
-    var birthday = $('#birthday').val();
-    var personal_email = $('#personal_email').val();
-    var first_name = $('#first_name').val();
-    var mid_name = $('#mid_name').val();
-    var last_name = $('#last_name').val();
-    var nickname = $('#nickname').val();
-    var k_name = $('#k_name').val();
-    var kanji_name = $('#kanji_name').val();
-    var phone = $('#phone').val();
-    var mobile = $('#mobile').val();
-    var address_line1 = $('#address_line1').val();
-    var address_line2 = $('#address_line2').val();
-    var city = $('#city').val();
-    var state = $('#state').val();
-    var country = $('#country').val();
-    var postal_code = $('#postal_code').val();
-    var emergency_name = $('#emergency_name').val();
-    var emergency_phone = $('#emergency_phone').val();
-    var admin = $('#admin').val();
 
-    // // Ajax goes to the server side and make request
-    // // attach the arg in the string as a parameter or have it as a second parameter
-    $.get('/add_user.json', { "birthday": birthday,
-                              "personal_email": personal_email,
-                              "first_name": first_name,
-                              "mid_name": mid_name,
-                              "last_name": last_name,
-                              "nickname": nickname,
-                              "k_name": k_name,
-                              "kanji_name": kanji_name,
-                              "phone": phone,
-                              "mobile": mobile,
-                              "address_line1": address_line1,
-                              "address_line2": address_line2,
-                              "city": city,
-                              "state": state,
-                              "country": country,
-                              "postal_code": postal_code,
-                              "emergency_name": emergency_name,
-                              "emergency_phone": emergency_phone,
-                              "admin": admin
+    // receives data from user_add.html
+    // Ajax goes to the server side and make request
+    // attach the arg in the string as a parameter or have it as a second parameter
+    $.get('/add_employee.json', { // dynamically generate this 
+                              //$('#'+iterated_string_from_dic').key(): $('#'+iterated_string_from_dic').val(),
+
+                              "birthday": $('#birthday').val(),
+                              "personal_email": $('#personal_email').val(),
+                              "first_name": $('#first_name').val(),
+                              "mid_name": $('#mid_name').val(),
+                              "last_name": $('#last_name').val(),
+                              "nickname": $('#nickname').val(),
+                              "k_name": $('#k_name').val(),
+                              "kanji_name": $('#kanji_name').val(),
+                              "phone": $('#phone').val(),
+                              "mobile": $('#mobile').val(),
+                              "address_line1": $('#address_line1').val(),
+                              "address_line2": $('#address_line2').val(),
+                              "city": $('#city').val(),
+                              "state": $('#state').val(),
+                              "country": $('#country').val(),
+                              "postal_code": $('#postal_code').val(),
+                              "emergency_name": $('#emergency_name').val(),
+                              "emergency_phone": $('#emergency_phone').val(),
+                              "admin": $('#admin').val()
                               }).done(handleAdd);
 
     // you will receive employee ids as the following format

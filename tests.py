@@ -54,7 +54,7 @@ class HomepageIntegrationTest(TestCase):
         db.drop_all()
 
 
-Class DatabaseIntegrationTest(TestCase):
+class DatabaseIntegrationTest(TestCase):
 
     def setUp(self):
         # Connect to our testdb
@@ -83,6 +83,10 @@ Class DatabaseIntegrationTest(TestCase):
         self.assertEqual(200, resp.status_code)
         self.assertNotEqual(404, resp.status_code)
         self.assertIn("Employee Search", resp.data)
+
+    def test_some_db_thing(self):
+
+
 
 
 # For login feature, user the following id & password to check the model.
