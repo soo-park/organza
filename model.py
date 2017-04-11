@@ -163,11 +163,11 @@ class Company_department(db.Model):
 
     company_department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
     company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'))    
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
 
-    departments = db.relationship('Department')
     companies = db.relationship('Company')
+    departments = db.relationship('Department')
 
     def __repr__(self):
         return "<Company_department id=%s>" %self.id

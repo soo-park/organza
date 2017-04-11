@@ -210,11 +210,11 @@ def load_company_department():
     for i, row in enumerate(open("seed_data/u.company_department")):
         row = row.rstrip()
 
-        company_department_id, department_id, company_id = row.split("|")
+        company_department_id, company_id, department_id = row.split("|")
 
         company_department = Company_department(company_department_id=company_department_id,
-                                                department_id=department_id,
-                                                company_id=company_id
+                                                company_id=company_id,
+                                                department_id=department_id
                                                 )
 
         db.session.add(company_department)
