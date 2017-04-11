@@ -52,6 +52,9 @@ def logging_test():
 
 #*# making session work with Flask2
 # have session key along with the app.secret_key line above, import request, session
+# TODO: when browser has session cache, when browser restarts
+# the button shows as user logged in, the page is default
+# find a way to match the two
 @app.route('/login', methods=['POST'])
 def login():
     """Login user to the user specific information."""
@@ -110,14 +113,12 @@ def admin_logged():
     """Login as an admin"""
 
     return render_template('admin_index.html')
-    # TODO: generate non default status of admin
     
 
 @app.route('/employee_logged')
 def employee_logged():
     """Login as an employee"""
 
-    # TODO: have certain qualities AJAXed into DOM if employee
     return render_template('employee_index.html')
 
 
@@ -144,8 +145,6 @@ def list_employees():
 def show_employee(employee_id):
     """Show an individual emp"""
 
-    # TODO: find a way to refactor active search result not to re-query for individual data page
-    # TODO: Have this pass all the qualities already combined/assembled
     employee_info = Employee.query.filter_by(employee_id=employee_id).first()
     employee_company_info = Employee_company.query.filter_by(employee_id=employee_id).first()
 
@@ -195,7 +194,6 @@ def search_employees():
 
         # if to pass as one dictionary, the following will combine the for dictionaries
         # TODO: make lists of things to be combined, and for loop them
-        # TODO: refactor separate display module from server into utilities.py
         attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
         attr_three_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
         attr_all_added =  dict(list(attr_three_added.items()) + list(employees_attributes.items()))
@@ -219,7 +217,7 @@ def add_employee_page():
 # generate new user AND log into session right away
 # TODO: separate generate new person page into two, and have "User"
 # Thant has nothing to do with the deep details into company - have this form as sign-up
-@app.route('/add_employee.json')
+@app.route('/add_employee', methods=['POST'])
 def add_employee():
     """Add employee to the db."""
 
@@ -257,6 +255,10 @@ def add_employee():
     # TODO: change the hardcode below to have a correct input
     employee_companies = 1
 
+    print '\n\n\n\n\n'
+    print first_name
+    print '\n\n\n\n\n'
+
     new_employee = Employee(birthday=birthday,
                             personal_email=personal_email,
                             first_name=first_name,
@@ -276,9 +278,13 @@ def add_employee():
                             emergency_name=emergency_name,
                             emergency_phone=emergency_phone,
                             admin=admin)
-    print '\n\n\n\n\n'
-    print first_name
-    print '\n\n\n\n\n'
+
+    session['first_name'] = first_name
+    session['last_name'] = last_name
+    # add user id by query
+
+
+
     # add employee to db
     db.session.add(new_employee)
     db.session.commit()
@@ -289,7 +295,8 @@ def add_employee():
               }
     # iterate through the employees to add them one by one to the map format
     # print result
-    return jsonify(result)
+    flash(u"User %s %s added."%(first_name, last_name), 'error')
+    return redirect("/employee/add")
 
 
 @app.route('/employee_excel_loading', methods=['GET'])

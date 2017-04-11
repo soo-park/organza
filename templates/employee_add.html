@@ -5,7 +5,7 @@
 <!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='employee_add'>
     <h3>Employee Add</h3>
-    <form id='add'>
+    <form action='add_employee' method="POST">
       * fields are required.</br> 
       </br>
       Name:</br>
@@ -37,8 +37,17 @@
       system admin <input type='checkbox' name='admin' id='admin' placeholder="admin"></br>
       <input type='submit'> 
     </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
   </div>
 
-  <!-- <script src="static/js/user_add.js" type="text/javascript"></script> -->
+  <!-- <script src="static/js/employee_add.js" type="text/javascript"></script> -->
 
 {% endblock %}
