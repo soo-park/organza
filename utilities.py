@@ -101,14 +101,6 @@ def column_is_in_db(table, attr_name):
     return (attr_name in table.__dict__)
 
 
-def value_is_same_as_db(table, attr_name, attr_value):
-    """Check if a specific value of an attribute"""
-
-    new_instance = table.query.filter_by(attr_name=attr_value)
-
-    return table.query.filter_by(attr_name=attr_value).exists().scalar()
-
-
 def column_exists_value_same(table, attr_name, attr_value):
     """Check if the column exists in the table and the value coming in is same"""
 

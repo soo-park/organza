@@ -18,9 +18,9 @@
   <!-- Needed for Google Maps API -->
   <script src="static/js/map.js"></script>
 
+  <!-- if you decide to hardcode your api_key change the Jinja part with the key-->
   <!-- route('/map') passed global variable api_key into HTML - Jinja parses it as text -->
-  <!--  use key=JINJA BRACES api_key to do the practice on '/map' route  -->
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFGHze_U0BhQWbzg_nsH38nLzsfnEvxhQ&callback=initMap"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap"></script>
   
 {% endblock %}

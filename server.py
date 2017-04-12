@@ -4,24 +4,30 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from jinja2 import StrictUndefined
-from flask import (Flask, jsonify, render_template, request, flash, redirect,
-                   session)
-from flask_debugtoolbar import DebugToolbarExtension
 import os
 import datetime
+from jinja2 import StrictUndefined
+from flask_debugtoolbar import DebugToolbarExtension
+
+# Execute Flask object
+from flask import (Flask, jsonify, render_template, request, flash, redirect,
+                   session, url_for, send_from_directory)
+app = Flask(__name__)
+
+# for file upload
+from werkzeug.utils import secure_filename 
+UPLOAD_FOLDER = 'static/img/employee_info_photo'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # limits upload to 16mb
 
 # import employee related models
 from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import get_map_from_sqlalchemy, value_is_same_as_db
+from utilities import get_map_from_sqlalchemy
 
-
-
-# Execute Flask object
-app = Flask(__name__)
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -242,7 +248,7 @@ def add_employee():
 
     # TODO: change the admin to status, and have drop down menu that has admin, employee, other
     # TODO: add web_id --> change across model + login + seed + form
-    # TODO: change the hardcode below to have dynamic variables -- request.form.get('admin')
+    # TODO: change the hardcode below to have dynamic variables
     new_employee = Employee(
                             birthday= result['birthday'],
                             personal_email= result['personal_email'],
@@ -262,46 +268,73 @@ def add_employee():
                             postal_code= result['postal_code'],
                             emergency_name= result['emergency_name'],
                             emergency_phone= result['emergency_phone'],
-                            admin= result['admin']
+                            admin= request.form.get('admin')
                             )
+    # add employee to db
+    db.session.add(new_employee)
+    db.session.commit()
 
+
+    # TODO: refactor lator to a reusable code
     company_name = result['company_name']
+
+    # add company to DB if there was a user input that has to do with the table
     if company_name != None:
-        query_companies = db.session.query(Company.company_name).all()
-        company_names = { company.company_name for company in query_companies}
-        if company_name in company_names:
-            # print db.session.query(func.max(employee_company))
-            print company_name
+        from sqlalchemy.orm import Load, load_only
+
+        # get the company with that name
+        # TODO: company name should be unique. enforce it in the model
+        #       and test the case user input the same company name without selecting 
+        query_company = (Company.query.options(
+                                Load(Company)
+                                .load_only(Company.company_id, Company.company_name)
+                                )
+                             .filter_by(company_name=company_name)
+                             .first()
+                            )
+        del Load, load_only
+
+        # if the name user input exists in the database
+        if query_company:
+            # return company id and name
+            company_id = query_company.company_id
         else:
+            new_company = Company(company_name=company_name)
+
+
+            # new id in employee_company adds with this employee number to that company id number
+            # that company name new name adds employee_company table
+            # add company id to the employee_company <- will generate employee_company_id auto
+
             # new id company is generated with this particular company name
             # new id in employee_company adds with this new company and the employee
-            print company_name, company_names
+            
+    #         new_company = Company(
+    #                        )
 
+    #         commit(new_company, new_employee_compay)
 
-    # if result['department_name'] != None:
-    #     if department_name exists:
-    #         # new id in employee_company adds with this employee number to that company id number
+    #         new_emplyee_company = 
 
-    #     else: 
-    #         # new id company is generated with this particular company name
-            # new id in employee_company adds with this new company and the employee
+    #         print company_name, company_names
 
-    #                         department_name= request.form.get('department_name'),
-    #                         title= request.form.get('title'),
-    #                         office_name= request.form.get('office_name'),
-    #                         office_email= request.form.get('office_email'),
-    #                         password= request.form.get('password'),
-    #                         date_employeed= request.form.get('date_employeed'),
-    #                         date_departed= request.form.get('date_departed'),
-    #                         job_description= request.form.get('job_description'),
-    #                         office_phone= request.form.get('office_phone'),
-    #                         title_id= request.form.get('title_id'),
-    #                         department_id= request.form.get('department_id'),
-    #                         office_id= request.form.get('office_id'),
-    #                         department_id= request.form.get('department_id')
-    #                         )
+    # department_name = result
+ 
+    # department_name= result['department_name'],
+
+    # title= result['title'],
+
+    # office_name= result['office_name'],
+    # office_email= result['office_email'],
+    # password= result['password'],
+    # date_employeed= result['date_employeed'],
+    # date_departed= result['date_departed'],
+    # job_description= result['job_description'],
+    # office_phone= result['office_phone'],
+
 
     # add user id by query
+
 
     # add employee to db
     db.session.add(new_employee)
@@ -342,22 +375,54 @@ def list_companies():
 def map():
     """Show organizational structure."""
 
-    # # Practice: Using global varialbe 
-    # # Google Map key secret. import os is used with this code.
-    # # Also, in terminal, use the following command to make sure you have the key 
-    # # source <the file that contanins GOOGLE_MAP_KEY variable>
-    # api_key = os.environ['GOOGLE_MAP_KEY']
-    # # Passing secret key to the html
-    # return render_template('map.html', api_key=api_key)
+    # Practice: Using global varialbe 
+    # Google Map key secret. import os is used with this code.
+    # Also, in terminal, use the following command to make sure you have the key 
+    # source <the file that contanins GOOGLE_MAP_KEY variable>
+    api_key = os.environ['GOOGLE_MAP_KEY']
+    # Passing secret key to the html
+    return render_template('map.html', api_key=api_key)
 
-    return render_template('map.html')
+    # return render_template('map.html') # if you decide to hardcode your api_key
 
 
-@app.route('/analysis')
-def analysis():
-    """Show organizational structure."""
+######################### For Flask file upload ############################
+# http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
 
-    return render_template('analysis.html')
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/file_upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('image_in.html', filename=filename)
+
+    print "File upload unsuccessful. Try again."
+    return render_template('upload_file.html')
+
+    # FIXME:  write try except for RequestEntityTooLarge 16mb up
+    # FIXME: load the image upto the info page without reload using JQuery 
+    # A <form> tag is marked with enctype=multipart/form-data and 
+    # an <input type=file> is placed in that form.
+    # The application accesses the file from the files dictionary on the request object.
+    # use the save() method of the file to save the file permanently 
+    # somewhere on the filesystem.
+
+######################### For Flask file upload end #########################
 
 
 if __name__ == '__main__':
