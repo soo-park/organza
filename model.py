@@ -1,5 +1,4 @@
 """ Database model file
-
 * Data Model
 employee_company table connects Employee to Title and Company
 employee_company - Title  - Department_title - Department - Company_department - Company
@@ -14,8 +13,8 @@ Order: fields, foreign key (id) fields, relations, repr function
 Middle/association tables have foreign keys and relationships
 Other tables have relationships
 No back references were used
-
 """
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -29,7 +28,6 @@ class Employee(db.Model):
 
     __tablename__ = "employees"
 
-    # TODO: add the extra info needed, especially the phone number with regX
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     photo_url = db.Column(db.String(100), nullable=True)
     birthday = db.Column(db.Date)
@@ -40,7 +38,7 @@ class Employee(db.Model):
     nickname = db.Column(db.Unicode(50))
     k_name = db.Column(db.Unicode(50))
     kanji_name = db.Column(db.Unicode(50))
-    phone = db.Column(db.Unicode(50))
+    phone = db.Column(db.Unicode(20))
     mobile = db.Column(db.Unicode(50))
     address_line1 = db.Column(db.Unicode(50))
     address_line2 = db.Column(db.Unicode(50))
@@ -93,7 +91,7 @@ class Department(db.Model):
 
 
 class Title(db.Model):
-    """Offices around the globe."""
+    """Job titles."""
 
     __tablename__ = "titles"
 
@@ -115,7 +113,7 @@ class Office(db.Model):
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_name = db.Column(db.String(50))
-    phone = db.Column(db.Unicode(50))
+    phone = db.Column(db.Unicode(20))
     address_line1 = db.Column(db.Unicode(50))
     address_line2 = db.Column(db.Unicode(50))
     city = db.Column(db.String(30))
@@ -131,7 +129,7 @@ class Office(db.Model):
 
 
 class Employee_company(db.Model):
-    """Middle table between employee, dept, office."""
+    """Middle table between employee, company."""
 
     __tablename__ = "employee_companies"
 
@@ -205,31 +203,6 @@ class Office_department(db.Model):
 
     def __repr__(self):
         return "<Office_department id=%s>" %self.id
-
-
-# Helper functions
-
-# TODO: finish writing integration test sample data
-# def example_data():
-#     """generates sample data for tests.py """
-
-#     e1 = Employee()
-#     e2 = Employee()
-
-#     d1 = Department()
-#     d2 = Department()
-
-#     c1 = Company()
-#     c2 = Company()
-
-#     t1 = Title()
-#     t2 = Title()
-
-#     o1 = Office()
-#     o2 = Office()
-
-#     db.session.add_all([e1, e2, ...])
-#     db.session.commit()
 
 
 def connect_to_db(app, db_url='postgresql:///intranet'):

@@ -33,6 +33,7 @@ def load_employees():
             if k == '':
                 row[j] = None
 
+        # TODO: id is not needed for the seed base file, because it auto increments
         (employee_id, photo_url, birthday, personal_email,
             first_name, mid_name, last_name, nickname, k_name,
             kanji_name, phone, mobile, address_line1,

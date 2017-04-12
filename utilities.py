@@ -91,7 +91,35 @@ def get_map_from_sqlalchemy(a_object):
     return result
 
 
+def column_is_in_db(table, attr_name):
+    """Check if a specific attribute name(column) is in a table"""
+
+    # for item in Company.__dict__.iterkeys():
+    #     print item
+    # above code also prints the column
+
+    return (attr_name in table.__dict__)
+
+
+def value_is_same_as_db(table, attr_name, attr_value):
+    """Check if a specific value of an attribute"""
+
+    new_instance = table.query.filter_by(attr_name=attr_value)
+
+    return table.query.filter_by(attr_name=attr_value).exists().scalar()
+
+
+def column_exists_value_same(table, attr_name, attr_value):
+    """Check if the column exists in the table and the value coming in is same"""
+
+    return (column_is_in_db(table, attr_name) and 
+            value_is_same_as_db(table, attr_name, attr_value))
+
+
 # TODO: add a function to show if the employee has web access
 # by calculating if the person has email and password.
 # display that information only on admin side information page
 
+# TODO: a function that counts empty space on database
+# TODO: a function that allows you to fill in one space in database
+# TODO: a function that generates log for the auto functions listed above

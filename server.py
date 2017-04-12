@@ -16,12 +16,12 @@ from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import get_map_from_sqlalchemy
+from utilities import get_map_from_sqlalchemy, value_is_same_as_db
+
 
 
 # Execute Flask object
 app = Flask(__name__)
-
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -79,8 +79,6 @@ def login():
 
             date_employeed = db_employee_company_info.date_employeed
             date_departed = db_employee_company_info.date_departed
-            # .strftime("%Y%m%d")
-
             # TODO: When an employee departure date is added, check if admin
             #       if admin, ask if want to delete the admin status
             if db_employee.admin == True:
@@ -123,6 +121,7 @@ def employee_logged():
 
 
 #*# Session log out
+# TODO: Find a way to delete the login info when the window is closed
 # request, redirect, url_for, session are needed to be imported
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -210,6 +209,7 @@ def search_employees():
 def add_employee_page():
     """Load add_employee page db."""
 
+    # TODO: make the query name specific, and make the list sorted 
     companies = Company.query.all()
     departments = Department.query.all()
     titles = Title.query.all()
@@ -229,59 +229,63 @@ def add_employee_page():
 def add_employee():
     """Add employee to the db."""
 
-    ############## BLOCKER ###################
-    # The employee not adding
-    # # how to you assign multiple keyword arguments as the attributes
-    # # Or should I receive them individually, and there is no other way
-    # kwargs = {}
-    # for item in request.args:
-    #     print item
-    #     if request.args[item]:
-    #         kwargs[item] = request.args[item]
-    # new_employee = Employee(**kwargs.keys()=**kwargs.values())
+    # Unicode/datetime does not accept empty string. When user do not input 
+    # anyting, an empty string becomes the value. Thus, iterate to assign None. 
+    # Exception: checkbox will not be submitted if off. Thus, receive value directly
+    all_input = request.form.items()
+    result = {}
+    for key, value in all_input:
+        if value == '':
+            result[key] = None
+        else:
+            result[key] = value
 
-    # TODO: limit the form input format
-    # TODO: change the hardcode below to have a correct input
-
-    # to calculate
-    # employee_id: check office email is there
-    #              if not there next to last one
-
-    # check if the relation is there if not there next to last one
-    #    employee_company_id 
-    #    employee_company_id
-    #    company_department_id
-    # office_department_id
-
-    # query from name
-    #    company_id 
-    #    department_id
-    #    title_id
-    print type(request.form.get('emergency_phone'))
+    # TODO: change the admin to status, and have drop down menu that has admin, employee, other
+    # TODO: add web_id --> change across model + login + seed + form
+    # TODO: change the hardcode below to have dynamic variables -- request.form.get('admin')
     new_employee = Employee(
-                            birthday= request.form.get('birthday'),
-                            personal_email= request.form.get('personal_email'),
-                            first_name= request.form.get('first_name'),
-                            mid_name= request.form.get('mid_name'),
-                            last_name= request.form.get('last_name'),
-                            nickname= request.form.get('nickname'),
-                            k_name= request.form.get('k_name'),
-                            kanji_name= request.form.get('kanji_name'),
-                            phone= request.form.get('phone'),
-                            mobile= request.form.get('mobile'),
-                            address_line1= request.form.get('address_line1'),
-                            address_line2= request.form.get('address_line2'),
-                            city= request.form.get('city'),
-                            state= request.form.get('state'),
-                            country= request.form.get('country'),
-                            postal_code= request.form.get('postal_code'),
-                            emergency_name= request.form.get('emergency_name'),
-                            emergency_phone= request.form.get('emergency_phone'),
-                            admin= request.form.get('admin')
+                            birthday= result['birthday'],
+                            personal_email= result['personal_email'],
+                            first_name= result['first_name'],
+                            mid_name= result['mid_name'],
+                            last_name= result['last_name'],
+                            nickname= result['nickname'],
+                            k_name= result['k_name'],
+                            kanji_name= result['kanji_name'],
+                            phone= result['phone'],
+                            mobile= result['mobile'],
+                            address_line1= result['address_line1'],
+                            address_line2= result['address_line2'],
+                            city= result['city'],
+                            state= result['state'],
+                            country= result['country'],
+                            postal_code= result['postal_code'],
+                            emergency_name= result['emergency_name'],
+                            emergency_phone= result['emergency_phone'],
+                            admin= result['admin']
                             )
 
-    # middle_employee_company = Employee_company(
-    #                         company_name= request.form.get('company_name'),
+    company_name = result['company_name']
+    if company_name != None:
+        query_companies = db.session.query(Company.company_name).all()
+        company_names = { company.company_name for company in query_companies}
+        if company_name in company_names:
+            # print db.session.query(func.max(employee_company))
+            print company_name
+        else:
+            # new id company is generated with this particular company name
+            # new id in employee_company adds with this new company and the employee
+            print company_name, company_names
+
+
+    # if result['department_name'] != None:
+    #     if department_name exists:
+    #         # new id in employee_company adds with this employee number to that company id number
+
+    #     else: 
+    #         # new id company is generated with this particular company name
+            # new id in employee_company adds with this new company and the employee
+
     #                         department_name= request.form.get('department_name'),
     #                         title= request.form.get('title'),
     #                         office_name= request.form.get('office_name'),
@@ -311,15 +315,14 @@ def add_employee():
 
 @app.route('/employee_excel_loading', methods=['GET'])
 def employee_excel_loading():
-    """"""
-
+    """Load Excel file and save"""
 
     return render_template('employee_excel.html')
 
 
 @app.route('/employee_excel', methods=['POST'])
 def employee_excel():
-    """"""
+    """Process the Excel data into DB"""
 
     # the file object is in python space to be used
     file = request.files['emp_xls']

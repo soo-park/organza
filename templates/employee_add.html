@@ -5,48 +5,50 @@
 <!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='employee_add'>
     <h3>Employee Add</h3>
-    <form action='/add_employee' method="POST">
+    <form action='/add_employee' method='POST'>
       * fields are required.</br> 
       </br>
       <fieldset>
         <!-- TODO: photo upload -->
         <!-- Other option is to use list of attributes and jinha, but placeholder will be row name  -->
         <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
-        <input type='text' name='mid_name' id='mid_name' placeholder="Middle name">
-        <input type='text' name='last_name' id='last_name' placeholder="Last Name">*</br>
-        <input type='text' name='k_name' id='k_name' placeholder="Korean name">
-        <input type='text' name='kanji_name' id='kanji_name' placeholder="Kanji Name"></br>
+        <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
+        <input type='text' name='last_name' id='last_name' placeholder='Last Name'>*</br>
+        <input type='text' name='nickname' id='nickname' placeholder='Nickname'>
+        <input type='text' name='k_name' id='k_name' placeholder='Korean name'>
+        <input type='text' name='kanji_name' id='kanji_name' placeholder='Kanji Name'></br>
         </br>
 
         <label>Company:</label>
-        <input list="companies" name="company_name" placeholder="Select or input">
-        <datalist id="companies">
+        <input list='companies' name='company_name' placeholder='Select or input'>
+        <datalist id='companies'>
           {% for company in companies %}
-            <option value="{{ company.company_name }}">
+            <option value='{{ company.company_name }}'>
           {% endfor %}
         </datalist>
 
+        <!-- limit the pull down menu size with scroll bar -->
         <label>Department:</label>
-        <input list="departments" name="department_name" placeholder="Select or input">
-        <datalist id="departments">
+        <input list='departments' name='department_name' placeholder='Select or input'>
+        <datalist id='departments'>
           {% for department in departments %}
-            <option value="{{ department.department_name }}">
+            <option value='{{ department.department_name }}'>
           {% endfor %}
         </datalist></br>
 
         <label>Title:</label>
-        <input list="title" name="title" placeholder="Select or input">
-        <datalist id="title">
+        <input list='title' name='title' placeholder='Select or input'>
+        <datalist id='title'>
           {% for title in titles %}
-            <option value="{{ title.title }}">
+            <option value='{{ title.title }}'>
           {% endfor %}
         </datalist>
 
         <label>Office:</label>
-        <input list="offices" name="office_name" placeholder="Select or input">
-        <datalist id="offices">
+        <input list='offices' name='office_name' placeholder='Select or input'>
+        <datalist id='offices'>
           {% for office in offices %}
-            <option value="{{ office.office_name }}">
+            <option value='{{ office.office_name }}'>
           {% endfor %}
         </datalist></br>
         </br>
@@ -59,38 +61,36 @@
         <input type='text' name='password' id='password' placeholder='Password'></br>
       </br>
       <label>Personal Contact:</label></br>
-        <input type='tel' name='mobile' id='mobile' placeholder="Mobile">
-        <input type='tel' name='phone' id='phone' placeholder="Home Phone">
-        <input type='email' name='personal_email' id='personal_email' placeholder="Personal Email"></br>
+        <input type='tel' name='mobile' id='mobile' placeholder='Mobile'>
+        <input type='tel' name='phone' id='phone' placeholder='Home Phone'>
+        <input type='email' name='personal_email' id='personal_email' placeholder='Personal Email'></br>
         </br>
 
       <label>Home Address:</label></br>
-        <input type='text' name='address_line1' id='address_line1' placeholder="Line 1">
-        <input type='text' name='address_line2' id='address_line2' placeholder="Line 2"></br>
-        <input type='text' name='city' id='city' placeholder="City">
-        <input type='text' name='state' id='state' placeholder="State"></br>
-        <input type='text' name='postal_code' id='postal_code' placeholder="Postal Code">
-        <input type='text' name='country' id='country' placeholder="Country"></br>
+        <input type='text' name='address_line1' id='address_line1' placeholder='Line 1'>
+        <input type='text' name='address_line2' id='address_line2' placeholder='Line 2'></br>
+        <input type='text' name='city' id='city' placeholder='City'>
+        <input type='text' name='state' id='state' placeholder='State'></br>
+        <input type='text' name='postal_code' id='postal_code' placeholder='Postal Code'>
+        <input type='text' name='country' id='country' placeholder='Country'></br>
         </br>
 
       <label>Emergency Contact:</label></br>
-        <input type='text' name='emergency_name' id='emergency_name' placeholder="Emergency Name">
-        <input type='tel' name='emergency_phone' id='emergency_phone' placeholder="Emergency Phone"></br>
+        <input type='text' name='emergency_name' id='emergency_name' placeholder='Emergency Name'>
+        <input type='tel' name='emergency_phone' id='emergency_phone' placeholder='Emergency Phone'></br>
         </br>
       </fieldset>
 
       <label>Job Description:</label></br>
-        <textarea name='job_description' id='job_description' rows="5" cols="50" placeholder=''></textarea></br>
-
-
-
+        <textarea name='job_description' id='job_description' rows='5' cols='50' placeholder=''></textarea></br>
 
       <label>History:</label></br>
-        Birthday: <input type='date' name='birthday' id='birthday' placeholder="Birthday"></br>
+        Birthday: <input type='date' name='birthday' id='birthday' placeholder='Birthday'></br>
         Date Employeed: <input type='date' name='date_employeed' id='date_employeed' placeholder='Date Employeed'></br>
         Date Departed: <input type='date' name='date_departed' id='date_departed' placeholder='Date Departed'></br>
 
-        system admin <input type='checkbox' name='admin' id='admin'></br>
+          <input type="hidden" name='admin'  id='admin' value="false">
+          system admin <input type="checkbox" name='admin' id='admin' value="true"></br>
         
       </fieldset>
 
@@ -100,6 +100,6 @@
     </form>
   </div>
 
-  <!-- <script src="static/js/employee_add.js" type="text/javascript"></script> -->
+  <!-- <script src='static/js/employee_add.js' type='text/javascript'></script> -->
 
 {% endblock %}

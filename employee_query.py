@@ -78,6 +78,7 @@ def search_by_company_name(**kwargs):
     result = (db.session.query(Employee)
                        .join(Employee_company)
                        .join(Company)
+                       .filter_by(company_name = kwargs['company_name'])
                        .join(Company_department)
                        .join(Department)
                        .join(Department_title)
