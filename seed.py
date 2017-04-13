@@ -42,12 +42,12 @@ def load_employees():
             ) = row
 
         employee = Employee(
-                            photo_url=photo_url,
+                            photo_url=unicode(photo_url),
                             birthday=birthday,
                             personal_email=personal_email,
-                            first_name=first_name,
-                            mid_name=mid_name,
-                            last_name=last_name,
+                            first_name=unicode(first_name),
+                            mid_name=unicode(mid_name),
+                            last_name=unicode(last_name),
                             nickname=unicode(nickname),
                             k_name=unicode(k_name),
                             kanji_name=unicode(kanji_name),
@@ -55,12 +55,12 @@ def load_employees():
                             mobile=unicode(mobile),
                             address_line1=unicode(address_line1),
                             address_line2=unicode(address_line2),
-                            city=city,
-                            state=state,
-                            country=country,
-                            postal_code=postal_code,
+                            city=unicode(city),
+                            state=unicode(state),
+                            country=unicode(country),
+                            postal_code=unicode(postal_code),
                             emergency_name=unicode(emergency_name),
-                            emergency_phone=emergency_phone,
+                            emergency_phone=unicode(emergency_phone),
                             admin=admin
                             )
 
@@ -84,8 +84,9 @@ def load_companies():
         company_id, company_name, short_name = row.split("|")
 
         company = Company(
-                          company_name=company_name,
-                          short_name=short_name)
+                          company_name=unicode(company_name),
+                          short_name=unicode(short_name)
+                          )
 
         db.session.add(company)
 
@@ -102,7 +103,7 @@ def load_department():
         department_id, department_name = row.split("|")
 
         department = Department(
-                                department_name=department_name
+                                department_name=unicode(department_name)
                                 )
 
         db.session.add(department)
@@ -120,7 +121,7 @@ def load_title():
         title_id, title, k_title = row.split("|")
 
         title = Title(
-                      title=title,
+                      title=unicode(title),
                       k_title=unicode(k_title)
                      )
 
@@ -140,14 +141,14 @@ def load_office():
         city, state, country, postal_code, fax) = row.split("|")
 
         office = Office(
-                        office_name=office_name,
+                        office_name=unicode(office_name),
                         phone=unicode(phone),
                         address_line1=unicode(address_line1), 
                         address_line2=unicode(address_line2),
-                        city=city,
-                        state=state,
-                        country=country,
-                        postal_code=postal_code,
+                        city=unicode(city),
+                        state=unicode(state),
+                        country=unicode(country),
+                        postal_code=unicode(postal_code),
                         fax=unicode(fax)
                         )
 
@@ -183,7 +184,7 @@ def load_employee_companies():
                                             password=password,
                                             date_employeed=date_employeed,
                                             date_departed=date_departed,
-                                            job_description=job_description,
+                                            job_description=unicode(job_description),
                                             office_phone=unicode(office_phone), 
                                             employee_id=employee_id,
                                             company_id=company_id,

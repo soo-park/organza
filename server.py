@@ -45,7 +45,7 @@ def index():
     """Homepage."""
 
     # return render_template('index.html')
-    return render_template('index.html')
+    return render_template('home_admin.html')
 
 #*# logging
 # used for marking on console for developer to print needed info
@@ -111,22 +111,22 @@ def login():
 def logged():
     """Login as a regular user"""
 
-    return render_template('index.html') # (date_employeed and date_departed)
+    return render_template('home_general.html') # (date_employeed and date_departed)
+
+
+@app.route('/employee_logged')
+def employee_logged():
+    """Login as an employee"""
+
+    return render_template('home_employee.html')
 
 
 @app.route('/admin_logged')
 def admin_logged():
     """Login as an admin"""
 
-    return render_template('admin_index.html')
+    return render_template('home_admin.html')
     
-
-@app.route('/employee_logged')
-def employee_logged():
-    """Login as an employee"""
-
-    return render_template('employee_index.html')
-
 
 #*# Session log out
 # TODO: Find a way to delete the login info when the window is closed
@@ -207,7 +207,12 @@ def search_employees():
 
         # now we add the employee dictionary to the result dictionary
         # print attr_all_added, '\n\n\n\n'
+        
         result[employee.employee_id] = attr_all_added
+
+        # When jasonifying, you cannot use date(time) object
+        # thus need to strftime the object to be read as a string
+        result[employee.employee_id]['birthday']=result[employee.employee_id]['birthday'].strftime("%Y/%m/%d")
 
     print result
     return jsonify(result)
@@ -322,6 +327,8 @@ def add_employee():
             db.session.add(new_title)
             db.session.commit()
             title_id = new_title.title_id
+    else:
+        title_id = None
 
     # add department to DB is there was a user input has to do with the table
     department_name= result['department_name']
@@ -343,7 +350,9 @@ def add_employee():
             new_department = Department(department_name=department_name)
             db.session.add(new_department)
             db.session.commit()
-            department_id = new_department.department_id  
+            department_id = new_department.department_id
+    else:
+        department_id = None
 
     # add employee_company data with metadata input
     office_email= result['office_email']
@@ -361,31 +370,64 @@ def add_employee():
                                     office_phone=office_phone))
     db.session.commit()
 
+    # add office to DB is there was a user input has to do with the table
+    office_name = result['office_name']
 
-    # add association tables
-    print Company_department.query
+    if office_name != None:
+        query_office_name = (Office.query
+                             .filter_by(office_name=office_name)
+                             .first()
+                            )
+        if query_office_name:
+            office_id = query_office_name.office_id
+        else:
+            new_office_name = Office(office_name=office_name)
+            db.session.add(new_office_name)
+            #TODO: prompt user to enter the office info
+            db.session.commit()
+            office_id = new_office_name.office_id
+    else:
+        office_id = None
 
+    # add department_title data
+    query_department_title = (Department_title.query
+                             .filter_by(department_id=department_id,
+                                        title_id=title_id)
+                             .first()
+                            )
+    if query_department_title == None:
+        db.session.add(Department_title(
+                                        department_id=department_id,
+                                        title_id=title_id
+                                        )
+                        )
+        db.session.commit()
 
- 
-    # if title != None:
-    #     query_title = (Title.query.options(
-    #                             Load(Title)
-    #                             .load_only(Title.title_id, Title.title)
-    #                             )
-    #                          .filter_by(title=title)
-    #                          .first()
-    #                         )
-    #     if query_title:
-    #         title_id = query_title.title_id
-    #     else:
-    #         new_title = Title(title=title)
-    #         db.session.add(new_title)
-    #         db.session.commit()
-    #         title_id = new_title.title_id
+    # add office_department data
+    query_office_department = (Office_department.query
+                                .filter_by(department_id=department_id,
+                                           office_id=office_id)
+                         .first()
+                        )
+    if query_office_department == None:
+        db.session.add(Office_department(
+                                         department_id=department_id,
+                                         office_id=office_id
+                                        ))
+        db.session.commit()
 
-
-
-
+    # add company_department data
+    query_company_department = (Company_department.query
+                                .filter_by(department_id=department_id,
+                                           company_id=company_id)
+                         .first()
+                        )
+    if query_company_department == None:
+        db.session.add(Company_department(
+                                          department_id=department_id,
+                                          company_id=company_id
+                                         ))
+        db.session.commit()
 
     # add employee to db
     db.session.add(new_employee)
@@ -459,7 +501,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('image_in.html', filename=filename)
+            return render_template('upload_file_image.html', filename=filename)
 
     print "File upload unsuccessful. Try again."
     return render_template('upload_file.html')

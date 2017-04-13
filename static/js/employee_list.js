@@ -5,6 +5,7 @@ $(function(){
   // AJAX event handler to attach action onto a ID
   $('#search').on('submit', function(evt){
     // to stop going to the server side
+    console.log('Made it to list function');
     evt.preventDefault();
 
     // JQuery gets the submitted value by the id

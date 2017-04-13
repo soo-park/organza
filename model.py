@@ -29,12 +29,12 @@ class Employee(db.Model):
     __tablename__ = "employees"
 
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_url = db.Column(db.String(100), nullable=True)
+    photo_url = db.Column(db.Unicode(100), nullable=True)
     birthday = db.Column(db.Date)
     personal_email = db.Column(db.String(100))
-    first_name = db.Column(db.String(50), nullable=False)
-    mid_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
+    first_name = db.Column(db.Unicode(50), nullable=False)
+    mid_name = db.Column(db.Unicode(50))
+    last_name = db.Column(db.Unicode(50))
     nickname = db.Column(db.Unicode(50))
     k_name = db.Column(db.Unicode(50))
     kanji_name = db.Column(db.Unicode(50))
@@ -42,10 +42,10 @@ class Employee(db.Model):
     mobile = db.Column(db.Unicode(50))
     address_line1 = db.Column(db.Unicode(50))
     address_line2 = db.Column(db.Unicode(50))
-    city = db.Column(db.String(30))
-    state = db.Column(db.String(30))
-    country = db.Column(db.String(50))
-    postal_code = db.Column(db.String(50))
+    city = db.Column(db.Unicode(30))
+    state = db.Column(db.Unicode(30))
+    country = db.Column(db.Unicode(50))
+    postal_code = db.Column(db.Unicode(50))
     emergency_name = db.Column(db.Unicode(50))
     emergency_phone = db.Column(db.Unicode(20))
     admin = db.Column(db.Boolean, server_default=u'false')
@@ -64,8 +64,8 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    company_name = db.Column(db.String(50))
-    short_name = db.Column(db.String(50))
+    company_name = db.Column(db.Unicode(50))
+    short_name = db.Column(db.Unicode(50))
 
     employee_companies = db.relationship('Employee_company')
     company_departments = db.relationship('Company_department')
@@ -80,7 +80,7 @@ class Department(db.Model):
     __tablename__ = "departments"
 
     department_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    department_name = db.Column(db.String(50))
+    department_name = db.Column(db.Unicode(50))
 
     department_titles = db.relationship('Department_title')
     office_departments = db.relationship('Office_department')
@@ -96,7 +96,7 @@ class Title(db.Model):
     __tablename__ = "titles"
 
     title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String(50))
+    title = db.Column(db.Unicode(50))
     k_title = db.Column(db.Unicode(50))
 
     employee_companies = db.relationship('Employee_company')
@@ -112,14 +112,14 @@ class Office(db.Model):
     __tablename__ = "offices"
 
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    office_name = db.Column(db.String(50))
+    office_name = db.Column(db.Unicode(50))
     phone = db.Column(db.Unicode(20))
     address_line1 = db.Column(db.Unicode(50))
     address_line2 = db.Column(db.Unicode(50))
-    city = db.Column(db.String(30))
-    state = db.Column(db.String(30))
-    country = db.Column(db.String(50))
-    postal_code = db.Column(db.String(50))
+    city = db.Column(db.Unicode(30))
+    state = db.Column(db.Unicode(30))
+    country = db.Column(db.Unicode(50))
+    postal_code = db.Column(db.Unicode(50))
     fax = db.Column(db.Unicode(50))
 
     office_departments = db.relationship('Office_department')
@@ -138,7 +138,7 @@ class Employee_company(db.Model):
     password = db.Column(db.String(50))
     date_employeed = db.Column(db.Date)
     date_departed = db.Column(db.Date)
-    job_description = db.Column(db.String(200))
+    job_description = db.Column(db.Unicode(200))
     office_phone = db.Column(db.Unicode(20))
 
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
