@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='employee_add'>
     <h3>Employee Add</h3>
@@ -20,7 +19,7 @@
         </br>
 
         <label>Company:</label>
-        <input list='companies' name='company_name' placeholder='Select or input'>
+        <input list='companies' name='company_name' placeholder='Select'>
         <datalist id='companies'>
           {% for company in companies %}
             <option value='{{ company.company_name }}'>
@@ -29,7 +28,7 @@
 
         <!-- limit the pull down menu size with scroll bar -->
         <label>Department:</label>
-        <input list='departments' name='department_name' placeholder='Select or input'>
+        <input list='departments' name='department_name' placeholder='Select'>
         <datalist id='departments'>
           {% for department in departments %}
             <option value='{{ department.department_name }}'>
@@ -37,7 +36,7 @@
         </datalist></br>
 
         <label>Title:</label>
-        <input list='title' name='title' placeholder='Select or input'>
+        <input list='title' name='title' placeholder='Select'>
         <datalist id='title'>
           {% for title in titles %}
             <option value='{{ title.title }}'>
@@ -45,7 +44,7 @@
         </datalist>
 
         <label>Office:</label>
-        <input list='offices' name='office_name' placeholder='Select or input'>
+        <input list='offices' name='office_name' placeholder='Select'>
         <datalist id='offices'>
           {% for office in offices %}
             <option value='{{ office.office_name }}'>
@@ -92,7 +91,6 @@
         
       </fieldset>
 
-      
       <input type='submit'> 
     
     </form>

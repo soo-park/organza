@@ -1,0 +1,1 @@
+virtualenv env; source env/bin/activate; dropdb intranet; createdb intranet; pip install -r requirements.txt; echo export secret_key='abc' > secret.sh; source secret.sh; python model.py; python seed.py; open 'http://localhost:5000'; python server.py;

@@ -6,13 +6,15 @@ sys.setdefaultencoding('utf8')
 
 import os
 import datetime
-from jinja2 import StrictUndefined
-from flask_debugtoolbar import DebugToolbarExtension
 
 # Execute Flask object
 from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session, url_for, send_from_directory)
+from flask_debugtoolbar import DebugToolbarExtension
 app = Flask(__name__)
+
+# for SQLAlchemy to load only certain columns
+from sqlalchemy.orm import Load, load_only
 
 # for file upload
 from werkzeug.utils import secure_filename 
@@ -28,12 +30,12 @@ from model import (Employee, Employee_company, Company, Department,Title,
 from employee_query import *
 from utilities import get_map_from_sqlalchemy
 
-
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
 app.secret_key = os.environ['secret_key']
 
 # undefined variable in Jinja2, not fails silently but raises an error
+from jinja2 import StrictUndefined
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -275,15 +277,14 @@ def add_employee():
     db.session.commit()
 
 
-    # TODO: refactor lator to a reusable code
+    # add company to DB if there was a user input that has to do with the table
+################################## ################################## ################################## 
+############TODO: refactor lator to a reusable code (get primary key and return)
     company_name = result['company_name']
 
-    # add company to DB if there was a user input that has to do with the table
     if company_name != None:
-        from sqlalchemy.orm import Load, load_only
-
         # get the company with that name
-        # TODO: company name should be unique. enforce it in the model
+        # TODO: company/title/dept name should be unique. enforce it in the model
         #       and test the case user input the same company name without selecting 
         query_company = (Company.query.options(
                                 Load(Company)
@@ -292,59 +293,108 @@ def add_employee():
                              .filter_by(company_name=company_name)
                              .first()
                             )
-        del Load, load_only
-
         # if the name user input exists in the database
         if query_company:
-            # return company id and name
+            # set the company_id to be used later on relational tables 
             company_id = query_company.company_id
         else:
-            new_company = Company(company_name=company_name)
+            # generate new company, and set the company_id to be used later
+            new_company = Company(company_name=company_name, short_name=None)
+            db.session.add(new_company)
+            db.session.commit()
+            company_id = new_company.company_id
+
+    # add title to DB is there was a user input has to do with the table
+    title = result['title']
+
+    if title != None:
+        query_title = (Title.query.options(
+                                Load(Title)
+                                .load_only(Title.title_id, Title.title)
+                                )
+                             .filter_by(title=title)
+                             .first()
+                            )
+        if query_title:
+            title_id = query_title.title_id
+        else:
+            new_title = Title(title=title)
+            db.session.add(new_title)
+            db.session.commit()
+            title_id = new_title.title_id
+
+    # add department to DB is there was a user input has to do with the table
+    department_name= result['department_name']
+
+    if department_name != None:
+        query_department = (Department.query.options(
+                                Load(Department)
+                                .load_only(Department.department_id, Department.department_name)
+                                )
+                             .filter_by(department_name=department_name)
+                             .first()
+                            )
+        # if the name user input exists in the database
+        if query_department:
+            # set the company_id to be used later on relational tables 
+            department_id = query_department.department_id
+        else:
+            # generate new company, and set the company_id to be used later
+            new_department = Department(department_name=department_name)
+            db.session.add(new_department)
+            db.session.commit()
+            department_id = new_department.department_id  
+
+    # add employee_company data with metadata input
+    office_email= result['office_email']
+    password= result['password']
+    date_employeed= result['date_employeed']
+    date_departed= result['date_departed'],
+    job_description= result['job_description']
+    office_phone= result['office_phone']
+
+    db.session.add(Employee_company(office_email=office_email,
+                                    password=password,
+                                    date_employeed=date_employeed,
+                                    date_departed=date_departed,
+                                    job_description=job_description,
+                                    office_phone=office_phone))
+    db.session.commit()
 
 
-            # new id in employee_company adds with this employee number to that company id number
-            # that company name new name adds employee_company table
-            # add company id to the employee_company <- will generate employee_company_id auto
+    # add association tables
+    print Company_department.query
 
-            # new id company is generated with this particular company name
-            # new id in employee_company adds with this new company and the employee
-            
-    #         new_company = Company(
-    #                        )
 
-    #         commit(new_company, new_employee_compay)
-
-    #         new_emplyee_company = 
-
-    #         print company_name, company_names
-
-    # department_name = result
  
-    # department_name= result['department_name'],
+    # if title != None:
+    #     query_title = (Title.query.options(
+    #                             Load(Title)
+    #                             .load_only(Title.title_id, Title.title)
+    #                             )
+    #                          .filter_by(title=title)
+    #                          .first()
+    #                         )
+    #     if query_title:
+    #         title_id = query_title.title_id
+    #     else:
+    #         new_title = Title(title=title)
+    #         db.session.add(new_title)
+    #         db.session.commit()
+    #         title_id = new_title.title_id
 
-    # title= result['title'],
-
-    # office_name= result['office_name'],
-    # office_email= result['office_email'],
-    # password= result['password'],
-    # date_employeed= result['date_employeed'],
-    # date_departed= result['date_departed'],
-    # job_description= result['job_description'],
-    # office_phone= result['office_phone'],
 
 
-    # add user id by query
 
 
     # add employee to db
     db.session.add(new_employee)
     db.session.commit()
 
-    # iterate through the employees to add them one by one to the map format
-    # print result
-    # flash(u"User %s %s added."%(first_name, last_name), 'error')
+    # TODO: modal window of the added employee data with
+    #       enter more/back to home page selection button
     return redirect("/employee/add")
-
+################################## ################################## ################################## 
 
 @app.route('/employee_excel_loading', methods=['GET'])
 def employee_excel_loading():

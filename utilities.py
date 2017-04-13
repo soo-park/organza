@@ -30,11 +30,8 @@ from model import Employee, Employee_company, Company, connect_to_db, db
     ## TODO: Build a function for importing Excel (below code imports one cell)
 # def import_Excel():
 #     """"""
-
 #     # # make route
 #     # # use function in route to call this function
-
-
 #     # import openpyxl
 #     # from openpyxl import load_workbook
 #     # wb = load_workbook(filename = 'static/doc/employee.xlsx')
@@ -100,12 +97,38 @@ def column_is_in_db(table, attr_name):
 
     return (attr_name in table.__dict__)
 
+# def value_is_same_as_db():
+# def column_exists_value_same(table, attr_name, attr_value):
+#     """Check if the column exists in the table and the value coming in is same"""
 
-def column_exists_value_same(table, attr_name, attr_value):
-    """Check if the column exists in the table and the value coming in is same"""
+#     return (column_is_in_db(table, attr_name) and 
+#             value_is_same_as_db(table, attr_name, attr_value))
 
-    return (column_is_in_db(table, attr_name) and 
-            value_is_same_as_db(table, attr_name, attr_value))
+
+# def if_any_in_db(table, attr_dic):
+#     for item in attr_dic:
+#         if 
+
+# def get_id(table, attr_name, attr_value):
+#     """Check if a specific value of given column in given table"""
+#     if title != None or k_title != None:
+#         query_company = (table.query.options(
+#                                 Load(table)
+#                                 .load_only(table.table_id, table.table_name)
+#                                 )
+#                              .filter_by(table_name=table_name)
+#                              .first()
+#                             )
+#     else:
+
+
+# def add_new(table, attr_dic):
+#     """Add new row to a give table by entering given attributes
+#        and others none"""
+
+#     # >>> from sqlalchemy.inspection import inspect
+#     # >>> inspect(User).primary_key[0].name
+#     # 'id'
 
 
 # TODO: add a function to show if the employee has web access
