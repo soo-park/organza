@@ -16,9 +16,15 @@ Ponyorm online editor, Balsamiq Mockups3
 
 ## How to see a test run of this site
 
+#### Use bash script given
+
+In terminal window in the folder downloaded, run the following command
+
+source roster_bash.sh
+
 #### Shortcut
 
- Copy the entire paragraph of the following inside the forked folder to run the web app
+Copy the entire paragraph of the following inside the forked folder to run the web app
 
 virtualenv env; source env/bin/activate; dropdb intranet; createdb intranet; pip install -r requirements.txt; echo export secret_key='abc' > secret.sh; source secret.sh; python model.py; python seed.py; open 'http://localhost:5000'; python server.py;
 
