@@ -1,3 +1,5 @@
+#### STUDY: Doing only one query with existing/non existing search criteria #####
+
 # reusable code for queires
 
 from model import (Employee, Employee_company, Company, Department,Title,
@@ -71,6 +73,7 @@ def search_no_criteria(**kwargs):
                        .join(Title)
                        .distinct()
                        .all())
+    print "No search criteria"
     return result
 
 
@@ -317,3 +320,65 @@ def search_by_all_four(**kwargs):
 # def new_search_criteria(**kwargs):
 #     pass
 #     raise NotImplementedError
+
+
+################################################################################
+# The code below can be used in server.py to do the search
+
+def company_department_first_last_search():
+    """Search the query result for the right employees for criteria"""
+    ############################################################################
+    # FIXME: if an employee have fields that are empty, the search result is incorrect
+    ############################################################################
+    # a parameter was saved in DOM, so no need to get par in route
+    # request.args brings in the arguments that are passed in by AJAX
+    # form result dictionary with key-value-pair items in a list
+    # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
+    # this code will get what is in the dictionary passed in by AJAX
+    kwargs = {}
+    for item in request.args:
+        if request.args[item]:
+            kwargs[item] = request.args[item]
+    queried_employees = query_selector(kwargs)
+    print kwargs
+
+    result = {}
+
+    # iterate through the employees to add them one by one to the map format
+    for employee in queried_employees:
+
+        # # To get something from the joined tables, you have to write the names
+        # # Below code will bring the name of the first company the person is working
+        # print employee.employee_companies[0].companies.company_name
+
+        # Below code will bring all the iter items from the first company and make a dictionary out of it
+        # Here the attributes of the employees from each tables are retrieved 
+        employees_tables = employee
+        employees_attributes = get_map_from_sqlalchemy(employee)
+
+        # TODO: make it possible for the employee info to contain
+        # all companies the person is working for by iterating 0
+        companies_tables = employee.employee_companies[0].companies
+        companies_attributes = get_map_from_sqlalchemy(companies_tables)
+
+        departments_tables = companies_tables.company_departments[0].departments
+        departments_attributes = get_map_from_sqlalchemy(departments_tables)
+
+        titles_tables = employee.employee_companies[0].titles
+        titles_attributes = get_map_from_sqlalchemy(titles_tables)
+
+        # if to pass as one dictionary, the following will combine the for dictionaries
+        # TODO: make lists of things to be combined, and for loop them
+        attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
+        attr_three_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
+        attr_all_added =  dict(list(attr_three_added.items()) + list(employees_attributes.items()))
+
+        # now we add the employee dictionary to the result dictionary
+        result[employee.employee_id] = attr_all_added
+
+        # When jasonifying, you cannot use date(time) object
+        # thus need to strftime the object to be read as a string
+        result[employee.employee_id]['birthday']=result[employee.employee_id]['birthday'].strftime("%Y/%m/%d")
+        
+    print result
+    return jsonify(result)

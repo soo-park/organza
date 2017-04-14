@@ -11,8 +11,6 @@ $(function(){
     // JQuery gets the submitted value by the id
     // figure out what the user typed in
     // not like regular JS the value is not value() but is val() in JQuery
-    // TODO: use regX to allow first_name, last_name, k_name and all combis
-    //       make name field to be only one field   
     var companySearch = $('#company').val();
     var departmentSearch = $('#department').val();
     var firstNameSearch = $('#first-name').val();
@@ -54,4 +52,11 @@ $(function(){
       $('#active_search_result').append('<ul>'+ html_employees + '</ul>');
     };
   })
+
+  var options = $$('#select');
+  var len = options.length;
+  for (var i = 0; i < len; i++) {
+    options[i].selected = false;
+}
+
 });

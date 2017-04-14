@@ -28,7 +28,7 @@ from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import get_map_from_sqlalchemy
+from utilities import get_map_from_sqlalchemy, change_sql_obj_into_dic
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -138,12 +138,94 @@ def logout():
     return redirect('/')
  
 
+@app.route('/employee/add')
+def add_employee_page():
+    """Load add_employee page db."""
+
+    # TODO: make the query name specific, and make the list sorted 
+    companies = Company.query.all()
+    departments = Department.query.all()
+    titles = Title.query.all()
+    offices = Office.query.all()
+
+    return render_template('employee_add.html', companies=companies,
+                                                departments=departments,
+                                                titles=titles,
+                                                offices=offices)
+
+
 @app.route('/employee/all')
 def list_employees():
     """Show list of employees."""
 
     employees = Employee.query.all()
-    return render_template('employee_list.html', employees=employees)
+    companies = (Company.query.options(
+                            Load(Company)
+                            .load_only(Company.company_id, Company.company_name)
+                            )
+                         .all()
+                        )
+    departments = (Department.query.options(
+                        Load(Department)
+                        .load_only(Department.department_id, Department.department_name)
+                        )
+                     .all()
+                    )
+
+    return render_template('employee_list.html', employees=employees,
+                                                 companies=companies,
+                                                 departments=departments
+                                                 )
+
+
+@app.route('/search_employees.json')
+def search_employees():
+    """Search the query result for the right employees for criteria"""
+
+    criteria = {}
+    for key, value in request.args.iteritems():
+        if value != '':
+            criteria[key]=value
+        else:
+            pass
+    print criteria
+
+    query_employees = (Employee.query.options(Load(Employee)
+                            .load_only(Employee.employee_id,
+                                       Employee.first_name,
+                                       Employee.last_name)
+                            )
+                        )
+
+    if 'first_name' in criteria:
+        query_employees = query_employees.filter_by(first_name=criteria['first_name'])
+
+    if 'last_name' in criteria:
+        query_employees = query_employees.filter_by(last_name=criteria['last_name'])
+
+    if 'company_name' in criteria:
+        query_employees = (query_employees.outerjoin(Employee_company)
+                                        .outerjoin(Company)
+                                        .filter_by(company_id=criteria['company_name'])
+                            )
+    if 'department_name' in criteria:
+        query_employees = (query_employees.outerjoin(Company_department)
+                                        .outerjoin(Department)
+                                        .filter_by(department_id=criteria['department_name'])
+                            )
+
+    query_employees = query_employees.all()
+    result = {}
+
+    if query_employees:
+        for i in range(0, len(query_employees)):
+            result[query_employees[i].employee_id] = { 
+                'first_name': query_employees[i].__dict__['first_name'],
+                'last_name': query_employees[i].__dict__['last_name'] 
+            }
+
+    print result
+    return jsonify(result)
 
 
 #*# receiving parameter in broweser: default <post_info> will be string  
@@ -161,94 +243,10 @@ def show_employee(employee_id):
                           .outerjoin(Department_title)
                           .outerjoin(Title)
                           .first())
-    if employee:
-        employee_info = employee[0].__dict__
-        remove = []
-        for key in employee_info:
-            if str(key)[0] == '_':
-                remove.append(key)
-            if type(employee_info[key]) == 'datetime':
-                pass
-        for key in remove: del employee_info[key]
+
+    employee_info = change_sql_obj_into_dic(employee)
 
     return render_template('employee_info.html', employee_info=employee_info)
-
-
-@app.route('/search_employees.json')
-def search_employees():
-    """Search the query result for the right employees for criteria"""
-
-    # FIXME: if an employee have fields that are empty, the search result is incorrect
-
-    # a parameter was saved in DOM, so no need to get par in route
-    # request.args brings in the arguments that are passed in by AJAX
-    # form result dictionary with key-value-pair items in a list
-    # print request.args >>> ImmutableMultiDic([('first-name', u'whatever input')])
-    # this code will get what is in the dictionary passed in by AJAX
-    kwargs = {}
-    for item in request.args:
-        if request.args[item]:
-            kwargs[item] = request.args[item]
-    queried_employees = query_selector(kwargs)
-
-    result = {}
-
-    # iterate through the employees to add them one by one to the map format
-    for employee in queried_employees:
-
-        # # To get something from the joined tables, you have to write the names
-        # # Below code will bring the name of the first company the person is working
-        # print employee.employee_companies[0].companies.company_name
-        
-        # Below code will bring all the iter items from the first company and make a dictionary out of it
-        # Here the attributes of the employees from each tables are retrieved 
-        employees_tables = employee
-        employees_attributes = get_map_from_sqlalchemy(employee)
-
-        # TODO: make it possible for the employee info to contain
-        # all companies the person is working for by iterating 0
-        companies_tables = employee.employee_companies[0].companies
-        companies_attributes = get_map_from_sqlalchemy(companies_tables)
-        
-        departments_tables = companies_tables.company_departments[0].departments
-        departments_attributes = get_map_from_sqlalchemy(departments_tables)
-        
-        titles_tables = employee.employee_companies[0].titles
-        titles_attributes = get_map_from_sqlalchemy(titles_tables)
-
-        # if to pass as one dictionary, the following will combine the for dictionaries
-        # TODO: make lists of things to be combined, and for loop them
-        attr_two_added = dict(list(companies_attributes.items()) + list(departments_attributes.items()))
-        attr_three_added = dict(list(attr_two_added.items()) + list(titles_attributes.items()))
-        attr_all_added =  dict(list(attr_three_added.items()) + list(employees_attributes.items()))
-
-        # now we add the employee dictionary to the result dictionary
-        # print attr_all_added, '\n\n\n\n'
-        
-        result[employee.employee_id] = attr_all_added
-
-        # When jasonifying, you cannot use date(time) object
-        # thus need to strftime the object to be read as a string
-        result[employee.employee_id]['birthday']=result[employee.employee_id]['birthday'].strftime("%Y/%m/%d")
-
-    print result
-    return jsonify(result)
-
-
-@app.route('/employee/add')
-def add_employee_page():
-    """Load add_employee page db."""
-
-    # TODO: make the query name specific, and make the list sorted 
-    companies = Company.query.all()
-    departments = Department.query.all()
-    titles = Title.query.all()
-    offices = Office.query.all()
-
-    return render_template('employee_add.html', companies=companies,
-                                                departments=departments,
-                                                titles=titles,
-                                                offices=offices)
 
 
 # TODO: In homepage, add sign-up page that uses this + session[email] to 

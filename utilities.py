@@ -88,14 +88,19 @@ def get_map_from_sqlalchemy(a_object):
     return result
 
 
-def column_is_in_db(table, attr_name):
+def change_sql_obj_into_dic(obj):
     """Check if a specific attribute name(column) is in a table"""
 
-    # for item in Company.__dict__.iterkeys():
-    #     print item
-    # above code also prints the column
+    if obj:
+        obj_info = obj[0].__dict__
+        remove = []
+        for key in obj_info:
+            if str(key)[0] == '_':
+                remove.append(key)
+        for key in remove: del obj_info[key]
 
-    return (attr_name in table.__dict__)
+    return obj_info
+
 
 # def value_is_same_as_db():
 # def column_exists_value_same(table, attr_name, attr_value):
