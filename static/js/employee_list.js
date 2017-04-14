@@ -53,10 +53,13 @@ $(function(){
     };
   })
 
+  $(document).ready(function(){
+   $(window).scroll(lazyload);
+   lazyload();
+  });
+
   var options = $$('#select');
   var len = options.length;
   for (var i = 0; i < len; i++) {
     options[i].selected = false;
-}
-
-});
+  }

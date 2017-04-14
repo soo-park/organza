@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
+{% block title %}Add Employee{% endblock %}
+
 {% block content %}
 
 <!-- make country/state into a pulldown list and limit other fields as well -->
-  <div id='employee_add'>
+  <div id='add_employee'>
     <h3>Employee Add</h3>
     <form action='/add_employee' method='POST'>
       * fields are required.</br> 
       </br>
       <fieldset>
+
         <!-- TODO: photo upload -->
+<!--         <label>Photo:</label>
+        <form method=post enctype=multipart/form-data>
+          <p><input type=file name=file>
+              <input type=submit value=Upload>
+        </form> -->
+
         <!-- Other option is to use list of attributes and jinha, but placeholder will be row name  -->
         <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
         <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
