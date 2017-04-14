@@ -152,16 +152,33 @@ def list_employees():
 def show_employee(employee_id):
     """Show an individual emp"""
 
-    employee_info = Employee.query.filter_by(employee_id=employee_id).first()
-    employee_company_info = Employee_company.query.filter_by(employee_id=employee_id).first()
+    employee = (db.session.query(Employee, Employee_company, Company, Department, Title)
+                          .filter(Employee.employee_id==employee_id)
+                          .outerjoin(Employee_company)
+                          .outerjoin(Company)
+                          .outerjoin(Company_department)
+                          .outerjoin(Department)
+                          .outerjoin(Department_title)
+                          .outerjoin(Title)
+                          .first())
+    if employee:
+        employee_info = employee[0].__dict__
+        remove = []
+        for key in employee_info:
+            if str(key)[0] == '_':
+                remove.append(key)
+            if type(employee_info[key]) == 'datetime':
+                pass
+        for key in remove: del employee_info[key]
 
-    return render_template('employee_info.html', employee_info=employee_info,
-                                                 employee_company_info=employee_company_info)
+    return render_template('employee_info.html', employee_info=employee_info)
 
 
 @app.route('/search_employees.json')
 def search_employees():
     """Search the query result for the right employees for criteria"""
+
+    # FIXME: if an employee have fields that are empty, the search result is incorrect
 
     # a parameter was saved in DOM, so no need to get par in route
     # request.args brings in the arguments that are passed in by AJAX
@@ -308,6 +325,8 @@ def add_employee():
             db.session.add(new_company)
             db.session.commit()
             company_id = new_company.company_id
+    else:
+        company_id = 6
 
     # add title to DB is there was a user input has to do with the table
     title = result['title']
@@ -328,7 +347,7 @@ def add_employee():
             db.session.commit()
             title_id = new_title.title_id
     else:
-        title_id = None
+        title_id = 46
 
     # add department to DB is there was a user input has to do with the table
     department_name= result['department_name']
@@ -352,7 +371,7 @@ def add_employee():
             db.session.commit()
             department_id = new_department.department_id
     else:
-        department_id = None
+        department_id = 7
 
     # add employee_company data with metadata input
     office_email= result['office_email']
@@ -387,7 +406,7 @@ def add_employee():
             db.session.commit()
             office_id = new_office_name.office_id
     else:
-        office_id = None
+        office_id = 13
 
     # add department_title data
     query_department_title = (Department_title.query

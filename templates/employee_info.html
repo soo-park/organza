@@ -2,16 +2,38 @@
 {% block content %}
 
   <ul>
-    <!-- TODO: have the field with no input be hidden -->
-    <li>Photo: {{ employee_info.photo_url }}</li>
-    <li>Name: {{ employee_info.first_name }} {{ employee_info.last_name }}</li>
-    <li>Korean name: {{ employee_info.k_name }}</li>
-    <li>Employee ID: {{ employee_info.employee_id }}</li>
-    <li>Birthday: {{ employee_info.birthday }}</li>
-    <li>Work email: {{ employee_company_info.office_email }}</li>
-    <li>Personal email: {{ employee_info.personal_email }}</li>
-  </ul>
+    {% for key, value in employee_info.iteritems() %}
+        {% if value != None %}
+            <li>{{ key }} : {{ value }}</li>
+        {% endif %}
 
-  
+<!--         
+        Employee ID:
+        Name:
+        Korean Name:
+        Postal Code:
+        Address Line1: 
+        Address Line2: 
+        City: 
+        Kanji Name:
+        Name (Other):
+        Personal Email:
+        State : 
+
+        Emergency Contact:
+        Name:
+        Number:
+
+        Birthday : 
+        Nickname : 
+        Photo_url : 
+        Mobile : 
+        Country : 
+        Admin : 
+        Middle Name :  -->
+    {% endfor %}
+
+
+  </ul>
 
 {% endblock %}
