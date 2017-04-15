@@ -18,7 +18,7 @@ from sqlalchemy.orm import Load, load_only
 
 # for file upload
 from werkzeug.utils import secure_filename 
-UPLOAD_FOLDER = 'static/img/employee_info_photo'
+UPLOAD_FOLDER = 'static/img'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # limits upload to 16mb
@@ -249,6 +249,11 @@ def show_employee(employee_id):
     return render_template('employee_info.html', employee_info=employee_info)
 
 
+# http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 # TODO: In homepage, add sign-up page that uses this + session[email] to 
 # generate new user AND log into session right away
 # TODO: separate generate new person page into two, and have "User"
@@ -267,6 +272,8 @@ def add_employee():
             result[key] = None
         else:
             result[key] = value
+
+
 
     # TODO: change the admin to status, and have drop down menu that has admin, employee, other
     # TODO: add web_id --> change across model + login + seed + form
@@ -296,10 +303,32 @@ def add_employee():
     db.session.add(new_employee)
     db.session.commit()
 
+######################### For Flask image upload ############################
+    # code below, along with the allowed_file function defined above, saves img
+    # A <form> tag is marked with enctype=multipart/form-data and 
+    # an <input type=file> is placed in that form.
+    # TODO:  write try except for RequestEntityTooLarge 16mb up
+    new_employee_query = Employee.query.all()[-1]
+    print new_employee_query    
+
+    employee_photo = request.files
+    if employee_photo:
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = unicode(str(new_employee.employee_id)
+                       + str(secure_filename(file.filename))[-4:])
+            # change the global upload path to this file specific path
+            app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER + '/employee_info_photo/'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash('Employee photo and information submitted successfully.')
+
+    new_employee_query.photo_url = UPLOAD_FOLDER + '/employee_info_photo/' + filename
+    db.session.commit()
+    print Employee.query.all()[-1].photo_url
+
+######################### For Flask file upload end #########################
 
     # add company to DB if there was a user input that has to do with the table
-################################## ################################## ################################## 
-############TODO: refactor lator to a reusable code (get primary key and return)
     company_name = result['company_name']
 
     if company_name != None:
@@ -453,7 +482,7 @@ def add_employee():
     # TODO: modal window of the added employee data with
     #       enter more/back to home page selection button
     return redirect("/employee/add")
-################################## ################################## ################################## 
+################################## ################################## 
 
 @app.route('/employee_excel_loading', methods=['GET'])
 def employee_excel_loading():
@@ -493,46 +522,6 @@ def map():
     return render_template('map.html', api_key=api_key)
 
     # return render_template('map.html') # if you decide to hardcode your api_key
-
-
-######################### For Flask file upload ############################
-# http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/file_upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('upload_file_image.html', filename=filename)
-
-    print "File upload unsuccessful. Try again."
-    return render_template('upload_file.html')
-
-    # FIXME:  write try except for RequestEntityTooLarge 16mb up
-    # FIXME: load the image upto the info page without reload using JQuery 
-    # A <form> tag is marked with enctype=multipart/form-data and 
-    # an <input type=file> is placed in that form.
-    # The application accesses the file from the files dictionary on the request object.
-    # use the save() method of the file to save the file permanently 
-    # somewhere on the filesystem.
-
-######################### For Flask file upload end #########################
-
 
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the

@@ -6,19 +6,16 @@
 <!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='add_employee'>
     <h3>Employee Add</h3>
-    <form action='/add_employee' method='POST'>
+    <form action='/add_employee' method='POST' enctype=multipart/form-data>
       * fields are required.</br> 
       </br>
       <fieldset>
 
         <!-- TODO: photo upload -->
-<!--         <label>Photo:</label>
-        <form method=post enctype=multipart/form-data>
-          <p><input type=file name=file>
-              <input type=submit value=Upload>
-        </form> -->
+        <label>Photo:</label>
+        <p><input type='file' name='file'>
 
-        <!-- Other option is to use list of attributes and jinha, but placeholder will be row name  -->
+        <label>Name:</label>
         <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
         <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
         <input type='text' name='last_name' id='last_name' placeholder='Last Name'>*</br>
