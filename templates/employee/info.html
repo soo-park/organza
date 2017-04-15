@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ employee_info.first_name }} {{ employee_info.last_name }}{% endblock %}
+{% block content %}
+
+  <ul>
+
+
+    {% for key, value in employee_info.iteritems() %}
+
+        {% if value != None %}
+            <li>{{ key }} : {{ value }}</li>
+        {% endif %}
+    
+    {% endfor %}
+
+<!--         
+        Employee ID:
+        Name:
+        Korean Name:
+        Postal Code:
+        Address Line1: 
+        Address Line2: 
+        City: 
+        Kanji Name:
+        Name (Other):
+        Personal Email:
+        State : 
+
+        Emergency Contact:
+        Name:
+        Number:
+
+        Birthday : 
+        Nickname : 
+        Photo_url : 
+        Mobile : 
+        Country : 
+        Admin : 
+        Middle Name :  -->
+
+  </ul>
+
+{% endblock %}
