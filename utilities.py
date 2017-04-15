@@ -17,27 +17,6 @@ import datetime
 from model import Employee, Employee_company, Company, connect_to_db, db
 
 
-## TODO: Build a function for importing Excel (below code imports one cell)
-# def import_Excel():
-#     import openpyxl
-#     from openpyxl import load_workbook
-#     wb = load_workbook(filename = 'static/doc/employee.xlsx')
-#     sheet_ranges = wb['test'] #use the workbook tab name
-#     print(sheet_ranges['A2'].value)
-
-
-## TODO: Use regx to enforce formatting
-    ## TODO: Build a function for importing Excel (below code imports one cell)
-# def import_Excel():
-#     """"""
-#     # # make route
-#     # # use function in route to call this function
-#     # import openpyxl
-#     # from openpyxl import load_workbook
-#     # wb = load_workbook(filename = 'static/doc/employee.xlsx')
-#     # sheet_ranges = wb['test'] #use the workbook tab name
-#     # print(sheet_ranges['A2'].value)
-
 
 def set_val_employee_id():
     """Set value for the next employee_id after seeding database"""
@@ -88,6 +67,20 @@ def get_map_from_sqlalchemy(a_object):
     return result
 
 
+def change_sql_sub_obj_into_dic(obj):
+    """Check if a specific attribute name(column) is in a table"""
+
+    if obj:
+        obj_info = obj.__dict__
+        remove = []
+        for key in obj_info:
+            if str(key)[0] == '_':
+                remove.append(key)
+        for key in remove: del obj_info[key]
+
+        return obj_info
+
+
 def change_sql_obj_into_dic(obj):
     """Check if a specific attribute name(column) is in a table"""
 
@@ -99,20 +92,27 @@ def change_sql_obj_into_dic(obj):
                 remove.append(key)
         for key in remove: del obj_info[key]
 
-    return obj_info
+        return obj_info
+
+
+def import_Excel_one_cell(file_path, tab, cell):
+    """a function for importing one Excel cell"""
+
+    import openpyxl
+    from openpyxl import load_workbook
+    wb = load_workbook(filename=file_path)
+    sheet_ranges = wb[tab] #use the workbook tab name
+    print(sheet_ranges[cell].value)
+    del openpyxl
 
 
 # def value_is_same_as_db():
 # def column_exists_value_same(table, attr_name, attr_value):
 #     """Check if the column exists in the table and the value coming in is same"""
-
+#
 #     return (column_is_in_db(table, attr_name) and 
 #             value_is_same_as_db(table, attr_name, attr_value))
 
-
-# def if_any_in_db(table, attr_dic):
-#     for item in attr_dic:
-#         if 
 
 # def get_id(table, attr_name, attr_value):
 #     """Check if a specific value of given column in given table"""
@@ -127,7 +127,7 @@ def change_sql_obj_into_dic(obj):
 #     else:
 
 
-# def add_new(table, attr_dic):
+# def add_new_row(table, attr_dic):
 #     """Add new row to a give table by entering given attributes
 #        and others none"""
 
@@ -136,9 +136,14 @@ def change_sql_obj_into_dic(obj):
 #     # 'id'
 
 
-# TODO: add a function to show if the employee has web access
-# by calculating if the person has email and password.
-# display that information only on admin side information page
+# def add_new_attr(table, attr_name, value):
+#     """Add new row to a give table by entering given attributes
+#        and others none"""
+
+#     # >>> from sqlalchemy.inspection import inspect
+#     # >>> inspect(User).primary_key[0].name
+#     # 'id'
+
 
 # TODO: a function that counts empty space on database
 # TODO: a function that allows you to fill in one space in database

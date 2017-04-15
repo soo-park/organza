@@ -28,7 +28,7 @@ from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import get_map_from_sqlalchemy, change_sql_obj_into_dic
+from utilities import get_map_from_sqlalchemy, change_sql_obj_into_dic, change_sql_sub_obj_into_dic
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -39,23 +39,18 @@ from jinja2 import StrictUndefined
 app.jinja_env.undefined = StrictUndefined
 
 
-### TODO: Use regx to enforce formatting
+##################### END IMPORTS START HOME FEATURE ###########################
+
+
 @app.route('/')
 def index():
     """Homepage."""
 
     # return render_template('index.html')
-    return render_template('home_admin.html')
+    return render_template('index.html')
 
-#*# logging
-# used for marking on console for developer to print needed info
-@app.route('/logging')
-def logging_test():
-    test = 1
-    app.logger.debug('debuggin needed')
-    app.logger.warning(str(test) + ' line')
-    app.logger.error('error occured')
-    return 'end logging'
+
+#################### END HOME START OF LOGIN FEATURE ###########################
 
 
 #*# making session work with Flask2
@@ -67,22 +62,22 @@ def logging_test():
 def login():
     """Login user to the user specific information."""
 
-    email = request.form.get('email')
+    username = request.form.get('username')
     password = request.form.get('password')
-    db_employees = query_selector({'email': email})
-
+    db_employees = Employee.query.filter_by(username=username).all()
+    print db_employees
     if len(db_employees) > 1:
         flash("More than one user for the email found. Contact admin.")
         return redirect("/")
     elif len(db_employees) == 1:
         db_employee = db_employees[0]
         db_employee_id = db_employee.employee_id
-        db_employee_company_info = db_employee.employee_companies[0]
-        db_password = db_employee_company_info.password
+        db_password = db_employee.password
+        db_employee_company_info = Employee_company.query.filter_by(employee_id=db_employee_id).all()[0]
 
         if (str(password) == str(db_password)):
             session['logged_in'] = True
-            session['email'] = email
+            session['username'] = username
             session['password'] = password
 
             date_employeed = db_employee_company_info.date_employeed
@@ -111,21 +106,21 @@ def login():
 def logged():
     """Login as a regular user"""
 
-    return render_template('home_general.html') # (date_employeed and date_departed)
+    return render_template('home/general.html') # (date_employeed and date_departed)
 
 
 @app.route('/employee_logged')
 def employee_logged():
     """Login as an employee"""
 
-    return render_template('home_employee.html')
+    return render_template('home/employee.html')
 
 
 @app.route('/admin_logged')
 def admin_logged():
     """Login as an admin"""
 
-    return render_template('home_admin.html')
+    return render_template('home/admin.html')
     
 
 #*# Session log out
@@ -134,31 +129,23 @@ def admin_logged():
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
-    session.pop('email', None)
+    session.pop('username', None)
     return redirect('/')
  
 
-@app.route('/employee/add')
-def add_employee_page():
-    """Load add_employee page db."""
-
-    # TODO: make the query name specific, and make the list sorted 
-    companies = Company.query.all()
-    departments = Department.query.all()
-    titles = Title.query.all()
-    offices = Office.query.all()
-
-    return render_template('employee_add.html', companies=companies,
-                                                departments=departments,
-                                                titles=titles,
-                                                offices=offices)
+################# END LOGIN START EMPLOYEE SEARCH FEATURE ######################
 
 
 @app.route('/employee/all')
 def list_employees():
     """Show list of employees."""
 
-    employees = Employee.query.all()
+    employees = Employee.query.options(
+                            Load(Employee)
+                            .load_only(Employee.first_name,
+                                       Employee.last_name,
+                                       Employee.employee_id)
+                            ).all()
     companies = (Company.query.options(
                             Load(Company)
                             .load_only(Company.company_id, Company.company_name)
@@ -172,7 +159,7 @@ def list_employees():
                      .all()
                     )
 
-    return render_template('employee_list.html', employees=employees,
+    return render_template('employee/list.html', employees=employees,
                                                  companies=companies,
                                                  departments=departments
                                                  )
@@ -182,6 +169,7 @@ def list_employees():
 def search_employees():
     """Search the query result for the right employees for criteria"""
 
+    # Get search input and make a dictionary out of it
     criteria = {}
     for key, value in request.args.iteritems():
         if value != '':
@@ -190,6 +178,7 @@ def search_employees():
             pass
     print criteria
 
+    # Lazy load employees
     query_employees = (Employee.query.options(Load(Employee)
                             .load_only(Employee.employee_id,
                                        Employee.first_name,
@@ -197,6 +186,8 @@ def search_employees():
                             )
                         )
 
+    # Lazy add filters if the condision exists
+    # TODO: currently search is case sensitive. Make it not so
     if 'first_name' in criteria:
         query_employees = query_employees.filter_by(first_name=criteria['first_name'])
 
@@ -206,7 +197,7 @@ def search_employees():
     if 'company_name' in criteria:
         query_employees = (query_employees.outerjoin(Employee_company)
                                         .outerjoin(Company)
-                                        .filter_by(company_id=criteria['company_name'])
+                                        .filter_by(company_name=criteria['company_name'])
                             )
     if 'department_name' in criteria:
         query_employees = (query_employees.outerjoin(Company_department)
@@ -214,17 +205,20 @@ def search_employees():
                                         .filter_by(department_id=criteria['department_name'])
                             )
 
+    # Do the actual query by calling the query into the python space
     query_employees = query_employees.all()
+
+    # Get the employee first/last names of the search result
     result = {}
 
     if query_employees:
         for i in range(0, len(query_employees)):
             result[query_employees[i].employee_id] = { 
-                'first_name': query_employees[i].__dict__['first_name'],
-                'last_name': query_employees[i].__dict__['last_name'] 
+                'first_name': query_employees[i].__dict__['first_name'].lower(),
+                'last_name': query_employees[i].__dict__['last_name'].lower() 
             }
 
-    print result
+    # Make JSON of the employee list to send back to static/js/employee_list.js
     return jsonify(result)
 
 
@@ -244,9 +238,37 @@ def show_employee(employee_id):
                           .outerjoin(Title)
                           .first())
 
+    # TODO: after finising fixing the seed file, load these info to the page
     employee_info = change_sql_obj_into_dic(employee)
+    company = change_sql_sub_obj_into_dic(employee.Company)
+    employee_company = change_sql_sub_obj_into_dic(employee.Employee_company)
+    department = change_sql_sub_obj_into_dic(employee.Department)
+    company = change_sql_sub_obj_into_dic(employee.Company)
+    title = change_sql_sub_obj_into_dic(employee.Title)
+    # TODO: get office info, build a utility not to repeat
+    print employee_company
 
-    return render_template('employee_info.html', employee_info=employee_info)
+
+    return render_template('employee/info.html', employee_info=employee_info)
+
+
+######### END EMPLOYEE SEARCH FEATURE START ADD EMPLOYEE FEATURE ###############
+
+
+@app.route('/employee/add')
+def add_employee_page():
+    """Load add_employee page db."""
+
+    # TODO: make the query name specific, and make the list sorted 
+    companies = Company.query.all()
+    departments = Department.query.all()
+    titles = Title.query.all()
+    offices = Office.query.all()
+
+    return render_template('employee/add.html', companies=companies,
+                                                departments=departments,
+                                                titles=titles,
+                                                offices=offices)
 
 
 # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
@@ -254,7 +276,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# TODO: In homepage, add sign-up page that uses this + session[email] to 
+# TODO: In homepage, add sign-up page that uses this + session[username] to 
 # generate new user AND log into session right away
 # TODO: separate generate new person page into two, and have "User"
 # Thant has nothing to do with the deep details into company - have this form as sign-up
@@ -284,13 +306,14 @@ def add_employee():
                             first_name= result['first_name'],
                             mid_name= result['mid_name'],
                             last_name= result['last_name'],
-                            nickname= result['nickname'],
+                            username= result['username'],
+                            password= result['username'],
                             k_name= result['k_name'],
                             kanji_name= result['kanji_name'],
                             phone= result['phone'],
                             mobile= result['mobile'],
-                            address_line1= result['address_line1'],
-                            address_line2= result['address_line2'],
+                            address= result['address'],
+                            country_code= result['country_code'],
                             city= result['city'],
                             state= result['state'],
                             country= result['country'],
@@ -303,7 +326,7 @@ def add_employee():
     db.session.add(new_employee)
     db.session.commit()
 
-######################### For Flask image upload ############################
+    ######################### For Flask image upload ##########################
     # code below, along with the allowed_file function defined above, saves img
     # A <form> tag is marked with enctype=multipart/form-data and 
     # an <input type=file> is placed in that form.
@@ -326,7 +349,7 @@ def add_employee():
     db.session.commit()
     print Employee.query.all()[-1].photo_url
 
-######################### For Flask file upload end #########################
+    ######################### For Flask file upload end #######################
 
     # add company to DB if there was a user input that has to do with the table
     company_name = result['company_name']
@@ -482,13 +505,16 @@ def add_employee():
     # TODO: modal window of the added employee data with
     #       enter more/back to home page selection button
     return redirect("/employee/add")
-################################## ################################## 
+
+
+################# END ADD EMPLOYEE START LOAD EXCEL FEATURE #################### 
+
 
 @app.route('/employee_excel_loading', methods=['GET'])
 def employee_excel_loading():
     """Load Excel file and save"""
 
-    return render_template('employee_excel.html')
+    return render_template('employee/excel.html')
 
 
 @app.route('/employee_excel', methods=['POST'])
@@ -501,27 +527,46 @@ def employee_excel():
     return ""
 
 
+############ END LOAD EXCEL FEATURE START ORGANIZATON CHART FEATURE ############
+
+
 @app.route('/company/all')
 def list_companies():
     """Show organizational structure."""
 
     companies = Company.query.all()
-    return render_template('org_chart.html', companies=companies)
+    return render_template('charts/org_chart.html', companies=companies)
+
+
+############ END ORGANIZATON CHART START GOOGLE MAP FEATURE #################### 
 
 
 @app.route('/map')
 def map():
-    """Show organizational structure."""
+    """Show a map with markers to pin the office locations."""
 
     # Practice: Using global varialbe 
     # Google Map key secret. import os is used with this code.
     # Also, in terminal, use the following command to make sure you have the key 
-    # source <the file that contanins GOOGLE_MAP_KEY variable>
+    # source the file that contanins <export GOOGLE_MAP_KEY="key value">
     api_key = os.environ['GOOGLE_MAP_KEY']
-    # Passing secret key to the html
-    return render_template('map.html', api_key=api_key)
+    return render_template('charts/map.html', api_key=api_key)
 
     # return render_template('map.html') # if you decide to hardcode your api_key
+
+
+################### END GOOGLE MAP START STATISTICS FEATURE ###################
+
+
+@app.route('/statistics')
+def statistics():
+    """Show statistics and charts."""
+
+    return render_template('charts/statistics.html')
+
+
+################### END STATISTICS START LOADING APP ##########################
+
 
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the

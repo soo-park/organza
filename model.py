@@ -3,12 +3,10 @@
 employee_company table connects Employee to Title and Company
 employee_company - Title  - Department_title - Department - Company_department - Company
 employee_company - Title  - Department_title - Department - Office_department - Office
-
 * General Naming Guide
 Table primary key name: tablename_id
 Middle/association table name: table1name_table2name
 Order: fields, foreign key (id) fields, relations, repr function
-
 * Construction
 Middle/association tables have foreign keys and relationships
 Other tables have relationships
@@ -29,19 +27,20 @@ class Employee(db.Model):
     __tablename__ = "employees"
 
     employee_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    photo_url = db.Column(db.Unicode(100), nullable=True)
+    photo_url = db.Column(db.Unicode(100))
     birthday = db.Column(db.Date)
     personal_email = db.Column(db.String(100))
     first_name = db.Column(db.Unicode(50), nullable=False)
     mid_name = db.Column(db.Unicode(50))
     last_name = db.Column(db.Unicode(50))
-    nickname = db.Column(db.Unicode(50))
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
     k_name = db.Column(db.Unicode(50))
     kanji_name = db.Column(db.Unicode(50))
     phone = db.Column(db.Unicode(20))
     mobile = db.Column(db.Unicode(50))
-    address_line1 = db.Column(db.Unicode(50))
-    address_line2 = db.Column(db.Unicode(50))
+    address = db.Column(db.Unicode(50))
+    country_code = db.Column(db.Unicode(50))
     city = db.Column(db.Unicode(30))
     state = db.Column(db.Unicode(30))
     country = db.Column(db.Unicode(50))
@@ -114,8 +113,8 @@ class Office(db.Model):
     office_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_name = db.Column(db.Unicode(50))
     phone = db.Column(db.Unicode(20))
-    address_line1 = db.Column(db.Unicode(50))
-    address_line2 = db.Column(db.Unicode(50))
+    address = db.Column(db.Unicode(50))
+    country_code = db.Column(db.Unicode(50))
     city = db.Column(db.Unicode(30))
     state = db.Column(db.Unicode(30))
     country = db.Column(db.Unicode(50))
@@ -135,7 +134,7 @@ class Employee_company(db.Model):
 
     employee_company_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     office_email = db.Column(db.String(50))
-    password = db.Column(db.String(50))
+    password = db.Column(db.Unicode(50))
     date_employeed = db.Column(db.Date)
     date_departed = db.Column(db.Date)
     job_description = db.Column(db.Unicode(200))

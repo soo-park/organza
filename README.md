@@ -82,16 +82,16 @@ Reason: Because your server is running, you can see the site
 ## Production Screen Shots
 
 ### Homepage
-![Alt text](/production_screen_shots/localhost5000.png?raw=true "Optional Title")
+![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/localhost5000.png?raw=true "Optional Title")
 
 
 ### Employee list
-![Alt text](/production_screen_shots/employees.png?raw=true "Optional Title")
+![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/employees.png?raw=true "Optional Title")
 
 
 ### Multiple search
-![Alt text](/production_screen_shots/employees_multiple_search.png?raw=true "Optional Title")
+![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/employees_multiple_search.png?raw=true "Optional Title")
 
 
 ### Employee information
-![Alt text](/production_screen_shots/employees1_employee_info.png?raw=true "Optional Title")
+![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/employees1_employee_info.png?raw=true "Optional Title")
