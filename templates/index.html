@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 
 {% block head %} 
-  <title> Homepage </title>
+  <title> Employee Roster Home </title>
 {% endblock %}
 
 {% block content %}
 
-  <h1> Employee Roster</h1>
-
-  <h2>Offices</h2>
+  <h3> Employee Roster</h3>
+  </br>
+  <label>Offices</label>
   <p><a href="/map">Corporate map</a></p>
-
-  <h2>Employees</h2>
+  </br>
+  <label>Employees</label>
   <p><a href="/employee/all">Employee data</a></p>
-
-  <h2>Employee Add</h2>
+  </br>
+  <label>Employee Add</label>
   <p><a href="/employee/add">Add employee</a></p>
-
-  <h2>Employee Edit or Delete</h2>
+  </br>
+  <label>Employee Edit or Delete</label>
   <p><a href="/employee/edit">Change employee info</a></p>
-
-  <h2>Upload Employee data using Excel</h2>
+  </br>
+<!--   <label>Upload Employee data using Excel</label>
   <p><a href="/employee_excel">Change employee info</a></p>  
-
-  <h2>Edit company/department/title/office info</h2>
+  </br> -->
+<!--   <label>Edit company/department/title/office info</label>
   <p><a href="/employee_excel">Change employee info</a></p>  
-
-  <h2>Organizational Chart</h2>
+  </br>
+ -->  <label>Organizational Chart</label>
   <p><a href="/company/all">Company data</a></p>
-
-  <h2>Company statistics</h2>
+  </br>
+<!--   <label>Company statistics</label>
   <p><a href="/statistics">Statistics on employees</a></p>
-
+ -->
 
 {% endblock %} 

@@ -199,6 +199,9 @@ def load_employee_companies():
                                             company_id=company_id,
                                             title_id=title_id
                                             )
+        if i%1000 == 0:
+            db.session.commit()
+            print i*1000, 'employee_compay added'
 
         db.session.add(employee_company)
         db.session.commit()

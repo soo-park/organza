@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <div id='add_employee'>
+  <div id='add_employee' id='add_employee'>
     <h3>Employee Add</h3>
     <form action='/add_employee' method='POST' enctype=multipart/form-data>
       * fields are required.</br> 
@@ -32,15 +32,17 @@
         </br>
 
         <label>Company:</label>
-        <select name='company_name' id='company_name'>
-          <option></option>
-          {% for company in companies %}
-            <option value='{{ company.company_name }}'>
-              {{ company.company_name }}
-            </option>
-          {% endfor %}
-        </select>
+        <div id='company_name'>
+          <select name='company_name'>
+            <option></option>
+            {% for company in companies %}
+              <option value='{{ company.company_name }}'>
+                {{ company.company_name }}
+              </option>
+            {% endfor %}
+          </select>
         <button type='button' id='company_add'>add company </button>
+        </div>
         </br>
 
         <label>Department:</label>
@@ -119,8 +121,10 @@
         </br>
         System admin <input type="checkbox" name='admin' id='admin' value="true"></br>
         </br>
+        <script src="/static/js/add.js" type="text/javascript"></script>
       </fieldset>
 
+      <input type='submit' style=display:none>
       <input type='submit'> 
     
     </form>

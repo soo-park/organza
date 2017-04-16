@@ -331,16 +331,15 @@ def add_employee():
     db.session.add(new_employee)
     db.session.commit()
 
-    ######################### For Flask image upload ##########################
+    ########################## For Flask image upload ##########################
     # code below, along with the allowed_file function defined above, saves img
     # A <form> tag is marked with enctype=multipart/form-data and 
     # an <input type=file> is placed in that form.
     # TODO:  write try except for RequestEntityTooLarge 16mb up
-    new_employee_query = Employee.query.all()[-1]
-    print new_employee_query    
-
-    employee_photo = request.files
-    if employee_photo:
+    #
+    # The following conditions did not stop the process and thus raised error
+    if request.files.keys() or 'file' in request.files or file.filename != '':
+        new_employee_query = Employee.query.all()[-1]
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = unicode(str(new_employee.employee_id)
@@ -349,12 +348,14 @@ def add_employee():
             app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER + '/employee_info_photo/'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('Employee photo and information submitted successfully.')
-
-    new_employee_query.photo_url = UPLOAD_FOLDER + '/employee_info_photo/' + filename
-    db.session.commit()
-    print Employee.query.all()[-1].photo_url
-
-    ######################### For Flask file upload end #######################
+        new_employee_query.photo_url = UPLOAD_FOLDER + '/employee_info_photo/' + filename
+        db.session.commit()
+    #    
+    # The following will catch the error but will stop the following tables submit
+    # try:
+    # except UnboundLocalError:
+    #     pass
+    ########################## For Flask file upload end #######################
 
     # add company to DB if there was a user input that has to do with the table
     company_name = result['company_name']
