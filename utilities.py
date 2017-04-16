@@ -106,6 +106,18 @@ def import_Excel_one_cell(file_path, tab, cell):
     del openpyxl
 
 
+# http://stackoverflow.com/questions/38987/how-to-merge-two-python-dictionaries-in-a-single-expression
+def merge_dicts(*dict_args):
+    """
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+    """
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+
+
 # def value_is_same_as_db():
 # def column_exists_value_same(table, attr_name, attr_value):
 #     """Check if the column exists in the table and the value coming in is same"""

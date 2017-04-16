@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
+{% block head %} 
+  <title> {{ employee_info.first_name }} {{ employee_info.last_name }} </title>
+{% endblock %}
 
-{% block title %}{{ employee_info.first_name }} {{ employee_info.last_name }}{% endblock %}
 {% block content %}
 
   <ul>
+    </br>
 
-
+    <img src = "/static/img/employee_info_photo/{{employee_info.photo_url}}" onerror="if (this.src != 'error.jpg') this.src = '/static/img/employee_info_photo/1.jpg';"></img>
+    </br>
     {% for key, value in employee_info.iteritems() %}
 
         {% if value != None %}

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Homepage{% endblock %}
+
+{% block head %} 
+  <title> Homepage </title>
+{% endblock %}
 
 {% block content %}
 
@@ -13,6 +16,12 @@
 
   <h2>Employee Add</h2>
   <p><a href="/employee/add">Add employee</a></p>
+
+  <h2>Employee Change or delete</h2>
+  <p><a href="/employee/edit">Change employee info</a></p>
+
+  <h2>Upload Employee data using Excel</h2>
+  <p><a href="/employee_excel">Change employee info</a></p>  
 
   <h2>Organizational Chart</h2>
   <p><a href="/company/all">Company data</a></p>

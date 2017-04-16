@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Add Employee{% endblock %}
+
+{% block head %} 
+  <title> Add Employees </title>
+{% endblock %}
 
 {% block content %}
 
-<!-- make country/state into a pulldown list and limit other fields as well -->
   <div id='add_employee'>
     <h3>Employee Add</h3>
     <form action='/add_employee' method='POST' enctype=multipart/form-data>
@@ -11,7 +13,6 @@
       </br>
       <fieldset>
 
-        <!-- TODO: photo upload -->
         <label>Photo:</label>
         <p><input type='file' name='file'></br> 
 
@@ -31,38 +32,54 @@
         </br>
 
         <label>Company:</label>
-        <input list='companies' name='company_name' placeholder='Select'>
-        <datalist id='companies'>
+        <select name='company_name' id='company_name'>
+          <option></option>
           {% for company in companies %}
             <option value='{{ company.company_name }}'>
+              {{ company.company_name }}
+            </option>
           {% endfor %}
-        </datalist>
+        </select>
+        <button type='button' id='company_add'>add company </button>
+        </br>
 
-        <!-- limit the pull down menu size with scroll bar -->
         <label>Department:</label>
-        <input list='departments' name='department_name' placeholder='Select'>
-        <datalist id='departments'>
+        <select name='department_name' id='department_name'>
+        <option></option>
           {% for department in departments %}
             <option value='{{ department.department_name }}'>
+              {{ department.department_name }}
+            </oprion>
           {% endfor %}
-        </datalist></br>
+        </select>
+        <button type='button' id='department_add'>add department </button>
+        </br>
 
         <label>Title:</label>
-        <input list='title' name='title' placeholder='Select'>
-        <datalist id='title'>
+        <select name='title' id='title'>
+        <option></option>
           {% for title in titles %}
             <option value='{{ title.title }}'>
+              {{ title.title }}
+            </oprion>
           {% endfor %}
-        </datalist>
+        </select>
+        <button type='button' id='title_add'>add title </button>
+        </br>
 
         <label>Office:</label>
-        <input list='offices' name='office_name' placeholder='Select'>
-        <datalist id='offices'>
+        <select name='office_name' id='office_name'>
+        <option></option>
           {% for office in offices %}
             <option value='{{ office.office_name }}'>
+              {{ office.office_name }}
+            </oprion>
           {% endfor %}
-        </datalist></br>
+        </select>
+        <button type='button' id='office_add'>add office </button>
         </br>
+        </br>
+
       </fieldset>
       <fieldset>
 
@@ -109,6 +126,5 @@
     </form>
   </div>
 
-  <!-- <script src='static/js/employee_add.js' type='text/javascript'></script> -->
 
 {% endblock %}

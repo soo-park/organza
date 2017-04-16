@@ -28,7 +28,8 @@ from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title,
                    Office_department, connect_to_db, db)
 from employee_query import *
-from utilities import get_map_from_sqlalchemy, change_sql_obj_into_dic, change_sql_sub_obj_into_dic
+from utilities import (get_map_from_sqlalchemy, change_sql_obj_into_dic, 
+                        change_sql_sub_obj_into_dic, merge_dicts)
 
 # "source secret.sh" to run flask server prior to "python server.py"
 # content of the sercret.sh: export secret_key="<your secret key>"
@@ -228,6 +229,7 @@ def search_employees():
 def show_employee(employee_id):
     """Show an individual emp"""
 
+    # query all table data related to the employee
     employee = (db.session.query(Employee, Employee_company, Company, Department, Title)
                           .filter(Employee.employee_id==employee_id)
                           .outerjoin(Employee_company)
@@ -238,17 +240,18 @@ def show_employee(employee_id):
                           .outerjoin(Title)
                           .first())
 
-    # TODO: after finising fixing the seed file, load these info to the page
-    employee_info = change_sql_obj_into_dic(employee)
+    # load the content of each table
+    employee_result = change_sql_obj_into_dic(employee)
     company = change_sql_sub_obj_into_dic(employee.Company)
     employee_company = change_sql_sub_obj_into_dic(employee.Employee_company)
     department = change_sql_sub_obj_into_dic(employee.Department)
     company = change_sql_sub_obj_into_dic(employee.Company)
     title = change_sql_sub_obj_into_dic(employee.Title)
-    # TODO: get office info, build a utility not to repeat
-    print employee_company
+    
+    # merge the contents into one dictionary
+    employee_info = merge_dicts(employee_result, employee_company, company, department, title)
 
-
+    # pass the dictionary to HTML
     return render_template('employee/info.html', employee_info=employee_info)
 
 
@@ -265,6 +268,7 @@ def add_employee_page():
     titles = Title.query.all()
     offices = Office.query.all()
 
+    # pass the query values to HTML
     return render_template('employee/add.html', companies=companies,
                                                 departments=departments,
                                                 titles=titles,
@@ -279,7 +283,7 @@ def allowed_file(filename):
 # TODO: In homepage, add sign-up page that uses this + session[username] to 
 # generate new user AND log into session right away
 # TODO: separate generate new person page into two, and have "User"
-# Thant has nothing to do with the deep details into company - have this form as sign-up
+# that has nothing to do with the deep details into company - have this form as sign-up
 @app.route('/add_employee', methods=['POST'])
 def add_employee():
     """Add employee to the db."""
@@ -295,11 +299,12 @@ def add_employee():
         else:
             result[key] = value
 
-
+    if result['username']==None or result['password']==None or result['first_name']==None:
+        session.pop('_flashes', None)
+        flash ("Please input all required fields.")
+        return redirect('/employee/add')
 
     # TODO: change the admin to status, and have drop down menu that has admin, employee, other
-    # TODO: add web_id --> change across model + login + seed + form
-    # TODO: change the hardcode below to have dynamic variables
     new_employee = Employee(
                             birthday= result['birthday'],
                             personal_email= result['personal_email'],
@@ -507,17 +512,31 @@ def add_employee():
     return redirect("/employee/add")
 
 
-################# END ADD EMPLOYEE START LOAD EXCEL FEATURE #################### 
+############### END ADD EMPLOYEE START CHANGE EMPLOYEE FEATURE ################# 
 
 
-@app.route('/employee_excel_loading', methods=['GET'])
+# @app.route('/employee/edit')
+# def edit_employee(employee_id):
+#     """Show an individual emp"""
+
+
+# @app.route('/employee/edit/<employee_id>')
+# def edit_employee(employee_id):
+#     """Show an individual emp"""
+
+
+
+############## END CHANGE EMPLOYEE START LOAD EXCEL FEATURE #################### 
+
+
+@app.route('/employee_excel', methods=['GET'])
 def employee_excel_loading():
     """Load Excel file and save"""
 
     return render_template('employee/excel.html')
 
 
-@app.route('/employee_excel', methods=['POST'])
+@app.route('/employee_excel/submit', methods=['POST'])
 def employee_excel():
     """Process the Excel data into DB"""
 
