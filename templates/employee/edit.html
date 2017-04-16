@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+  <title> Add Employees </title>
+{% endblock %}
+
+{% block content %}
+
+  <div id='add_employee'>
+    <h3>Employee Add</h3>
+    <form action='/add_employee' method='POST' enctype=multipart/form-data>
+      * fields are required.</br> 
+      </br>
+      <fieldset>
+
+        <label>Photo:</label>
+        <p><input type='file' name='file'></br> 
+
+        <label>Login information:</label>
+        <input type='text' name='username' id='username' placeholder='User Name'>*
+        <input type='text' name='password' id='password' placeholder='Password'>*</br>  
+
+      </fieldset>  
+      
+      <fieldset>
+        <label>Name:</label>
+        <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
+        <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
+        <input type='text' name='last_name' id='last_name' placeholder='Last Name'></br>
+        <input type='text' name='k_name' id='k_name' placeholder='Korean name'>
+        <input type='text' name='kanji_name' id='kanji_name' placeholder='Kanji Name'></br>
+        </br>
+
+        <label>Company:</label>
+        <select name='company_name' id='company_name'>
+          <option>select</option>
+          {% for company in companies %}
+            <option value='{{ company.company_name }}'>
+              {{ company.company_name }}
+            </option>
+          {% endfor %}
+        </select>
+        <button type='button' id='company_add'>add company </button>
+        </br>
+
+        <label>Department:</label>
+        <select name='department_name' id='department_name'>
+        <option>select</option>
+          {% for department in departments %}
+            <option value='{{ department.department_name }}'>
+              {{ department.department_name }}
+            </oprion>
+          {% endfor %}
+        </select>
+        <button type='button' id='department_add'>add department </button>
+        </br>
+
+        <label>Title:</label>
+        <select name='title' id='title'>
+        <option>select</option>
+          {% for title in titles %}
+            <option value='{{ title.title }}'>
+              {{ title.title }}
+            </oprion>
+          {% endfor %}
+        </select>
+        <button type='button' id='title_add'>add title </button>
+        </br>
+
+        <label>Office:</label>
+        <select name='office_name' id='office_name'>
+        <option>select</option>
+          {% for office in offices %}
+            <option value='{{ office.office_name }}'>
+              {{ office.office_name }}
+            </oprion>
+          {% endfor %}
+        </select>
+        <button type='button' id='office_add'>add office </button>
+        </br>
+        </br>
+
+      </fieldset>
+      <fieldset>
+
+        <label>Office Contacts:</label></br>
+        <input type='tel' name='office_phone' id='office_phone' placeholder='Office Phone'>
+        <input type='email' name='office_email' id='office_email' placeholder='Office Email'>
+        <input type='text' name='password' id='password' placeholder='Password'></br>
+      </br>
+      <label>Personal Contact:</label></br>
+        <input type='tel' name='mobile' id='mobile' placeholder='Mobile'>
+        <input type='tel' name='phone' id='phone' placeholder='Home Phone'>
+        <input type='email' name='personal_email' id='personal_email' placeholder='Personal Email'></br>
+        </br>
+
+      <label>Home Address:</label></br>
+        <input type='text' name='address' id='address' placeholder='address'>
+        <input type='text' name='country_code' id='country_code' placeholder='country_code'></br>
+        <input type='text' name='city' id='city' placeholder='City'>
+        <input type='text' name='state' id='state' placeholder='State'></br>
+        <input type='text' name='postal_code' id='postal_code' placeholder='Postal Code'>
+        <input type='text' name='country' id='country' placeholder='Country'></br>
+        </br>
+
+      <label>Emergency Contact:</label></br>
+        <input type='text' name='emergency_name' id='emergency_name' placeholder='Emergency Name'>
+        <input type='tel' name='emergency_phone' id='emergency_phone' placeholder='Emergency Phone'></br>
+        </br>
+      </fieldset>
+
+      <label>Job Description:</label></br>
+        <textarea name='job_description' id='job_description' rows='5' cols='50' placeholder=''></textarea></br>
+
+      <label>History:</label></br>
+        Birthday: <input type='date' name='birthday' id='birthday' placeholder='Birthday'></br>
+        Date Employeed: <input type='date' name='date_employeed' id='date_employeed' placeholder='Date Employeed'></br>
+        Date Departed: <input type='date' name='date_departed' id='date_departed' placeholder='Date Departed'></br>
+        </br>
+        System admin <input type="checkbox" name='admin' id='admin' value="true"></br>
+        </br>
+      </fieldset>
+
+      <input type='submit'> 
+    
+    </form>
+  </div>
+
+
+{% endblock %}
