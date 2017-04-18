@@ -167,7 +167,7 @@ class Company_department(db.Model):
     departments = db.relationship('Department')
 
     def __repr__(self):
-        return "<Company_department id=%s>" %self.id
+        return "<Company_department id=%s>" %self.company_department_id
 
 
 class Department_title(db.Model):
@@ -184,7 +184,7 @@ class Department_title(db.Model):
     departments = db.relationship('Department')
 
     def __repr__(self):
-        return "<Department_title id=%s>" %self.id
+        return "<Department_title id=%s>" %self.department_title_id
 
 
 class Office_department(db.Model):
@@ -201,7 +201,7 @@ class Office_department(db.Model):
     departments = db.relationship('Department')
 
     def __repr__(self):
-        return "<Office_department id=%s>" %self.id
+        return "<Office_department id=%s>" %self.office_department.id
 
 
 def connect_to_db(app, db_url='postgresql:///intranet'):

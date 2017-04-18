@@ -37,7 +37,7 @@
 
     <!-- no need to load entire thing. make a page break -->
     <div id="active_search_result">
-      <ul>
+      <ul id="emp_list">
         {% for employee in employees %}
             <li>
               <a href = '/employee/{{ employee.employee_id }}'>
@@ -47,7 +47,30 @@
         {% endfor %}
       </ul>
     </div>
+    <script type="text/javascript">
+    // WIP: page parsing needed
+    // employee_len = n, limit_per_page = limit
+    // if n % lim == 0; page = n/lim; if n % lim > 0; page = n/lim+1; else: raise error
+    // each page will query [lim(x-1), lim*x-1] 
+    var continueLoading = true
+    var limit = 10
+    for (var offset = 10; offset < 30; offset= offset + limit) {
+        $.get("/employee/data/"+offset+"/"+limit, function(data){
+          for(var i = 0; i<limit; i++){
+            if (continueLoading){
+              console.log(data.employees[0].first_name);
+              var nameListItem = '<li class="dym">'+data.employees[i].first_name+" "+data.employees[i].last_name+ '</li>'
+              var employee_id = data.employees[i].employee_id
 
+              $('#emp_list').append('<a href="/employee/'+ employee_id+ '/">'+nameListItem+'</a>');
+            }
+            else{
+              window.stop();
+            }
+          }
+      })
+    }
+    </script>
     <script src="/static/js/employee_list.js" type="text/javascript"></script>
 
 

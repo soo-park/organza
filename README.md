@@ -1,5 +1,13 @@
 A final project at HB to generate an employee roster web app
 
+### Features
+
+Multi-language support including asian characters (ASCII, Unicode, UTF8)
+DB based auto 1) form menu & 2) organizational structure map updates
+Subsidiary supports - many to many relations between employee/company/department/title
+Google Map corporate locations
+Multi level logins
+
 ### Languages
 Python, JavaScript, SQL, HTML, CSS
 
@@ -8,8 +16,9 @@ Flask, PostgreSQL, SQLAlchemy, JQuery, AJAX, Jinja
 Angular, Bootstrap, openpyxl, virtualenv
 
 ### Industry
-Git, GitHub, Jira, Photoshop, Illustrator
-Ponyorm online editor, Balsamiq Mockups3
+Git, GitHub, Jira, Photoshop, Illustrator,
+Ponyorm online editor
+
 
 ## Data model
 ![Alt text](/static/img/model.jpg?raw=true "Optional Title")

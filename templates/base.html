@@ -3,28 +3,28 @@
   <head>
     <meta charset="utf-8"> 
 
-    <!-- Makes site mobile friendly through Bootstrap by setting width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Latest compiled and minified CSS -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Mobile friendly Bootstrap -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- Minified CSS Bootstrap-->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 
     <!-- Latest D3 -->
-    <script src="https://d3js.org/d3.v4.js"></script>
-
+    <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
     <!-- Minified D3 -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script> -->
 
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/project.css">
+ 
     {% block head %}{% endblock %}
-
-    <!-- TODO: load a script that makes all pages load by checking admin/employee or not -->
-    <!-- make sure to generate a reusable function that is to check status -->
 
   </head>
 
@@ -52,8 +52,12 @@
           </ul>
         {% endif %}
       {% endwith %}
-      
-    <!-- Whatever the actual content attatched by Jinja goes here -->
+
     {% block content %}{% endblock %}
+
+    <!-- Necessary code for bootstrap -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
   </body>
 </html>

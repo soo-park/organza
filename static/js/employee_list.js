@@ -7,6 +7,7 @@ $(function(){
     // to stop going to the server side
     console.log('Made it to list function');
     evt.preventDefault();
+    continueLoading = false
 
     // JQuery gets the submitted value by the id
     // figure out what the user typed in

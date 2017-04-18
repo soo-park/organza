@@ -59,6 +59,8 @@ def index():
 # TODO: when browser has session cache, when browser restarts
 # the button shows as user logged in, the page is default
 # find a way to match the two
+# TODO: load a script that makes all pages load by checking admin/employee or not
+
 @app.route('/login', methods=['POST'])
 def login():
     """Login user to the user specific information."""
@@ -136,6 +138,20 @@ def logout():
 
 ################# END LOGIN START EMPLOYEE SEARCH FEATURE ######################
 
+@app.route('/employee/data/<int:offset>/<int:limit>')
+def limit_list(offset, limit):
+    """limits the amount of employees loaded up on HTML"""
+
+    employees = Employee.query.options(
+                            Load(Employee)
+                            .load_only(Employee.first_name,
+                                       Employee.last_name,
+                                       Employee.employee_id)
+                            ).offset(offset).limit(limit).all()
+
+    print({'employees':[{'first_name': employee.first_name, 'last_name': employee.last_name, 'employee_id': employee.employee_id} for employee in employees]})
+    return jsonify({'employees':[{'first_name': employee.first_name, 'last_name': employee.last_name, 'employee_id': employee.employee_id} for employee in employees]}), 200
+
 
 @app.route('/employee/all')
 def list_employees():
@@ -147,6 +163,7 @@ def list_employees():
                                        Employee.last_name,
                                        Employee.employee_id)
                             ).all()
+
     companies = (Company.query.options(
                             Load(Company)
                             .load_only(Company.company_id, Company.company_name)
@@ -160,7 +177,8 @@ def list_employees():
                      .all()
                     )
 
-    return render_template('employee/list.html', employees=employees,
+    return render_template('employee/list.html', employees=employees[:9],
+                                                 employees_length=len(employees),
                                                  companies=companies,
                                                  departments=departments
                                                  )
@@ -203,7 +221,7 @@ def search_employees():
     if 'department_name' in criteria:
         query_employees = (query_employees.outerjoin(Company_department)
                                         .outerjoin(Department)
-                                        .filter_by(department_id=criteria['department_name'])
+                                        .filter_by(department_name=criteria['department_name'])
                             )
 
     # Do the actual query by calling the query into the python space
@@ -341,13 +359,16 @@ def add_employee():
     if request.files.keys() or 'file' in request.files or file.filename != '':
         new_employee_query = Employee.query.all()[-1]
         file = request.files['file']
+
         if file and allowed_file(file.filename):
             filename = unicode(str(new_employee.employee_id)
                        + str(secure_filename(file.filename))[-4:])
+        
             # change the global upload path to this file specific path
             app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER + '/employee_info_photo/'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('Employee photo and information submitted successfully.')
+        
         new_employee_query.photo_url = UPLOAD_FOLDER + '/employee_info_photo/' + filename
         db.session.commit()
     #    
@@ -554,11 +575,221 @@ def employee_excel():
 def list_companies():
     """Show organizational structure."""
 
-    companies = Company.query.all()
+    company_name = request.form.items()
+
+    query_companies = (Company.query.options(
+                                Load(Company)
+                                .load_only(Company.company_id, Company.company_name)
+                                )
+                )
+    companies = [company.company_name for company in query_companies]
+
     return render_template('charts/org_chart.html', companies=companies)
 
 
-############ END ORGANIZATON CHART START GOOGLE MAP FEATURE #################### 
+############ END LOAD EXCEL FEATURE START ORGANIZATON CHART FEATURE ############
+
+
+@app.route('/company/all', method="POST")
+def list_companies():
+    """Show organizational structure."""
+
+    if company_name:
+        company = query_companies.filter_by(company_name=company_name).first()
+        company_id = company.company_id
+        company_name = company.company_name
+        print company_id, company_name, "all of this"
+    else:
+        company_id = 1
+        company_name = Company.query.filter_by(company_id=company_id).first().company_name
+        print company_id, company_name, "all of that"
+
+    result = {
+                'name': company_name,
+                'title': 'Company'}
+                # 'children': []}
+
+    # # do things in relational tables to get departments - titles - employee
+    # company_departments = Company_department.query.filter_by(company_id=company_id).all()
+    # for i, company_department in enumerate(company_departments):
+    #     result['children'].append( {'name': company_department.departments.department_name,
+    #                                 'title': 'Department',
+    #                                 'children': []} )
+    #     department_id = company_department.department_id
+    #     department_titles = Department_title.query.filter_by(department_id=department_id).all() 
+        
+    #     for department_title in set(department_titles):
+    #         title_id = department_title.title_id 
+    #         title = department_title.titles.query.filter_by(title_id=title_id).first().title
+
+    #         print result['children'][i]['children'].append( {
+    #             'name': title,
+    #             'title': 'Title'
+    #             })
+
+    structure = jsonify(result)
+    # #
+    # employees = Employee.query.filter_by(employee_company_id=employee_company_id).all()
+    # for employee in employees:
+    #     result['name'] = depatment_titiles.titiles.title
+    # structure=jsonify(structure)
+    return structure
+
+
+############### END ORGANIZATON CHART START ADD COMPANY FEATURE ################
+
+
+@app.route('/company/add')
+def add_company_form():
+    """Display add_company form."""
+
+    companies = Company.query.all()
+
+    return render_template('company/add_company.html', companies=companies)
+
+
+@app.route('/add_company', methods=['POST'])
+def add_company():
+    """Adds company."""
+
+    all_input = request.form.items()
+    result = {}
+    for key, value in all_input:
+        if value == '':
+            result[key] = None
+        else:
+            result[key] = value
+
+    if result['company_name']==None:
+        session.pop('_flashes', None)
+        flash ("Please input at least the company name field.")
+        return redirect('/company/add')
+
+    query_company = (Company.query.options(
+                            Load(Company)
+                            .load_only(Company.company_id, Company.company_name)
+                            )
+                         .filter_by(company_name=result['company_name'])
+                         .first()
+                        )
+    # if the name user input exists in the database
+    if query_company:
+        # set the company_id to be used later on relational tables 
+        flash ("The company name is already in the database.")
+        return redirect('/company/add')
+    else:
+        # generate new company, and set the company_id to be used later
+        new_company = Company(company_name=result['company_name'], short_name=result['short_name'])
+        db.session.add(new_company)
+        db.session.commit()
+        company_id = new_company.company_id
+        flash ("The company has been added.")
+        return redirect('/company/add')
+
+
+############### END ADD COMPANY START ADD DEPARTMENT FEATURE ################
+
+
+@app.route('/department/add')
+def add_department_form():
+    """Display add_department form."""
+
+    companies = Department.query.all()
+
+    return render_template('department/add_department.html', companies=companies)
+
+
+@app.route('/add_department', methods=['POST'])
+def add_department():
+    """Adds department."""
+
+    all_input = request.form.items()
+    result = {}
+    for key, value in all_input:
+        if value == '':
+            result[key] = None
+        else:
+            result[key] = value
+
+    if result['department_name']==None:
+        session.pop('_flashes', None)
+        flash ("Please input at least the department name field.")
+        return redirect('/company/add')
+
+    query_department = (Department.query.options(
+                            Load(Department)
+                            .load_only(Department.department_id, Department.department_name)
+                            )
+                         .filter_by(department_name=result['department_name'])
+                         .first()
+                        )
+    # if the name user input exists in the database
+    if query_department:
+        # set the department_id to be used later on relational tables 
+        flash ("The department name is already in the database.")
+        return redirect('/company/add')
+    else:
+        # generate new department, and set the department_id to be used later
+        new_department = Department(department_name=result['department_name'], short_name=result['short_name'])
+        db.session.add(new_department)
+        db.session.commit()
+        department_id = new_department.department_id
+        flash ("The department has been added.")
+        return redirect('/company/add')
+
+
+############### END ADD COMPANY START ADD title FEATURE ################
+
+
+@app.route('/title/add')
+def add_title_form():
+    """Display add_title form."""
+
+    companies = title.query.all()
+
+    return render_template('title/add_title.html', companies=companies)
+
+
+@app.route('/add_title', methods=['POST'])
+def add_title():
+    """Adds title."""
+
+    all_input = request.form.items()
+    result = {}
+    for key, value in all_input:
+        if value == '':
+            result[key] = None
+        else:
+            result[key] = value
+
+    if result['title']==None:
+        session.pop('_flashes', None)
+        flash ("Please input at least the title name field.")
+        return redirect('/company/add')
+
+    query_title = (Title.query.options(
+                            Load(Title)
+                            .load_only(Title.title_id, Title.title)
+                            )
+                         .filter_by(title=result['title'])
+                         .first()
+                        )
+    # if the name user input exists in the database
+    if query_title:
+        # set the title_id to be used later on relational tables 
+        flash ("The title name is already in the database.")
+        return redirect('/company/add')
+    else:
+        # generate new title, and set the title_id to be used later
+        new_title = title(title=result['title'])
+        db.session.add(new_title)
+        db.session.commit()
+        title_id = new_title.title_id
+        flash ("The title has been added.")
+        return redirect('/company/add')
+
+
+################ END ADD DEPARTMENT START GOOGLE MAP FEATURE ################### 
 
 
 @app.route('/map')
@@ -583,6 +814,13 @@ def statistics():
     """Show statistics and charts."""
 
     return render_template('charts/statistics.html')
+
+
+@app.route('/temp')
+def temp():
+    """Show statistics and charts."""
+
+    return render_template('temp.html')
 
 
 ################### END STATISTICS START LOADING APP ##########################

@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
-{% block head %} 
-  <title> Statistics </title>
+{% block head %}
+
+<link rel="stylesheet" href="/static/css/statistics.css">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="static/js//dndTree.js"></script>
+<script src="static/js//donut.js"></script>
+
 {% endblock %}
 
 {% block content %}
 
-D3 and other stat data goes here
-  
+  <label>dndTree</label>
+  <div id="tree-container"></div>
+<!-- 
+  <button class="randomize">randomize</button>
+  <div id="donut"></div -->>
+
 {% endblock %}

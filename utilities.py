@@ -68,7 +68,7 @@ def get_map_from_sqlalchemy(a_object):
 
 
 def change_sql_sub_obj_into_dic(obj):
-    """Check if a specific attribute name(column) is in a table"""
+    """change sql sub object into a dictionary"""
 
     if obj:
         obj_info = obj.__dict__
@@ -82,7 +82,7 @@ def change_sql_sub_obj_into_dic(obj):
 
 
 def change_sql_obj_into_dic(obj):
-    """Check if a specific attribute name(column) is in a table"""
+    """Chandge sql object into a dictionary"""
 
     if obj:
         obj_info = obj[0].__dict__
