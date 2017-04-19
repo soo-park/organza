@@ -106,7 +106,6 @@ def import_Excel_one_cell(file_path, tab, cell):
     del openpyxl
 
 
-# http://stackoverflow.com/questions/38987/how-to-merge-two-python-dictionaries-in-a-single-expression
 def merge_dicts(*dict_args):
     """
     Given any number of dicts, shallow copy and merge into a new dict,
@@ -116,47 +115,3 @@ def merge_dicts(*dict_args):
     for dictionary in dict_args:
         result.update(dictionary)
     return result
-
-
-# def value_is_same_as_db():
-# def column_exists_value_same(table, attr_name, attr_value):
-#     """Check if the column exists in the table and the value coming in is same"""
-#
-#     return (column_is_in_db(table, attr_name) and 
-#             value_is_same_as_db(table, attr_name, attr_value))
-
-
-# def get_id(table, attr_name, attr_value):
-#     """Check if a specific value of given column in given table"""
-#     if title != None or k_title != None:
-#         query_company = (table.query.options(
-#                                 Load(table)
-#                                 .load_only(table.table_id, table.table_name)
-#                                 )
-#                              .filter_by(table_name=table_name)
-#                              .first()
-#                             )
-#     else:
-
-
-# def add_new_row(table, attr_dic):
-#     """Add new row to a give table by entering given attributes
-#        and others none"""
-
-#     # >>> from sqlalchemy.inspection import inspect
-#     # >>> inspect(User).primary_key[0].name
-#     # 'id'
-
-
-# def add_new_attr(table, attr_name, value):
-#     """Add new row to a give table by entering given attributes
-#        and others none"""
-
-#     # >>> from sqlalchemy.inspection import inspect
-#     # >>> inspect(User).primary_key[0].name
-#     # 'id'
-
-
-# TODO: a function that counts empty space on database
-# TODO: a function that allows you to fill in one space in database
-# TODO: a function that generates log for the auto functions listed above

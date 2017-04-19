@@ -18,7 +18,6 @@
 # indicates the route '/' is returning 200 on client
 # So if the browser will be running, you will get a page
 
-# TODO: write some unit tests. Currently it is all integration tests
 import unittest
 from unittest import TestCase
 from server import app

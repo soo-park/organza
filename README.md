@@ -21,7 +21,7 @@ Ponyorm online editor
 
 
 ## Data model
-![Alt text](/static/img/model.jpg?raw=true "Optional Title")
+![Alt text](/NOT_FOR_DEPLOYMENT/model.jpg?raw=true "Data Model")
 
 ## How to see a test run of this site
 

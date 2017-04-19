@@ -1,20 +1,70 @@
 {% extends 'base.html' %}
 
+
 {% block head %}
-
-<link rel="stylesheet" href="/static/css/statistics.css">
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="static/js//dndTree.js"></script>
-<script src="static/js//donut.js"></script>
-
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+<script src="/static/lib/chartjs/chart.js"></script>
 
-  <label>dndTree</label>
-  <div id="tree-container"></div>
-<!-- 
-  <button class="randomize">randomize</button>
-  <div id="donut"></div -->>
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels | safe }},
+            datasets: [{
+                label: '# of Votes',
+                data: {{ data | safe }},
+                backgroundColor: {{ background | safe }},
+                borderColor: {{ border | safe }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+          
+        }
+      }
+    });
+</script>
+
 
 {% endblock %}
+
+
+
+<!-- 
+
+Usage
+
+// Using CommonJS
+var Chart = require('chart.js')
+var myChart = new Chart({...})
+
+// ES6
+import Chart from 'chart.js'
+let myChart = new Chart({...})
+
+// Using requirejs
+require(['path/to/Chartjs'], function(Chart){
+ var myChart = new Chart({...})
+}) 
+
+Creating a chart
+
+// Any of the following formats may be used
+var ctx = document.getElementById("myChart");
+var ctx = document.getElementById("myChart").getContext("2d");
+var ctx = $("#myChart");
+var ctx = "myChart";
+
+-->

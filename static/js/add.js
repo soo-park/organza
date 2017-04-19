@@ -55,32 +55,3 @@ $(function(){
      $(this).dialog('close');
     }
   })
-
-  // $("#dialog-div").dialog({
-  //   autoOpen: false,
-  //   modal: true,
-  //   buttons: {
-  //     'Create an account': function() {
-  //       $(this).trigger('submit');
-  //     },
-  //     Cancel: function() {
-  //       $(this).dialog('close');
-  //     }
-  //   },
-  //   close: function() {
-  //     allFields.val('').removeClass('ui-state-error');
-  //   }
-  // };
-
-
-  // $("#dialog-form").dialog({
-  //   autoOpen: false,
-  //   modal: true,
-  //   resizable: false,
-  //   buttons: { "Ok": function() {$('#target').submit();
-  //                                $(this).dialog("close");
-  //                               },
-  //              "Cancel": function() {$(this).dialog("close");
-  //   }}
-  // });
-})

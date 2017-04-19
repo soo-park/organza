@@ -14,14 +14,14 @@
 
   <label>org chart</label>
 
-<!--   <select name='company' id='company'>
+  <select name='company' id='company'>
     <option></option>
     {% for company in companies %}
       <option value='{{ company }}'>
         {{ company }}
       </option>
     {% endfor %}
-  </select> -->
+  </select>
 
   <div id="chart-container"></div>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -29,37 +29,45 @@
 
 
   <script>
-      var datasource = structure;
-      var datasource_1 = {
-        'name': 'Lao Lao',
-        'title': 'general manager',
-        'children': [
-          { 'name': 'Bo Miao', 'title': 'department manager' },
-          { 'name': 'Su Miao', 'title': 'department manager',
-            'children': [
-              { 'name': 'Tie Hua', 'title': 'senior engineer' },
-              { 'name': 'Hei Hei', 'title': 'senior engineer' }
-            ]
-          },
-          { 'name': 'Hong Miao', 'title': 'department manager' },
-          { 'name': 'Chun Miao', 'title': 'department manager' }
-        ]
-      };
 
-      // separate companies into menu, and see only one structure at a time
+      var datasource = {{ structure | safe }}
+
+      // var datasource = {
+      //   'name': 'Mike Tison',
+      //   'className': 'company-level',
+      //   'title': 'CEO',
+      //   'children': [
+      //     { 'name': 'Bo Miao', 'title': 'department manager' },
+      //     { 'name': 'Su Miao', 'title': 'department manager',
+      //       'children': [
+      //         { 'name': 'Tie Hua', 'title': 'senior engineer' },
+      //         { 'name': 'Hei Hei', 'title': 'senior engineer' }
+      //       ]
+      //     },
+      //     { 'name': 'Hong Miao', 'title': 'department manager' },
+      //     { 'name': 'Chun Miao', 'title': 'department manager' }
+      //   ]
+      // }
 
       $('#chart-container').orgchart({
         'data' : datasource,
         'nodeContent': 'title',
         // 'direction': 'l2r',
         'pan': true,
-        'zoom': true,
+        // 'zoom': true,
         'verticalDepth': 3, // From the 3th level of orgchart, nodes will be aligned vertically.
         'depth': 4
       });
 
   </script>
 
+  <style>
+  .orgchart .company-level .title {
+    background-color: #006644;
+    
+  }
+
+  </style>
 
 
 

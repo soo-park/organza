@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Line one is necessary to have utf-8 recognized
-import sys
+import sys, json
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 # for SQLAlchemy to load only certain columns
 from sqlalchemy.orm import Load, load_only
+from sqlalchemy.sql import func
 
 # for file upload
 from werkzeug.utils import secure_filename 
@@ -54,13 +55,6 @@ def index():
 #################### END HOME START OF LOGIN FEATURE ###########################
 
 
-#*# making session work with Flask2
-# have session key along with the app.secret_key line above, import request, session
-# TODO: when browser has session cache, when browser restarts
-# the button shows as user logged in, the page is default
-# find a way to match the two
-# TODO: load a script that makes all pages load by checking admin/employee or not
-
 @app.route('/login', methods=['POST'])
 def login():
     """Login user to the user specific information."""
@@ -85,8 +79,6 @@ def login():
 
             date_employeed = db_employee_company_info.date_employeed
             date_departed = db_employee_company_info.date_departed
-            # TODO: When an employee departure date is added, check if admin
-            #       if admin, ask if want to delete the admin status
             if db_employee.admin == True:
                 return redirect('/admin_logged')
 
@@ -127,8 +119,6 @@ def admin_logged():
     
 
 #*# Session log out
-# TODO: Find a way to delete the login info when the window is closed
-# request, redirect, url_for, session are needed to be imported
 @app.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
@@ -137,6 +127,7 @@ def logout():
  
 
 ################# END LOGIN START EMPLOYEE SEARCH FEATURE ######################
+
 
 @app.route('/employee/data/<int:offset>/<int:limit>')
 def limit_list(offset, limit):
@@ -205,8 +196,6 @@ def search_employees():
                             )
                         )
 
-    # Lazy add filters if the condision exists
-    # TODO: currently search is case sensitive. Make it not so
     if 'first_name' in criteria:
         query_employees = query_employees.filter_by(first_name=criteria['first_name'])
 
@@ -280,7 +269,6 @@ def show_employee(employee_id):
 def add_employee_page():
     """Load add_employee page db."""
 
-    # TODO: make the query name specific, and make the list sorted 
     companies = Company.query.all()
     departments = Department.query.all()
     titles = Title.query.all()
@@ -298,10 +286,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# TODO: In homepage, add sign-up page that uses this + session[username] to 
-# generate new user AND log into session right away
-# TODO: separate generate new person page into two, and have "User"
-# that has nothing to do with the deep details into company - have this form as sign-up
 @app.route('/add_employee', methods=['POST'])
 def add_employee():
     """Add employee to the db."""
@@ -322,7 +306,6 @@ def add_employee():
         flash ("Please input all required fields.")
         return redirect('/employee/add')
 
-    # TODO: change the admin to status, and have drop down menu that has admin, employee, other
     new_employee = Employee(
                             birthday= result['birthday'],
                             personal_email= result['personal_email'],
@@ -353,8 +336,6 @@ def add_employee():
     # code below, along with the allowed_file function defined above, saves img
     # A <form> tag is marked with enctype=multipart/form-data and 
     # an <input type=file> is placed in that form.
-    # TODO:  write try except for RequestEntityTooLarge 16mb up
-    #
     # The following conditions did not stop the process and thus raised error
     if request.files.keys() or 'file' in request.files or file.filename != '':
         new_employee_query = Employee.query.all()[-1]
@@ -383,8 +364,6 @@ def add_employee():
 
     if company_name != None:
         # get the company with that name
-        # TODO: company/title/dept name should be unique. enforce it in the model
-        #       and test the case user input the same company name without selecting 
         query_company = (Company.query.options(
                                 Load(Company)
                                 .load_only(Company.company_id, Company.company_name)
@@ -479,7 +458,6 @@ def add_employee():
         else:
             new_office_name = Office(office_name=office_name)
             db.session.add(new_office_name)
-            #TODO: prompt user to enter the office info
             db.session.commit()
             office_id = new_office_name.office_id
     else:
@@ -529,23 +507,7 @@ def add_employee():
     db.session.add(new_employee)
     db.session.commit()
 
-    # TODO: modal window of the added employee data with
-    #       enter more/back to home page selection button
     return redirect("/employee/add")
-
-
-############### END ADD EMPLOYEE START CHANGE EMPLOYEE FEATURE ################# 
-
-
-# @app.route('/employee/edit')
-# def edit_employee(employee_id):
-#     """Show an individual emp"""
-
-
-# @app.route('/employee/edit/<employee_id>')
-# def edit_employee(employee_id):
-#     """Show an individual emp"""
-
 
 
 ############## END CHANGE EMPLOYEE START LOAD EXCEL FEATURE #################### 
@@ -575,8 +537,6 @@ def employee_excel():
 def list_companies():
     """Show organizational structure."""
 
-    company_name = request.form.items()
-
     query_companies = (Company.query.options(
                                 Load(Company)
                                 .load_only(Company.company_id, Company.company_name)
@@ -584,56 +544,69 @@ def list_companies():
                 )
     companies = [company.company_name for company in query_companies]
 
-    return render_template('charts/org_chart.html', companies=companies)
 
+    company_name = request.form.items()
 
-############ END LOAD EXCEL FEATURE START ORGANIZATON CHART FEATURE ############
-
-
-@app.route('/company/all', method="POST")
-def list_companies():
-    """Show organizational structure."""
+    query_companies = (Company.query.options(
+                                Load(Company)
+                                .load_only(Company.company_id, Company.company_name)
+                                )
+                )
 
     if company_name:
         company = query_companies.filter_by(company_name=company_name).first()
         company_id = company.company_id
         company_name = company.company_name
-        print company_id, company_name, "all of this"
     else:
         company_id = 1
         company_name = Company.query.filter_by(company_id=company_id).first().company_name
-        print company_id, company_name, "all of that"
+
+    employees = Employee.query.join(Employee_company).filter_by(company_id=company_id)
+
+    ceo_title_id = 11
+    ceo = employees.join(Title).filter_by(title_id=ceo_title_id).first()
 
     result = {
-                'name': company_name,
-                'title': 'Company'}
-                # 'children': []}
+                "name": "CEO",
+                "title": ceo.first_name + " " + ceo.last_name,
+                "children": []
+            }
 
-    # # do things in relational tables to get departments - titles - employee
-    # company_departments = Company_department.query.filter_by(company_id=company_id).all()
-    # for i, company_department in enumerate(company_departments):
-    #     result['children'].append( {'name': company_department.departments.department_name,
-    #                                 'title': 'Department',
-    #                                 'children': []} )
-    #     department_id = company_department.department_id
-    #     department_titles = Department_title.query.filter_by(department_id=department_id).all() 
+    # do things in relational tables to get departments - titles - employee
+    company_departments = Company_department.query.filter_by(company_id=company_id).all()
+
+    for i, company_department in enumerate(company_departments):
+
+        # supervisor = Employee.query.join(Employee_company).join(Title)
+        # supervisor_name = supervisor.first_name + " " + supervisor.last_name
+
+        result['children'].append( {"name": company_department.departments.department_name,
+                                    "title": "supervisor_name",
+                                    "children": []} )
+
+        department_id = company_department.department_id
+        department_titles = Department_title.query.filter_by(department_id=department_id).all() 
         
-    #     for department_title in set(department_titles):
-    #         title_id = department_title.title_id 
-    #         title = department_title.titles.query.filter_by(title_id=title_id).first().title
+        for department_title in set(department_titles):
+            title_id = department_title.title_id 
+            title = department_title.titles.query.filter_by(title_id=title_id).first().title
 
-    #         print result['children'][i]['children'].append( {
-    #             'name': title,
-    #             'title': 'Title'
-    #             })
+            result['children'][i]['children'].append( {
+                "name": title,
+                "title": "Title"
+                })
+    
+            # This may make the chart too long)
+            # employees = Employee.query.filter_by(employee_company_id=employee_company_id).all()
+            # for employee in employees:
+            #     result['name'] = depatment_titiles.titiles.title
+            # structure=jsonify(structure)
 
-    structure = jsonify(result)
-    # #
-    # employees = Employee.query.filter_by(employee_company_id=employee_company_id).all()
-    # for employee in employees:
-    #     result['name'] = depatment_titiles.titiles.title
-    # structure=jsonify(structure)
-    return structure
+    structure = json.dumps(result, ensure_ascii=False)
+    # print result
+
+    return render_template('charts/org_chart.html', companies=companies,
+                                                    structure=structure)
 
 
 ############### END ORGANIZATON CHART START ADD COMPANY FEATURE ################
@@ -796,14 +769,10 @@ def add_title():
 def map():
     """Show a map with markers to pin the office locations."""
 
-    # Practice: Using global varialbe 
     # Google Map key secret. import os is used with this code.
-    # Also, in terminal, use the following command to make sure you have the key 
-    # source the file that contanins <export GOOGLE_MAP_KEY="key value">
+    # in terminal, source the file that contanins <export GOOGLE_MAP_KEY="key value">
     api_key = os.environ['GOOGLE_MAP_KEY']
     return render_template('charts/map.html', api_key=api_key)
-
-    # return render_template('map.html') # if you decide to hardcode your api_key
 
 
 ################### END GOOGLE MAP START STATISTICS FEATURE ###################
@@ -813,7 +782,68 @@ def map():
 def statistics():
     """Show statistics and charts."""
 
-    return render_template('charts/statistics.html')
+    employee_companies = Employee_company.query.options(
+                            Load(Employee_company)
+                            .load_only(Employee_company.company_id)
+                            ).all()
+    
+    result = {}
+    for employee_company in employee_companies:
+        if employee_company.company_id in result:
+            result[employee_company.company_id] += 1
+        else:
+            result[employee_company.company_id] = 1
+
+    companies = Company.query.options(
+                            Load(Company)
+                            .load_only(Company.company_id, Company.company_name)
+                            ).all()
+
+    company_names = {}
+    for company in companies:
+        company_names[company.company_id] = company.company_name
+
+    labels = []
+    data = []
+    background = []
+    border = []
+
+    background_color = {
+                        0: 'rgba(255, 99, 132, 0.2)',
+                        1: 'rgba(54, 162, 235, 0.2)',
+                        2: 'rgba(255, 206, 86, 0.2)',
+                        3: 'rgba(75, 192, 192, 0.2)',
+                        4: 'rgba(153, 102, 255, 0.2)',
+                        5: 'rgba(255, 159, 64, 0.2)'
+                        }
+
+    border_color = {
+                    0: 'rgba(255,99,132,1)',
+                    1: 'rgba(54, 162, 235, 1)',
+                    2: 'rgba(255, 206, 86, 1)',
+                    3: 'rgba(75, 192, 192, 1)',
+                    4: 'rgba(153, 102, 255, 1)',
+                    5: 'rgba(255, 159, 64, 1)'
+                    }
+
+    for label, value in result.iteritems():
+        print company_names
+        if label in company_names:
+            label = str(company_names[label])
+        labels.append(label)
+        data.append(value)
+        color_key = len(data)%6
+        background.append(background_color[color_key])
+        border.append(border_color[color_key])
+
+    background= json.dumps(background, ensure_ascii=False)
+    labels = json.dumps(labels, ensure_ascii=False)
+    data = json.dumps(data, ensure_ascii=False)
+
+    return render_template('charts/statistics.html', data=data
+                                                   , labels=labels
+                                                   , background=background
+                                                   , border=border)
 
 
 @app.route('/temp')

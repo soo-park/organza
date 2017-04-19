@@ -20,7 +20,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 
-### TODO: check unicode/non unicode data types on server/model 
 class Employee(db.Model):
     """Employee of the group."""
 

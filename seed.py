@@ -10,7 +10,7 @@ from model import (Employee, Employee_company, Company, Department,
                    Office_department, connect_to_db, db)
 from server import app
 
-# TODO: put seed.py into NOT_FOR_DEPLOYMENT/seed_data folder and test the code
+
 def purge_db():
     """Delete all data from the intranet and recreate"""
 
