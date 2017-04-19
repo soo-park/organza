@@ -1,0 +1,23 @@
+{% extends 'company/add_company.html' %}
+
+{% block head %} 
+  <title> Add departments </title>
+{% endblock %}
+
+{% block department %}
+
+  <div id='add_department' id='add_department'>
+    <h3>Add department</h3>
+    <form action='/add_department' method='POST'>
+      * fields are required.</br> 
+      </br>
+
+        Department name: <input type='text' name='department_name' id='department_name' placeholder='department name'></br>
+        <!-- TODO: check database to see if the abbreviation exists -->
+
+      </br></br>
+      <input type='submit'>
+    </form>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'company/add_office.html' %}
+
+{% block head %} 
+  <title> Add titles </title>
+{% endblock %}
+
+{% block title %}
+
+  <div id='add_title' id='add_title'>
+    <h3>Add title</h3>
+    <form action='/add_title' method='POST'>
+      * fields are required.</br> 
+      </br>
+
+        title name: <input type='text' name='title_name' id='title_name' placeholder='title name'></br>
+        <!-- TODO: check database to see if the abbreviation exists -->
+
+      </br></br>
+      <input type='submit'>
+    </form>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'company/add_all.html' %}
+
+{% block head %} 
+  <title> Add companys </title>
+{% endblock %}
+
+{% block company %}
+
+  <div id='add_company' id='add_company'>
+    <h3>Add Company</h3>
+    <form action='/add_company' method='POST' enctype=multipart/form-data>
+      * fields are required.</br> 
+      </br>
+        <label>Photo:</label>
+        <input type='file' name='file'></br> 
+
+        Company name: <input type='text' name='company_name' id='company_name' placeholder='Company name'></br>
+        <!-- TODO: check database to see if the abbreviation exists -->
+        Company abbreviation: <input type='text' name='short_name' id='short_name' placeholder='Company abbreviation'></br>
+
+      </br></br>
+      <input type='submit'>
+    </form>
+  </div>
+
+{% endblock %}
