@@ -29,31 +29,33 @@
   </head>
 
   <body>
-      {% if session.get('logged_in') %}
-          <form action="/logout" method="POST">
-              <button type="submit" value="Logout">Logout</button>
-          </form>
-      {% else %}
-          <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <!-- The characters in a password field are masked 
-            (shown as asterisks or circles). -->
-            <input type="password" name="password" placeholder="Password">
-            <button type="submit" value="Login" id="login">Login</button>
-          </form>
+    <h1>HB Employee Roster</h1>
+    {% if session.get('logged_in') %}
+        <form action="/logout" method="POST">
+            <button type="submit" value="Logout">Logout</button>
+        </form>
+    {% else %}
+      <h2>Log in here: </h2>
+        <form action="/login" method="POST">
+          <input type="text" name="username" placeholder="Username">
+          <!-- The characters in a password field are masked 
+          (shown as asterisks or circles). -->
+          <input type="password" name="password" placeholder="Password">
+          <button type="submit" value="Login" id="login">Login</button>
+        </form>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
       {% endif %}
+    {% endwith %}
 
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class=flashes>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
     <!-- Necessary code for bootstrap -->
     <script src="http://code.jquery.com/jquery.js"></script>

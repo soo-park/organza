@@ -6,55 +6,86 @@
 
 {% block content %}
 
-    <div id='employee_search'>
+  <div id='employee_search'>
 
-      <h3>Employee Search</h3>
+    <h3>Employee Search</h3>
 
-      <form id='search'>
-        <!-- TODO: make disable select value to be possible to be selected for null -->
-        <select name='company' id='company'>
-          <option></option>
-          {% for company in companies %}
-            <option value='{{ company.company_name }}'>
-              {{ company.company_name }}
-            </option>
-          {% endfor %}
-        </select>
-
-        <select name='department' id='department'>
-          <option></option>
-          {% for department in departments %}          
-            <option value='{{ department.department_name }}'>
-              {{ department.department_name }}
-            </option>
-          {% endfor %}
-        </select>
-        <input type='text' name='first-name' id='first-name' placeholder="First Name">
-        <input type='text' name='last-name' id='last-name' placeholder="Last Name">
-        <input type='submit'> 
-      </form>
-    </div>
-
-    <!-- no need to load entire thing. make a page break -->
-    <div id="active_search_result">
-      <ul id="emp_list">
-        {% for employee in employees %}
-            <li>
-              <a href = '/employee/{{ employee.employee_id }}'>
-                {{ employee.first_name }} {{ employee.last_name }} 
-              </a>
-            </li>
+    <form id='search'>
+      <!-- TODO: make disable select value to be possible to be selected for null -->
+      <select name='company' id='company'>
+        <option></option>
+        {% for company in companies %}
+          <option value='{{ company.company_name }}'>
+            {{ company.company_name }}
+          </option>
         {% endfor %}
-      </ul>
-    </div>
-    <script type="text/javascript">
-    // WIP: page parsing needed
-    // employee_len = n, limit_per_page = limit
-    // if n % lim == 0; page = n/lim; if n % lim > 0; page = n/lim+1; else: raise error
-    // each page will query [lim(x-1), lim*x-1] 
+      </select>
+
+      <select name='department' id='department'>
+        <option></option>
+        {% for department in departments %}          
+          <option value='{{ department.department_name }}'>
+            {{ department.department_name }}
+          </option>
+        {% endfor %}
+      </select>
+      <input type='text' name='first-name' id='first-name' placeholder="First Name">
+      <input type='text' name='last-name' id='last-name' placeholder="Last Name">
+      <input type='submit'> 
+    </form>
+  </div>
+  <div id="page-number"></div>
+
+  <!-- no need to load entire thing. make a page break -->
+  <div id="active_search_result">
+    <ul id="emp_list">
+      {% for employee in employees %}
+          <li>
+            <a href = '/employee/{{ employee.employee_id }}'>
+              {{ employee.first_name }} {{ employee.last_name }} 
+            </a>
+          </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <script type="text/javascript">
+    
     var continueLoading = true
     var limit = 10
-    for (var offset = 10; offset < 30; offset= offset + limit) {
+    var pageLimit = 10
+    var pageOffset = 0
+
+    if ({{employee_count}} % limit != Math.floor({{employee_count}} % limit)){
+      var pageNumbers = {{employee_count}}/limit + 1
+    }else{
+      var pageNumbers = {{employee_count}}/limit
+    }
+
+    showPageNumbers(pageOffset, pageLimit);
+
+    function showPageNumbers(pageOffset, pageLimit){
+      // empty the page nuber location
+      $("#page-number").html('')      
+      // buling the page numbers
+      for (var j=pageOffset+1; j<= pageLimit+pageOffset; j++){
+        $("#page-number").append(" <a id='page-"+j+"'>" + j + "</a>")
+        console.log(pageOffset, j)
+      }
+      // next
+      $("#page-number").append(" <a id='page-next'> Next </a>")
+    }
+
+    // WIP: call the function we built
+    // bump up the offset by limit if the next is pressed
+    $("#page-next").on('click', function(evt){
+        pageOffset = pageOffset+pageLimit
+        showPageNumbers(pageOffset, pageLimit)
+      })
+
+    // WIP: show current page
+    function showCurrentPage(employee_count, limit){
+      // each page will query [lim(x-1), lim*x-1]       
+      for (var offset = 10; offset < 30; offset= offset + limit) {
         $.get("/employee/data/"+offset+"/"+limit, function(data){
           for(var i = 0; i<limit; i++){
             if (continueLoading){
@@ -68,10 +99,18 @@
               window.stop();
             }
           }
-      })
+        })
+      } 
     }
-    </script>
-    <script src="/static/js/employee_list.js" type="text/javascript"></script>
 
+    $("#page-1").css(
+      'text-decoration', 'none'
+    )
+    $("#page-1").css(
+      'text-decoration', 'underline'
+    )
+
+  </script>
+  <script src="/static/js/employee_list.js" type="text/javascript"></script>
 
 {% endblock %}

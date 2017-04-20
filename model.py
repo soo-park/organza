@@ -196,7 +196,7 @@ class Office_department(db.Model):
     office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'))
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
     
-    offices = db.relationship('Office')
+    offices = db.relationship('Office', backref="office_department")
     departments = db.relationship('Department')
 
     def __repr__(self):

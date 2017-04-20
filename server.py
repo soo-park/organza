@@ -80,14 +80,17 @@ def login():
             date_employeed = db_employee_company_info.date_employeed
             date_departed = db_employee_company_info.date_departed
             if db_employee.admin == True:
+                session["permission"] = "admin"
                 return redirect('/admin_logged')
-
             if date_employeed and not date_departed:
+                session["permission"] = "employee"
                 return redirect("/employee_logged")
             elif date_employeed and date_departed:
+                session["permission"] = "user"
                 flash('No date employeed found. Please contact the admin for more information.')
                 return redirect("/logged")
             else:
+                session["permission"] = "user"
                 return redirect('/logged')
         else:
             flash('Password incorrect.')
@@ -100,27 +103,31 @@ def login():
 @app.route('/logged')
 def logged():
     """Login as a regular user"""
-
-    return render_template('home/general.html') # (date_employeed and date_departed)
+    if session["permission"] == "user":
+        return render_template('home/general.html') # (date_employeed and date_departed)
+    return redirect('/')
 
 
 @app.route('/employee_logged')
 def employee_logged():
     """Login as an employee"""
-
-    return render_template('home/employee.html')
+    if session["permission"] == "employee":
+        return render_template('home/employee.html')
+    return redirect('/')
 
 
 @app.route('/admin_logged')
 def admin_logged():
     """Login as an admin"""
+    if session["permission"] == "admin":
+        return render_template('home/admin.html')
+    return redirect('/')
 
-    return render_template('home/admin.html')
-    
 
 #*# Session log out
 @app.route('/logout', methods=['POST'])
 def logout():
+    del session["permission"]
     session['logged_in'] = False
     session.pop('username', None)
     return redirect('/')
@@ -169,6 +176,7 @@ def list_employees():
                     )
 
     return render_template('employee/list.html', employees=employees[:9],
+                                                 employee_count=len(employees),
                                                  employees_length=len(employees),
                                                  companies=companies,
                                                  departments=departments
@@ -772,7 +780,36 @@ def map():
     # Google Map key secret. import os is used with this code.
     # in terminal, source the file that contanins <export GOOGLE_MAP_KEY="key value">
     api_key = os.environ['GOOGLE_MAP_KEY']
+
     return render_template('charts/map.html', api_key=api_key)
+
+
+@app.route('/data/companies')
+def map_company_data():
+    """Get map company data"""
+
+    offices = (Office.query.join(Office_department)
+                        .join(Department)
+                        .join(Company_department)
+                        .join(Company)
+                        .all()
+                    )
+    result = {"data": []}
+
+    for i, office in enumerate(offices):
+        office_data = change_sql_sub_obj_into_dic(office)
+        if office_data['address']:
+            result["data"].append({ 'office_name': office_data['office_name'].split(",")[0],
+                                   'address': office_data['address'],
+                                   'city': office_data['city'],
+                                   'state': office_data['state'],
+                                   'country': office_data['country'],
+                                   'postal_code': office_data['postal_code'],
+                                   'phone': office_data['phone'],
+                                   'fax': office_data['fax']
+                                  })
+
+    return jsonify(result)
 
 
 ################### END GOOGLE MAP START STATISTICS FEATURE ###################
@@ -782,6 +819,26 @@ def map():
 def statistics():
     """Show statistics and charts."""
 
+    background_color = {
+                        0: 'rgba(255, 99, 132, 0.2)',
+                        1: 'rgba(54, 162, 235, 0.2)',
+                        2: 'rgba(255, 206, 86, 0.2)',
+                        3: 'rgba(75, 192, 192, 0.2)',
+                        4: 'rgba(153, 102, 255, 0.2)',
+                        5: 'rgba(255, 159, 64, 0.2)'
+                        }
+
+    border_color = {
+                    0: 'rgba(255,99,132,1)',
+                    1: 'rgba(54, 162, 235, 1)',
+                    2: 'rgba(255, 206, 86, 1)',
+                    3: 'rgba(75, 192, 192, 1)',
+                    4: 'rgba(153, 102, 255, 1)',
+                    5: 'rgba(255, 159, 64, 1)'
+                    }
+
+    ################################################################
+    # number of people in a company bar chart data
     employee_companies = Employee_company.query.options(
                             Load(Employee_company)
                             .load_only(Employee_company.company_id)
@@ -808,26 +865,7 @@ def statistics():
     background = []
     border = []
 
-    background_color = {
-                        0: 'rgba(255, 99, 132, 0.2)',
-                        1: 'rgba(54, 162, 235, 0.2)',
-                        2: 'rgba(255, 206, 86, 0.2)',
-                        3: 'rgba(75, 192, 192, 0.2)',
-                        4: 'rgba(153, 102, 255, 0.2)',
-                        5: 'rgba(255, 159, 64, 0.2)'
-                        }
-
-    border_color = {
-                    0: 'rgba(255,99,132,1)',
-                    1: 'rgba(54, 162, 235, 1)',
-                    2: 'rgba(255, 206, 86, 1)',
-                    3: 'rgba(75, 192, 192, 1)',
-                    4: 'rgba(153, 102, 255, 1)',
-                    5: 'rgba(255, 159, 64, 1)'
-                    }
-
     for label, value in result.iteritems():
-        print company_names
         if label in company_names:
             label = str(company_names[label])
         labels.append(label)
@@ -840,6 +878,54 @@ def statistics():
     labels = json.dumps(labels, ensure_ascii=False)
     data = json.dumps(data, ensure_ascii=False)
 
+    ################################################################
+    # number of people per department in company 1 donut chart data#
+    employee_titles = (Employee_company.query
+                            .filter_by(company_id=1)
+                            .join(Title)
+                            .all())
+    
+    result = {}
+    for employee_title in employee_titles:
+        for item in employee_title.titles.department_titles:
+            print item
+        # if employee_title.department_id in result:
+    #         result[employee_title.department_id] += 1
+    #     else:
+    #         result[employee_department.company_id] = 1
+
+
+    # companies = Title.query.options(
+    #                         Load(Title)
+    #                         .load_only(Title.title_id, Title.title)
+    #                         ).all()
+
+    # title_names = {}
+    # for title in companies:
+    #     title_names[title.title_id] = title.title
+
+    # labels_2 = []
+    # data_2 = []
+    # background_2 = []
+
+    # for label, value in result.iteritems():
+    #     print label, value, "are lable value"
+
+    #     if label in company_names:
+    #         label = str(company_names[label])
+    #     labels.append(label)
+    #     data.append(value)
+    #     color_key = len(data)%6
+    #     background.append(background_color[color_key])
+    #     border.append(border_color[color_key])
+
+    # background= json.dumps(background, ensure_ascii=False)
+    # labels = json.dumps(labels, ensure_ascii=False)
+    # data = json.dumps(data, ensure_ascii=False)
+
+
+    ################################################################
+    # return result
     return render_template('charts/statistics.html', data=data
                                                    , labels=labels
                                                    , background=background

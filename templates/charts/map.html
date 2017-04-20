@@ -13,6 +13,7 @@
 {% block content %}
 
   <div id='map'></div>
+  <ul id="company-list"></ul>
 
   <!-- for Google Maps API -->
   <script src="static/js/map.js"></script>
@@ -20,6 +21,8 @@
   <!-- if you decide to hardcode your api_key change the Jinja part with the key-->
   <!-- route('/map') passed global variable api_key into HTML - Jinja parses it as text -->
 
-  <script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap" defer></script>
+
+
   
 {% endblock %}
