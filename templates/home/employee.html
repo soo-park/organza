@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}Employee menu{% endblock %}
+
+{% block head %} 
+  <title> EMPLOYEE: Employee Roster Home </title>
+{% endblock %}
 
 {% block content %}
 
+    </br>
+    <label>Offices</label>
+    <p><a href="/map">Corporate map</a></p>
+    </br>
+    <label>Employees</label>
+    <p><a href="/employee/all">Employee data</a></p>
+    </br>
+    <label>Organizational Chart</label>
+    <p><a href="/company/all">Company data</a></p>
 
-  <h2>Offices</h2>
-  <p><a href="/map">Corporate map</a></p>
 
-  <h2>Employees</h2>
-  <p><a href="/employee/all">Employee data</a></p>
-
-  {% block admin %}{% endblock %}
-
-{% endblock %}
-
+{% endblock %} 

@@ -1,9 +1,18 @@
-<!-- Load index.html, and the base.html portion will be added -->
 {% extends 'base.html' %}
+
+{% block head %} 
+  <title> USER: Employee Roster Home </title>
+{% endblock %}
+
 {% block content %}
 
+    </br>
+    <label>Offices</label>
+    <p><a href="/map">Corporate map</a></p>
+    </br>
+    <label>Organizational Chart</label>
+    <p><a href="/company/all">Company data</a></p>
+    </br>
 
-  <h2>Offices</h2>
-  <p><a href="/map">Corporate map</a></p>
 
-{% endblock %}
+{% endblock %} 

@@ -10,7 +10,7 @@ import datetime
 # Execute Flask object
 from flask import (Flask, jsonify, render_template, request, flash, redirect,
                    session, url_for, send_from_directory)
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 app = Flask(__name__)
 
 # for SQLAlchemy to load only certain columns
@@ -62,7 +62,6 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     db_employees = Employee.query.filter_by(username=username).all()
-    print db_employees
     if len(db_employees) > 1:
         flash("More than one user for the email found. Contact admin.")
         return redirect("/")
@@ -87,7 +86,7 @@ def login():
                 return redirect("/employee_logged")
             elif date_employeed and date_departed:
                 session["permission"] = "user"
-                flash('No date employeed found. Please contact the admin for more information.')
+                flash('Welcome, general user. If you are an employee, please contact the admin.')
                 return redirect("/logged")
             else:
                 session["permission"] = "user"
@@ -147,7 +146,6 @@ def limit_list(offset, limit):
                                        Employee.employee_id)
                             ).offset(offset).limit(limit).all()
 
-    print({'employees':[{'first_name': employee.first_name, 'last_name': employee.last_name, 'employee_id': employee.employee_id} for employee in employees]})
     return jsonify({'employees':[{'first_name': employee.first_name, 'last_name': employee.last_name, 'employee_id': employee.employee_id} for employee in employees]}), 200
 
 
@@ -194,7 +192,6 @@ def search_employees():
             criteria[key]=value
         else:
             pass
-    print criteria
 
     # Lazy load employees
     query_employees = (Employee.query.options(Load(Employee)
@@ -534,7 +531,6 @@ def employee_excel():
 
     # the file object is in python space to be used
     file = request.files['emp_xls']
-    print file
     return ""
 
 
@@ -611,7 +607,6 @@ def list_companies():
             # structure=jsonify(structure)
 
     structure = json.dumps(result, ensure_ascii=False)
-    # print result
 
     return render_template('charts/org_chart.html', companies=companies,
                                                     structure=structure)
@@ -943,15 +938,16 @@ def temp():
 
 
 if __name__ == '__main__':
-    # We have to set debug=True here, since it has to be True at the
-    # point that we invoke the DebugToolbarExtension
-    app.debug = True
-    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    # # We have to set debug=True here, since it has to be True at the
+    # # point that we invoke the DebugToolbarExtension
+    # app.debug = True
+    # # make sure templates, etc. are not cached in debug mode
+    # app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
 
-    # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # # Use the DebugToolbar
+    # DebugToolbarExtension(app)
 
     # Run internal server
     app.run(port=5000, host='0.0.0.0')
