@@ -186,6 +186,22 @@ class Department_title(db.Model):
         return "<Department_title id=%s>" %self.department_title_id
 
 
+# class Hierarchy(db.Model):
+#     """Hierarchy between titles."""
+
+#     __tablename__ = "hierarchies"
+
+#     hierarchy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+#     supervisor_id = db.Column(db.Integer, db.ForeignKey('department_titles.department_title_id'))
+#     subordinate_id = db.Column(db.Integer, db.ForeignKey('department_titles.department_title_id'))
+
+#     department_titles = db.relationship('Department_title')
+
+#     def __repr__(self):
+#         return "<Hierarchy id=%s>" %self.hierarchy_id
+
+
 class Office_department(db.Model):
     """Middle table between office and department."""
 

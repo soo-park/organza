@@ -60,5 +60,5 @@ Chart.plugins.register(plugins);
 
 module.exports = Chart;
 if (typeof window !== 'undefined') {
-    window.Chart = Chart;
+	window.Chart = Chart;
 }

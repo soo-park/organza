@@ -61,38 +61,52 @@
       var pageNumbers = {{employee_count}}/limit
     }
 
+/////////////////// Load first page with page numbers //////////////////////
     showPageNumbers(pageOffset, pageLimit);
 
+    // show a list of page numbers to choose from
     function showPageNumbers(pageOffset, pageLimit){
       // empty the page nuber location
-      $("#page-number").html('')      
+      $("#page-number").html('');      
       // buling the page numbers
-      for (var j=pageOffset+1; j<= pageLimit+pageOffset; j++){
-        $("#page-number").append(" <a id='page-"+j+"'>" + j + "</a>")
-        console.log(pageOffset, j)
+      for (var j=pageOffset; j<= pageLimit+pageOffset; j++){
+        $("#page-number").append(" <a class = 'myButton' id='page-"+j+"'>" + (j+1) + "</a>")
       }
       // next
       $("#page-number").append(" <a id='page-next'> Next </a>")
+      nextPage();
+      // previous
+      if(pageOffset != 0){
+        $("#page-number").prepend(" <a id='page-prev'> Prev </a>")
+        previousPage();
+      }
     }
 
-    // WIP: call the function we built
-    // bump up the offset by limit if the next is pressed
-    $("#page-next").on('click', function(evt){
-        pageOffset = pageOffset+pageLimit
-        showPageNumbers(pageOffset, pageLimit)
-      })
+    // activates next page numbers button
+    function nextPage(){
+      // bump up the offset by limit if the next is pressed
+      $("#page-next").on('click', function(evt){
+          pageOffset = pageOffset+pageLimit
+          showPageNumbers(pageOffset, pageLimit)
+        });
+    }
 
-    // WIP: show current page
-    function showCurrentPage(employee_count, limit){
-      // each page will query [lim(x-1), lim*x-1]       
+    // activates previous page numbers button
+    function previousPage(){
+      $("#page-prev").on('click', function(evt){
+          pageOffset = pageOffset-pageLimit
+          showPageNumbers(pageOffset, pageLimit)
+        });      
+    }
+
+    // load first page
+    function showCurrentPage(limit){
       for (var offset = 10; offset < 30; offset= offset + limit) {
         $.get("/employee/data/"+offset+"/"+limit, function(data){
           for(var i = 0; i<limit; i++){
             if (continueLoading){
-              console.log(data.employees[0].first_name);
               var nameListItem = '<li class="dym">'+data.employees[i].first_name+" "+data.employees[i].last_name+ '</li>'
               var employee_id = data.employees[i].employee_id
-
               $('#emp_list').append('<a href="/employee/'+ employee_id+ '/">'+nameListItem+'</a>');
             }
             else{
@@ -103,12 +117,48 @@
       } 
     }
 
-    $("#page-1").css(
-      'text-decoration', 'none'
-    )
+    // turns on the underline of the page
     $("#page-1").css(
       'text-decoration', 'underline'
     )
+
+/////////////////// Load page with page number clicked //////////////////////
+
+    // when clicked the page number
+    $(".myButton").click(function(){
+      var page = $(this).attr('id');
+      var pageNumber = Number(page.replace("page-",""));
+      alert(pageNumber);
+      showClicked(pageNumber)
+    });
+
+    // load people on clicked page
+    function showClicked(pageNumber){
+      var offset2 = pageNumber*limit
+      console.log(offset2, limit)
+      $("#emp_list").html('');
+      $.get("/employee/data/"+offset2+"/"+limit, function(data){
+        // // need to get the employees with employee id, but right now arbitrary employees
+        // for (var i = offset2; i < offset2 + limit; i++){
+        //   if (data.employees[i].employee_id == i){
+        //     console.log(data.employee[i]);
+        //   }
+        // }
+
+        for(var i = 0; i<limit; i++){
+          if (continueLoading){
+            var nameListItem = '<li class="dym">'+data.employees[i].first_name+" "+data.employees[i].last_name+ '</li>'
+            var employee_id = data.employees[i].employee_id
+            $('#emp_list').append('<a href="/employee/'+ employee_id+ '/">'+nameListItem+'</a>');
+
+
+          }
+          else{
+            window.stop();
+          }
+        }
+      })
+    }
 
   </script>
   <script src="/static/js/employee_list.js" type="text/javascript"></script>

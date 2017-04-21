@@ -6,7 +6,7 @@
 
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-<script src="/static/lib/chartjs/chart.js"></script>
+<script src="./../../static/lib/chartjs/src/chart.js"></script>
 
 <canvas id="numEmployeePerCompany" width="100" height="100"></canvas>
 <canvas id="myChart2" width="100" height="100"></canvas>
@@ -40,18 +40,18 @@
   var myChart2 = new Chart(ctx, {
     type: 'polarArea',
     data: {
-      labels: ["M", "T", "W", "T", "F", "S", "S"],
+      labels: ["Senior Manager", "Manager", "Admin", "Other", "Outsource", "Assistant", "Board Member"],
       datasets: [{
         backgroundColor: [
-          "#2ecc71",
-          "#3498db",
-          "#95a5a6",
-          "#9b59b6",
-          "#f1c40f",
-          "#e74c3c",
-          "#34495e"
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 206, 186, 0.2)'
         ],
-        data: [12, 19, 3, 17, 28, 24, 7]
+        data: [10, 19, 20, 17, 28, 24, 7]
       }]
     }
   });

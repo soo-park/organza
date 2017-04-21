@@ -37,21 +37,3 @@ $(function(){
         
     $('#company_name').append(html_list);
   })
-
-  $("#dialog-div").bind( "submit", function() {
-    allFields.removeClass('ui-state-error');
-    var bValid = checkLength(username,"username", 3, 50);
-    bValid = bValid && checkLength(password,"password",5,16);
-    bValid = bValid && checkLength(first_name,"first_name", 6, 80);
-    bValid = bValid && checkRegexp(/^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter.");
-    bValid = bValid && checkRegexp(/^[a-z]([0-9a-z_])+$/i, "First Name may consist of a-z, 0-9, underscores, begin with a letter.");
-    bValid = bValid && checkRegexp(password,/^([0-9a-zA-Z])+$/,"Password field only allow : a-z 0-9");
-    if (bValid) {
-     $('#users tbody').append('<tr>' +
-      '<td>' + username.val() + '</td>' + 
-      '<td>' + first_name.val() + '</td>' + 
-      '<td>' + password.val() + '</td>' +
-      '</tr>'); 
-     $(this).dialog('close');
-    }
-  })

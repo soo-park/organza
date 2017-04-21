@@ -48,8 +48,15 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    # return render_template('index.html')
-    return render_template('index.html')
+    if "permission" in session.keys():
+        if session["permission"] == "admin":
+            return redirect('/admin_logged')
+        elif  session["permission"] == "employee":
+            return redirect('/employee_logged')
+        else:
+            return redirect('/logged')
+    else:
+        return render_template('index.html')
 
 
 #################### END HOME START OF LOGIN FEATURE ###########################
@@ -139,18 +146,25 @@ def logout():
 def limit_list(offset, limit):
     """limits the amount of employees loaded up on HTML"""
 
-    employees = Employee.query.options(
+    employees = (Employee.query.options(
                             Load(Employee)
                             .load_only(Employee.first_name,
                                        Employee.last_name,
                                        Employee.employee_id)
-                            ).offset(offset).limit(limit).all()
-
-    return jsonify({'employees':[{'first_name': employee.first_name, 'last_name': employee.last_name, 'employee_id': employee.employee_id} for employee in employees]}), 200
+                            )
+                            .order_by(Employee.employee_id)
+                            .offset(offset)
+                            .limit(limit).all()
+                        )
+    print (employees[0])
+    return jsonify({'employees':[{'first_name': employee.first_name,
+                                  'last_name': employee.last_name, 
+                                  'employee_id': employee.employee_id} 
+                                  for employee in employees]}), 200
 
 
 @app.route('/employee/all')
-def list_employees():
+def listba_employees():
     """Show list of employees."""
 
     employees = Employee.query.options(
@@ -875,21 +889,23 @@ def statistics():
 
     ################################################################
     # number of people per department in company 1 donut chart data#
-    employee_titles = (Employee_company.query
-                            .filter_by(company_id=1)
-                            .join(Title)
-                            .all())
+    # employee_titles = (Employee_company.query
+    #                         .filter_by(company_id=1)
+    #                         .join(Title)
+    #                         .join(Department_title)
+    #                         .join(Department)
+    #                         .join(Company_department)
+    #                         .join(Company)
+    #                         .all())
     
-    result = {}
-    for employee_title in employee_titles:
-        for item in employee_title.titles.department_titles:
-            print item
-        # if employee_title.department_id in result:
-    #         result[employee_title.department_id] += 1
+    # result2 = {}
+    # for employee_title in employee_titles:
+    #     if employee_title.department_title in result2:
+    #         result2[employee_company.department_title] += 1
     #     else:
-    #         result[employee_department.company_id] = 1
+    #         result2[employee_company.department_title] = 1
 
-
+    # print
     # companies = Title.query.options(
     #                         Load(Title)
     #                         .load_only(Title.title_id, Title.title)
@@ -938,11 +954,11 @@ def temp():
 
 
 if __name__ == '__main__':
-    # # We have to set debug=True here, since it has to be True at the
-    # # point that we invoke the DebugToolbarExtension
-    # app.debug = True
-    # # make sure templates, etc. are not cached in debug mode
-    # app.jinja_env.auto_reload = app.debug
+    # We have to set debug=True here, since it has to be True at the
+    # point that we invoke the DebugToolbarExtension
+    app.debug = True
+    # make sure templates, etc. are not cached in debug mode
+    app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
 
