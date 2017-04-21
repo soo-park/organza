@@ -585,31 +585,61 @@ def list_companies():
     result = {
                 "name": "CEO",
                 "title": ceo.first_name + " " + ceo.last_name,
+                'className': 'top-level',
                 "children": []
             }
 
-    # do things in relational tables to get departments - titles - employee
-    company_departments = Company_department.query.filter_by(company_id=company_id).all()
-
-    c_levels = {}
-    for i, company_department in enumerate(company_departments):
-        if company_department.departments.department_name != "C-level":
-            result['children'].append( {"name": company_department.departments.department_name,
-                                        "title": "supervisor_name",
+    departments = Department.query.all()
+    for i, department in enumerate(departments):
+        if department.department_name != "C-level":
+            result['children'].append( {"name": department.department_name,
+                                        "title": "Department Head",
+                                        'className': 'middle-level',
                                         "children": []} )
-        else:
-            c_levels[company_department] = company_department.departments.department_name
 
-        department_id = company_department.department_id
-        department_titles = Department_title.query.filter_by(department_id=department_id).all() 
-        for department_title in set(department_titles):
-            if department_title.department_id != 1:
-                title_id = department_title.title_id
-                title = department_title.titles.query.filter_by(title_id=title_id).first().title
-                result['children'][i-1]['children'].append( {
+
+    titles = Title.query.all()
+    all_employee = employees.all()
+    department_titles = Department_title.query.all()
+
+    ####### Below code is to display sudo names to view the org chart ##########
+    # titles_per_department = {
+    #     1: [11, 30], 
+    #     2: [2, 5, 6, 7, 10, 13, 16, 17, 20, 21, 22, 23, 25, 26, 27, 28, 34, 35, 36, 37, 38, 39, 41, 42, 46], 
+    #     3: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 20, 22, 23, 25, 26, 27, 35, 38, 39, 41, 42, 46], 
+    #     4: [2, 6, 38, 7, 41, 42, 39, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 10, 5], 
+    #     5: [2, 5, 6, 7, 10, 12, 13, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 29, 31, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 46], 
+    #     6: [2, 5, 6, 7, 38, 41, 42, 39, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 10], 
+    #     7: [2, 5, 6, 39, 38, 41, 10, 7, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 42]
+    #     }
+
+    # for key in titles_per_department:
+    #     for i, number in enumerate(titles_per_department[key]):
+    #         for title in titles:
+    #             if number == title.title_id:
+    #                 titles_per_department[key][i] = title.title
+
+    # print titles_per_department
+    count = 1
+    for title in titles:
+        title_id = title.title_id
+        title = title.title
+        for item in result['children']:
+            if title != 'CEO': 
+                employee_name = all_employee[count].first_name + " " + all_employee[count].last_name
+                item['children'].append( {
                     "name": title,
-                    "title": "Title"
+                    "title": employee_name,
+                    'className': 'bottom-level'
                     })
+            count += 1
+
+
+    for item in result['children']:
+        item['title'] = all_employee[count].first_name + " " + all_employee[count].last_name
+        count+=1
+
+    ####### Above code is to display sudo names to view the org chart ##########
 
     structure = json.dumps(result, ensure_ascii=False)
 
@@ -874,59 +904,14 @@ def statistics():
         background.append(background_color[color_key])
         border.append(border_color[color_key])
 
+    ################################################################
+    # same calculation with dif query can be repeated with the rest of three charts
+    ################################################################
+
     background= json.dumps(background, ensure_ascii=False)
     labels = json.dumps(labels, ensure_ascii=False)
     data = json.dumps(data, ensure_ascii=False)
 
-    ################################################################
-    # number of people per department in company 1 donut chart data#
-    # employee_titles = (Employee_company.query
-    #                         .filter_by(company_id=1)
-    #                         .join(Title)
-    #                         .join(Department_title)
-    #                         .join(Department)
-    #                         .join(Company_department)
-    #                         .join(Company)
-    #                         .all())
-    
-    # result2 = {}
-    # for employee_title in employee_titles:
-    #     if employee_title.department_title in result2:
-    #         result2[employee_company.department_title] += 1
-    #     else:
-    #         result2[employee_company.department_title] = 1
-
-    # print
-    # companies = Title.query.options(
-    #                         Load(Title)
-    #                         .load_only(Title.title_id, Title.title)
-    #                         ).all()
-
-    # title_names = {}
-    # for title in companies:
-    #     title_names[title.title_id] = title.title
-
-    # labels_2 = []
-    # data_2 = []
-    # background_2 = []
-
-    # for label, value in result.iteritems():
-    #     print label, value, "are lable value"
-
-    #     if label in company_names:
-    #         label = str(company_names[label])
-    #     labels.append(label)
-    #     data.append(value)
-    #     color_key = len(data)%6
-    #     background.append(background_color[color_key])
-    #     border.append(border_color[color_key])
-
-    # background= json.dumps(background, ensure_ascii=False)
-    # labels = json.dumps(labels, ensure_ascii=False)
-    # data = json.dumps(data, ensure_ascii=False)
-
-
-    ################################################################
     # return result
     return render_template('charts/statistics.html', data=data
                                                    , labels=labels
@@ -938,7 +923,7 @@ def statistics():
 def temp():
     """Show statistics and charts."""
 
-    return render_template('employee/temp.html')
+    return render_template('temp.html')
 
 
 ################### END STATISTICS START LOADING APP ##########################

@@ -4,18 +4,17 @@
 
 
   <link rel="stylesheet" href="https://cdn.rawgit.com/FortAwesome/Font-Awesome/master/css/font-awesome.min.css">
-<link rel="stylesheet" href="/static/lib/org_chart/css/jquery.orgchart.css">
-
+  <link rel="stylesheet" href="../../static/lib/org_chart/css/jquery.orgchart.css">
 
 
 {% endblock %}
 
 {% block content %}
 
-  <label>org chart</label>
+  <h3>Organizational Chart</h3></br>
 
+  Company Name:
   <select name='company' id='company'>
-    <option></option>
     {% for company in companies %}
       <option value='{{ company }}'>
         {{ company }}
@@ -32,23 +31,6 @@
 
       var datasource = {{ structure | safe }}
 
-      // var datasource = {
-      //   'name': 'Mike Tison',
-      //   'className': 'company-level',
-      //   'title': 'CEO',
-      //   'children': [
-      //     { 'name': 'Bo Miao', 'title': 'department manager' },
-      //     { 'name': 'Su Miao', 'title': 'department manager',
-      //       'children': [
-      //         { 'name': 'Tie Hua', 'title': 'senior engineer' },
-      //         { 'name': 'Hei Hei', 'title': 'senior engineer' }
-      //       ]
-      //     },
-      //     { 'name': 'Hong Miao', 'title': 'department manager' },
-      //     { 'name': 'Chun Miao', 'title': 'department manager' }
-      //   ]
-      // }
-
       $('#chart-container').orgchart({
         'data' : datasource,
         'nodeContent': 'title',
@@ -62,13 +44,27 @@
   </script>
 
   <style>
-  .orgchart .company-level .title {
-    background-color: #006644;
-    
-  }
+  
+    .orgchart .top-level .title {
+    background-color: #006699;
+    }
+    .orgchart .top-level .content {
+      border-color: #006699;
+    }
+    .orgchart .middle-level .title {
+      background-color: #009933;
+    }
+    .orgchart .middle-level .content {
+      border-color: #009933;
+    }
+    .orgchart .bottom-level .title {
+      background-color: #993366;
+    }
+    .orgchart .bottom-level .content {
+      border-color: #993366;
+    }
 
   </style>
-
 
 
 {% endblock %}
