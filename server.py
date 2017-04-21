@@ -26,7 +26,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # limits upload to 16mb
 
 # import employee related models
 from model import (Employee, Employee_company, Company, Department,Title,
-                   Office, Company_department, Department_title,
+                   Office, Company_department, Department_title, Hierarchy,
                    Office_department, connect_to_db, db)
 from employee_query import *
 from utilities import (get_map_from_sqlalchemy, change_sql_obj_into_dic, 
@@ -561,7 +561,6 @@ def list_companies():
                 )
     companies = [company.company_name for company in query_companies]
 
-
     company_name = request.form.items()
 
     query_companies = (Company.query.options(
@@ -592,32 +591,25 @@ def list_companies():
     # do things in relational tables to get departments - titles - employee
     company_departments = Company_department.query.filter_by(company_id=company_id).all()
 
+    c_levels = {}
     for i, company_department in enumerate(company_departments):
-
-        # supervisor = Employee.query.join(Employee_company).join(Title)
-        # supervisor_name = supervisor.first_name + " " + supervisor.last_name
-
-        result['children'].append( {"name": company_department.departments.department_name,
-                                    "title": "supervisor_name",
-                                    "children": []} )
+        if company_department.departments.department_name != "C-level":
+            result['children'].append( {"name": company_department.departments.department_name,
+                                        "title": "supervisor_name",
+                                        "children": []} )
+        else:
+            c_levels[company_department] = company_department.departments.department_name
 
         department_id = company_department.department_id
         department_titles = Department_title.query.filter_by(department_id=department_id).all() 
-        
         for department_title in set(department_titles):
-            title_id = department_title.title_id 
-            title = department_title.titles.query.filter_by(title_id=title_id).first().title
-
-            result['children'][i]['children'].append( {
-                "name": title,
-                "title": "Title"
-                })
-    
-            # This may make the chart too long)
-            # employees = Employee.query.filter_by(employee_company_id=employee_company_id).all()
-            # for employee in employees:
-            #     result['name'] = depatment_titiles.titiles.title
-            # structure=jsonify(structure)
+            if department_title.department_id != 1:
+                title_id = department_title.title_id
+                title = department_title.titles.query.filter_by(title_id=title_id).first().title
+                result['children'][i-1]['children'].append( {
+                    "name": title,
+                    "title": "Title"
+                    })
 
     structure = json.dumps(result, ensure_ascii=False)
 
@@ -946,7 +938,7 @@ def statistics():
 def temp():
     """Show statistics and charts."""
 
-    return render_template('temp.html')
+    return render_template('employee/temp.html')
 
 
 ################### END STATISTICS START LOADING APP ##########################

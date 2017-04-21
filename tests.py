@@ -23,7 +23,7 @@ from unittest import TestCase
 from server import app
 
 class HomepageIntegrationTest(TestCase):
-    """A smote test."""
+    """A smoke test."""
 
 
     def setUp(self):
@@ -61,7 +61,6 @@ class DatabaseIntegrationTest(TestCase):
         db.create_all()
 
         # possibly seed it with example_data()
-
         # make test_client
 
     def tearDown(self):

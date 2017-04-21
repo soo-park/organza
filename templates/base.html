@@ -3,17 +3,11 @@
   <head>
     <meta charset="utf-8"> 
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Mobile friendly Bootstrap -->
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-    <!-- Minified CSS Bootstrap-->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-
-    <!-- Latest D3 -->
-    <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
-    <!-- Minified D3 -->
-    <!-- <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script> -->
+      <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/united/bootstrap.min.css"
+          rel="stylesheet">
 
     <!-- jQuery -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -29,10 +23,10 @@
   </head>
 
   <body>
-    <h1>Organza</h1>
+    <h1><a href="/">Organza</a></h1>
     {% if session.get('logged_in') %}
         <form action="/logout" method="POST">
-            <button type="submit" value="Logout">Logout</button>
+            <button id="logout-button" type="submit" value="Logout">Logout</button>
         </form>
     {% else %}
       <h2>Log in here: </h2>
@@ -60,6 +54,11 @@
     <!-- Necessary code for bootstrap -->
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+      $("#logout-button").on("click", function(){
+        alert("You have been logged out.");
+      })
+    </script>
 
   </body>
 </html>
