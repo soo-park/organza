@@ -169,6 +169,20 @@ class Company_department(db.Model):
         return "<Company_department id=%s>" %self.company_department_id
 
 
+class Hierarchy(db.Model):
+    """Hierarchy between titles."""
+
+    __tablename__ = "hierarchies"
+
+    hierarchy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+    supervisor_dept_title_id = db.Column(db.Integer)
+
+
+    def __repr__(self):
+        return "<Hierarchy id=%s>" %self.hierarchy_id
+
+
 class Department_title(db.Model):
     """Middle table between department and title."""
 
@@ -176,30 +190,16 @@ class Department_title(db.Model):
 
     department_title_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    title_id = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'))
+    title_id = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
+    hierarchy_id = db.Column(db.Integer, db.ForeignKey('hierarchies.hierarchy_id'))
 
     titles = db.relationship('Title')
     departments = db.relationship('Department')
+    hierarchies = db.relationship('Hierarchy')
 
     def __repr__(self):
         return "<Department_title id=%s>" %self.department_title_id
-
-
-# class Hierarchy(db.Model):
-#     """Hierarchy between titles."""
-
-#     __tablename__ = "hierarchies"
-
-#     hierarchy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
-#     supervisor_id = db.Column(db.Integer, db.ForeignKey('department_titles.department_title_id'))
-#     subordinate_id = db.Column(db.Integer, db.ForeignKey('department_titles.department_title_id'))
-
-#     department_titles = db.relationship('Department_title')
-
-#     def __repr__(self):
-#         return "<Hierarchy id=%s>" %self.hierarchy_id
 
 
 class Office_department(db.Model):

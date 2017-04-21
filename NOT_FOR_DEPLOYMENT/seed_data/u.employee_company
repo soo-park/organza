@@ -1,7 +1,7 @@
 1|a@seahusa.com|aaa123|20190301||Admin|7068434800|1|1|34
 2|b@seahusa.com|bbb123|19860127||Start no end|5625678460|2|2|34
 3|c@seahusa.com|ccc123||20320503|End no start|7248158982|3|3|35
-4|d@seahusa.com|ddd123|20320503|20320503|Start and end|5145738649|4|4|16
+4|d@seahusa.com|ddd123|19860127|20080424|Start and end|5145738649|4|4|16
 5|Obte1966@seahusa.com|Solomon1|19860531|19950527|Greenskeeper|4564564567|5|1|26
 6|Harstand@seahusa.com|Lundberg2|19860531|19950527|Mixing and blending machine setter|7807364153|6|1|31
 7|Varom1966@seahusa.com|Orr3|19860127||University dean|9167186200|7|1|34
@@ -2024,7 +2024,7 @@
 2024|Texpeady81@seahusa.com|Pickering2020|20011124|20061120|Purchasing manager|6414768340|2024|1|44
 2025|Howas1977@seahusa.com|Wheeler2021|19970726|20060722|Railroad engineer|9415259115|2025|2|34
 2026|Whosecter71@seahusa.com|Torres2022|19910922|19950918|Forging machine operator|5123145650|2026|2|7
-2027|CÃ¦say@seahusa.com|Ross2023|19931110||Food cooking machine operator|3037381169|2027|2|35
+2027|CÃƒÂ¦say@seahusa.com|Ross2023|19931110||Food cooking machine operator|3037381169|2027|2|35
 2028|Nuants@seahusa.com|Miller2024|20020920|20110916|Transfer clerk|5145750328|2028|2|36
 2029|Hors1969@seahusa.com|Gutierrez2025|19890110||Marketing specialist|8192139199|2029|2|24
 2030|Consy1979@seahusa.com|Bump2026|19990920|20040916|Purchasing clerk|2124159475|2030|2|34
@@ -2998,7 +2998,7 @@
 2998|Didet1980@seahusa.com|Cruz2994|20000619||Business management consultant|6099786197|2998|3|10
 2999|Pritterpron@seahusa.com|Dollard2995|19971208|20061204|Stainless Steel operations|2502195286|2999|5|35
 3000|Initable@seahusa.com|Clift2996|19830701|19980620|Explosives worker|9787318723|3000|2|19
-3001|GencÃ©ed@seahusa.com|Kemper2997|19840909|19890905|Milling and planing machine tender|2289341143|3001|5|27
+3001|GencÃƒÂ©ed@seahusa.com|Kemper2997|19840909|19890905|Milling and planing machine tender|2289341143|3001|5|27
 3002|Worsir@seahusa.com|Schmidt2998|19941120|19981116|Bus mechanic|5148054130|3002|4|29
 3003|Amesed@seahusa.com|Lee2999|19850116|19880112|Government accountant|8184923438|3003|3|33
 3004|Quiented@seahusa.com|Wright3000|20001120|20041116|Automotive body repairer|6132826744|3004|4|36
@@ -3717,7 +3717,7 @@
 3717|Glage1976@seahusa.com|Jordan3713|19960316||Greeter|4132505978|3717|6|25
 3718|Sweng1962@seahusa.com|Bourg3714|19820830|20020826|Purchase-and-sales clerk|5864971013|3718|5|27
 3719|Oundeent@seahusa.com|Joseph3715|19900503|19950420|Photographic process worker|6046189666|3719|6|40
-3720|GencÃ©ed@seahusa.com|Harry3716|20000505|20020501|Meter reader|9179164317|3720|2|5
+3720|GencÃƒÂ©ed@seahusa.com|Harry3716|20000505|20020501|Meter reader|9179164317|3720|2|5
 3721|Yesing1983@seahusa.com|Abshire3717|20031201|20061120|Computer and information systems manager|3016709093|3721|4|18
 3722|Sudgers@seahusa.com|Jones3718|19831107|19841103|Nursery worker|4035481368|3722|6|22
 3723|Boupeshorter@seahusa.com|Eberle3719|19920115|20010111|Identification clerk|6025940566|3723|3|23
@@ -5803,7 +5803,7 @@
 5803|Thencoarchey1965@seahusa.com|Edson5799|19850325|19880321|Aircraft engineer|7572539240|5803|4|45
 5804|Evized@seahusa.com|Reece5800|19960710|19990706|High school counselor|8199550898|5804|6|9
 5805|Equallown@seahusa.com|King5801|20000312||Power tool repairer|9147654726|5805|1|14
-5806|TherÃ©tin@seahusa.com|McInturff5802|19860717|20060713|Fry cook|8506375380|5806|2|18
+5806|TherÃƒÂ©tin@seahusa.com|McInturff5802|19860717|20060713|Fry cook|8506375380|5806|2|18
 5807|Meas1969@seahusa.com|Price5803|19890420|19940416|Library media assistant|6138180027|5807|2|24
 5808|Fild1980@seahusa.com|Jernigan5804|20001213|20031209|Marketing specialist|7737970025|5808|6|25
 5809|Foriever@seahusa.com|Parson5805|19890630|19940626|Marketing specialist|2507453282|5809|2|27
@@ -6096,7 +6096,7 @@
 6096|Tile1981@seahusa.com|Blauvelt6092|20011204|20051221|Physical chemist|8028184127|6096|4|37
 6097|Prommits@seahusa.com|Chick6093|19930925||Administrative director|3204923604|6097|1|1
 6098|Inglast@seahusa.com|Cantwell6094|19830918|19980914|Heat treating equipment operator|7743536398|6098|5|9
-6099|Ã©cle@seahusa.com|Levi6095|19931017|20021013|ERW operations|4038180581|6099|6|25
+6099|ÃƒÂ©cle@seahusa.com|Levi6095|19931017|20021013|ERW operations|4038180581|6099|6|25
 6100|Rayce1977@seahusa.com|Conway6096|19971219|19991215|Meatcutter|8177525149|6100|3|26
 6101|Jecome@seahusa.com|Falls6097|19890525|19980521|ERW operations|6616211489|6101|4|31
 6102|Areimis@seahusa.com|Wills6098|19930125|20020121|Personnel training officer|2509670366|6102|3|33
@@ -7406,7 +7406,7 @@
 7406|Butionfoned@seahusa.com|Robinson7402|20020304||Music instructor|6049268515|7406|1|15
 7407|Wiffeatrout@seahusa.com|Hux7403|20060703|20070620|Ornamental ironworker|6138473809|7407|3|22
 7408|Thork1983@seahusa.com|Rogers7404|20031006|20061002|General operations|5147994551|7408|1|27
-7409|GencÃ©ed@seahusa.com|Smith7405|19930210|19940206|Mold and model maker|4182337417|7409|3|28
+7409|GencÃƒÂ©ed@seahusa.com|Smith7405|19930210|19940206|Mold and model maker|4182337417|7409|3|28
 7410|Phrudging@seahusa.com|Gines7406|20020929|20050925|Playwright|7242070428|7410|6|31
 7411|Mentir@seahusa.com|Klein7407|19970122|20060118|Fine arts instructor|7807744905|7411|4|37
 7412|Indesur@seahusa.com|Nieves7408|19920609|19950605|Painting restorer|7062934243|7412|3|21
@@ -8074,7 +8074,7 @@
 8074|Withold@seahusa.com|Sands8070|19881114||Human resources clerk|6137367695|8074|4|11
 8075|Midn1981@seahusa.com|Mattson8071|20011221|20051217|Marketing specialist|4032355544|8075|2|12
 8076|Hatiere74@seahusa.com|Didomenico8072|19941003|19941007|Prosthodontist|4035856846|8076|6|14
-8077|Ã¦saw@seahusa.com|Mitchell8073|19911120|19951116|Personnel coordinator|2037049095|8077|5|15
+8077|ÃƒÂ¦saw@seahusa.com|Mitchell8073|19911120|19951116|Personnel coordinator|2037049095|8077|5|15
 8078|Ornat1972@seahusa.com|Vazquez8074|19920324||Development specialist|9568102198|8078|1|34
 8079|Witing@seahusa.com|Moser8075|19920320|19920324|Cooperative manager|5144878030|8079|5|2
 8080|Gralwyn85@seahusa.com|Long8076|20050629|20140625|Foot specialist|6045905906|8080|4|5
@@ -8419,7 +8419,7 @@
 8419|Perrappe@seahusa.com|Deen8415|19980418|20010414|Bus dispatcher|4178480661|8419|6|1
 8420|Milver@seahusa.com|Kirst8416|19871022|19911018|Shipping, receiving, and traffic clerk|7083444177|8420|2|5
 8421|Butile@seahusa.com|Tucker8417|19831126|19981122|Radiographer|4044753562|8421|6|9
-8422|GencÃ©ed@seahusa.com|Lam8418|19830929|19980925|Diabetes management nurse|5187299265|8422|2|14
+8422|GencÃƒÂ©ed@seahusa.com|Lam8418|19830929|19980925|Diabetes management nurse|5187299265|8422|2|14
 8423|Linceres@seahusa.com|Brew8419|19850701|19860620|Shampooer|2187235602|8423|1|20
 8424|Hals1987@seahusa.com|Snider8420|20071204|20101221|Reactor operator|9184453445|8424|5|24
 8425|Oppatical70@seahusa.com|Alers8421|19901228|19991224|Control room trainee|6312749142|8425|6|25
@@ -10420,7 +10420,7 @@
 10420|Bettantil87@seahusa.com|錢10416|20071219||Student services director|3166876616|10420|5|15
 10421|Wavicujjoys@seahusa.com|盧10417|20020505||Clerical worker supervisor|7635168073|10421|6|21
 10422|Hakey1986@seahusa.com|梁10418|20060705||Poet|9184206248|10422|2|33
-10423|Ã¦saw1984@seahusa.com|倪10419|20040605||Gaming manager|5304390021|10423|6|37
+10423|ÃƒÂ¦saw1984@seahusa.com|倪10419|20040605||Gaming manager|5304390021|10423|6|37
 10424|Waso1978@seahusa.com|麥10420|19980513||ERW operations|3234590618|10424|4|44
 10425|Recas1973@seahusa.com|程10421|19930516||Sales engineer|4252525726|10425|1|4
 10426|Senwor@seahusa.com|韓10422|20010508||Medical doctor|3153280098|10426|3|15
@@ -12208,7 +12208,7 @@
 12208|Dirarew@seahusa.com|Lombardo12204|20050329|20140325|CPA|6472926110|12208|1|38
 12209|Weandstaid@seahusa.com|Palerma12205|19840929|19890925|Worker compensation coordinator|4166445986|12209|1|45
 12210|Hatoreld@seahusa.com|Marchesi12206|20000112|20000116|Nannie|5308316953|12210|3|34
-12211|CÃ¦saingle@seahusa.com|Marcelo12207|19930213|20020209|Furniture finisher|2484867278|12211|1|5
+12211|CÃƒÂ¦saingle@seahusa.com|Marcelo12207|19930213|20020209|Furniture finisher|2484867278|12211|1|5
 12212|Derearthe@seahusa.com|Costa12208|19940401|19980320|Bellhop|7243524804|12212|1|5
 12213|Doind1971@seahusa.com|Udinese12209|19911219|19941215|Decommissioning and decontamination (D&D) worker|8312410136|12213|2|12
 12214|Hativered@seahusa.com|Mazzanti12210|19910107|19920103|Human resources director|6478911567|12214|1|28
@@ -14135,7 +14135,7 @@
 14135|Ciatell@seahusa.com|Lucchesi14131|19820521|20020517|Cruise ship worker|4168580269|14135|4|31
 14136|Wrife1977@seahusa.com|Ferrari14132|19970723|20000719|SAW operations|4169350606|14136|5|46
 14137|Sumsed@seahusa.com|Dellucci14133|19920831|20010827|Student affairs administrator|5168558113|14137|1|7
-14138|CÃ¦saingle@seahusa.com|Palerma14134|19840405|19890401|Transportation, storage, and distribution manager|9053636000|14138|6|13
+14138|CÃƒÂ¦saingle@seahusa.com|Palerma14134|19840405|19890401|Transportation, storage, and distribution manager|9053636000|14138|6|13
 14139|Couglag64@seahusa.com|Mazzi14135|19840802|19870720|Independent agent|4167975923|14139|3|44
 14140|Ancessiond83@seahusa.com|Genovese14136|20030110|20060106|Cable splicer|5196497990|14140|6|46
 14141|Coland@seahusa.com|Padovano14137|19900514|19950510|Architectural drafter|8024410989|14141|4|9
@@ -14561,7 +14561,7 @@
 14561|Vence1976@seahusa.com|Napolitano14557|19961127|20001123|Apparel worker|2187933640|14561|6|18
 14562|Firlifer1983@seahusa.com|Genovesi14558|20030515|20060511|Clinical dietitian|8308373888|14562|6|23
 14563|Prous1980@seahusa.com|Bellucci14559|20000829|20090825|Lease driver|6045976040|14563|4|27
-14564|HiscoÃ¶pence@seahusa.com|Piccio14560|19991222|20041218|Closed captioner|5197283360|14564|4|33
+14564|HiscoÃƒÂ¶pence@seahusa.com|Piccio14560|19991222|20041218|Closed captioner|5197283360|14564|4|33
 14565|Preselle@seahusa.com|Trevisan14561|19930623|19970619|Human resources assistant|7053226921|14565|6|34
 14566|Stue1973@seahusa.com|Lucciano14562|19930117|20020113|Railroad conductor|2506299710|14566|5|35
 14567|Madever@seahusa.com|Cocci14563|19820507|20020503|Roof bolter|9056764071|14567|6|5
@@ -16624,7 +16624,7 @@
 16624|Vainhaver1963@seahusa.com|Lombardo16620|19830820|19980816|Sewer|6042648162|16624|1|19
 16625|Kinger@seahusa.com|Padovesi16621|19890222|19940218|Dental medicine doctor|2508689726|16625|2|35
 16626|Whilto@seahusa.com|Mazzi16622|20040901||Aircraft pilot|2067209590|16626|2|38
-16627|CÃ¦say@seahusa.com|Phan16623|20070308|20120304|Marketing specialist|4169674917|16627|1|33
+16627|CÃƒÂ¦say@seahusa.com|Phan16623|20070308|20120304|Marketing specialist|4169674917|16627|1|33
 16628|Hisfireeness86@seahusa.com|Chung16624|20060914||Local transit bus driver|6318315611|16628|1|38
 16629|Remplourt@seahusa.com|La16625|20021228|20111224|Finance officer|8633287942|16629|1|40
 16630|Sainigh@seahusa.com|Tạ16626|19890608|19930604|Software engineer|7147648152|16630|1|23
@@ -17523,7 +17523,7 @@
 17523|Faideringed@seahusa.com|Thạch17519|19980326|19990322|Fitness worker|5122214516|17523|1|41
 17524|Agne1975@seahusa.com|Trần17520|19951022|19991018|Market research analyst|3073297587|17524|2|27
 17525|Truck1975@seahusa.com|Trịnh17521|19951117|19991113|Hearing officer|3166404775|17525|1|9
-17526|CalkÃœrewn@seahusa.com|Triệu17522|20020324|20060320|Subway operator|2012129849|17526|2|35
+17526|CalkÃƒÅ“rewn@seahusa.com|Triệu17522|20020324|20060320|Subway operator|2012129849|17526|2|35
 17527|Forepher@seahusa.com|Lý17523|19940912|20030908|Surveyor|3157193747|17527|1|34
 17528|Haile1974@seahusa.com|Lưu17524|19940919|20030915|Microeconomist|8017160532|17528|1|15
 17529|Musbang1979@seahusa.com|Chung17525|19990723||Addictions nurse|8147657781|17529|2|2
@@ -17823,7 +17823,7 @@
 17823|Prarnethir@seahusa.com|Cao17819|19891007||Administrative support services director|4108426298|17823|2|36
 17824|Popop1976@seahusa.com|Chu17820|19960228||General practitioner|2037636406|17824|2|7
 17825|Scientoped74@seahusa.com|Dương17821|19940201||General operations|6079739707|17825|2|26
-17826|Candia@seahusa.com|Mai17822|19710424||Aircraft cargo handling supervisor|8603303475|17826|2|
-17827|Ficks1970@seahusa.com|Đỗ17823|19700124||Aircraft systems assembler|9496104924|17827|1|
-17828|Mucer1963@seahusa.com|Đào17824|19630102||Behavioral disorder counselor|6412576128|17828|1|
-17829|Yesseed1966@seahusa.com|Đinh17825|19660712||Physical oceanographer|7203059115|17829|2|
+17826|Candia@seahusa.com|Mai17822|19710424||Aircraft cargo handling supervisor|8603303475|17826|2|5
+17827|Ficks1970@seahusa.com|Đỗ17823|19700124||Aircraft systems assembler|9496104924|17827|1|2
+17828|Mucer1963@seahusa.com|Đào17824|19630102||Behavioral disorder counselor|6412576128|17828|1|5
+17829|Yesseed1966@seahusa.com|Đinh17825|19660712||Physical oceanographer|7203059115|17829|2|35

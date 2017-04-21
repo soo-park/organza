@@ -156,7 +156,6 @@ def limit_list(offset, limit):
                             .offset(offset)
                             .limit(limit).all()
                         )
-    print (employees[0])
     return jsonify({'employees':[{'first_name': employee.first_name,
                                   'last_name': employee.last_name, 
                                   'employee_id': employee.employee_id} 
@@ -241,8 +240,8 @@ def search_employees():
     if query_employees:
         for i in range(0, len(query_employees)):
             result[query_employees[i].employee_id] = { 
-                'first_name': query_employees[i].__dict__['first_name'].lower(),
-                'last_name': query_employees[i].__dict__['last_name'].lower() 
+                'first_name': query_employees[i].__dict__['first_name'],
+                'last_name': query_employees[i].__dict__['last_name'] 
             }
 
     # Make JSON of the employee list to send back to static/js/employee_list.js

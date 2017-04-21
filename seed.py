@@ -5,7 +5,7 @@ dropdb intranet; createdb intranet; python model.py before running this code
 import datetime
 from sqlalchemy import func
 
-from model import (Employee, Employee_company, Company, Department, 
+from model import (Employee, Employee_company, Company, Department, Hierarchy,
                    Title, Company_department, Office, Department_title,
                    Office_department, connect_to_db, db)
 from server import app
@@ -230,17 +230,36 @@ def load_company_department():
     print "company_department seeding completed.\n"
 
 
+def load_hierarchy():
+
+    print "hierarchy seeding"
+    for i, row in enumerate(open("NOT_FOR_DEPLOYMENT/seed_data/u.hierarchy")):
+        row = row.rstrip()
+
+        hierarcy_id, supervisor_dept_title_id = row.split("|")
+
+        hierarchy = Hierarchy(
+                              supervisor_dept_title_id=supervisor_dept_title_id
+                              )
+
+        db.session.add(hierarchy)
+
+    db.session.commit()
+    print "hierarchy seeding completed.\n"
+
+
 def load_department_title():
 
     print "department_title seeding"
     for i, row in enumerate(open("NOT_FOR_DEPLOYMENT/seed_data/u.department_title")):
         row = row.rstrip()
 
-        department_title_id, title_id, department_id = row.split("|")
+        department_title_id, department_id, title_id, hierarchy_id = row.split("|")
 
         department_title = Department_title(
+                                            department_id=department_id,
                                             title_id=title_id,
-                                            department_id=department_id
+                                            hierarchy_id=hierarchy_id
                                             )
 
         db.session.add(department_title)
@@ -280,5 +299,6 @@ if __name__ == "__main__":
     load_office()
     load_employee_companies()
     load_company_department()
+    load_hierarchy()
     load_department_title()
     load_office_department()
