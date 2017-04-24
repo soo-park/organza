@@ -146,20 +146,65 @@ def logout():
 def limit_list(offset, limit):
     """limits the amount of employees loaded up on HTML"""
 
-    employees = (Employee.query.options(
-                            Load(Employee)
-                            .load_only(Employee.first_name,
-                                       Employee.last_name,
-                                       Employee.employee_id)
+    # Get search input and make a dictionary out of it
+    criteria = {}
+    for key, value in request.args.iteritems():
+        if value != '':
+            criteria[key]=value
+        else:
+            pass
+
+    print criteria
+    if not criteria:
+        employees = (Employee.query.options(
+                                Load(Employee)
+                                .load_only(Employee.first_name,
+                                           Employee.last_name,
+                                           Employee.employee_id)
+                                )
+                                .order_by(Employee.employee_id)
+                                .offset(offset)
+                                .limit(limit).all()
                             )
-                            .order_by(Employee.employee_id)
-                            .offset(offset)
-                            .limit(limit).all()
-                        )
+        employee_count=len(employees)
+    else:
+        # Lazy load employees
+        query_employees = (Employee.query.options(Load(Employee)
+                                .load_only(Employee.employee_id,
+                                           Employee.first_name,
+                                           Employee.last_name)
+                                )
+                            )
+
+        if 'first_name' in criteria:
+            query_employees = query_employees.filter_by(first_name=criteria['first_name'])
+
+        if 'last_name' in criteria:
+            query_employees = query_employees.filter_by(last_name=criteria['last_name'])
+
+        if 'company_name' in criteria:
+            query_employees = (query_employees.outerjoin(Employee_company)
+                                            .outerjoin(Company)
+                                            .filter_by(company_name=criteria['company_name'])
+                                )
+        if 'department_name' in criteria:
+            query_employees = (query_employees.outerjoin(Company_department)
+                                            .outerjoin(Department)
+                                            .filter_by(department_name=criteria['department_name'])
+                                )
+
+        # Do the actual query by calling the query into the python space
+        employees_before_limit = query_employees.offset(offset).all()
+        employee_count = len(employees_before_limit)
+        employees = query_employees.offset(offset).limit(limit).all()
+
+    # Get the employee first/last names of the search result
+
     return jsonify({'employees':[{'first_name': employee.first_name,
                                   'last_name': employee.last_name, 
                                   'employee_id': employee.employee_id} 
-                                  for employee in employees]}), 200
+                                  for employee in employees],
+                    'employee_count': employee_count}), 200
 
 
 @app.route('/employee/all')
@@ -192,60 +237,6 @@ def listba_employees():
                                                  companies=companies,
                                                  departments=departments
                                                  )
-
-
-@app.route('/search_employees.json')
-def search_employees():
-    """Search the query result for the right employees for criteria"""
-
-    # Get search input and make a dictionary out of it
-    criteria = {}
-    for key, value in request.args.iteritems():
-        if value != '':
-            criteria[key]=value
-        else:
-            pass
-
-    # Lazy load employees
-    query_employees = (Employee.query.options(Load(Employee)
-                            .load_only(Employee.employee_id,
-                                       Employee.first_name,
-                                       Employee.last_name)
-                            )
-                        )
-
-    if 'first_name' in criteria:
-        query_employees = query_employees.filter_by(first_name=criteria['first_name'])
-
-    if 'last_name' in criteria:
-        query_employees = query_employees.filter_by(last_name=criteria['last_name'])
-
-    if 'company_name' in criteria:
-        query_employees = (query_employees.outerjoin(Employee_company)
-                                        .outerjoin(Company)
-                                        .filter_by(company_name=criteria['company_name'])
-                            )
-    if 'department_name' in criteria:
-        query_employees = (query_employees.outerjoin(Company_department)
-                                        .outerjoin(Department)
-                                        .filter_by(department_name=criteria['department_name'])
-                            )
-
-    # Do the actual query by calling the query into the python space
-    query_employees = query_employees.all()
-
-    # Get the employee first/last names of the search result
-    result = {}
-
-    if query_employees:
-        for i in range(0, len(query_employees)):
-            result[query_employees[i].employee_id] = { 
-                'first_name': query_employees[i].__dict__['first_name'],
-                'last_name': query_employees[i].__dict__['last_name'] 
-            }
-
-    # Make JSON of the employee list to send back to static/js/employee_list.js
-    return jsonify(result)
 
 
 #*# receiving parameter in broweser: default <post_info> will be string  
