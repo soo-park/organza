@@ -6,59 +6,60 @@
 
 {% block content %}
 
-  <div class="padding" id="padding"></br></br></br></br></br></div>
-
-  <ul>
-    </br>
-
-    <img src = "/static/img/employee_info_photo/{{employee_info.photo_url}}" onerror="if (this.src != 'error.jpg') this.src = '/static/img/employee_info_photo/1.jpg';"></img>
-    </br>
-    </br>
-      <li>Employee ID:</li>
+  <section id="portfolio">
+    <div class="container">
       <ul>
-        <li>Name: {{ employee_info.first_name }} {{ employee_info.last_name }}</li>
-        <li>Middle Name: {{ employee_info.mid_name }}</li>
-        <li>Korean Name: {{ employee_info.k_name }}</li>
-        <li>Kanji Name: {{ employee_info.kanji_name }}</li>
-        <li>Birthday: {{ employee_info.birthday }}</li>
+        </br>
 
-      </ul>
+        <img src = "/static/img/employee_info_photo/{{employee_info.photo_url}}" onerror="if (this.src != 'error.jpg') this.src = '/static/img/employee_info_photo/1.jpg';"></img>
+        </br>
+        </br>
+          <li>Employee ID:</li>
+          <ul>
+            <li>Name: {{ employee_info.first_name }} {{ employee_info.last_name }}</li>
+            <li>Middle Name: {{ employee_info.mid_name }}</li>
+            <li>Korean Name: {{ employee_info.k_name }}</li>
+            <li>Kanji Name: {{ employee_info.kanji_name }}</li>
+            <li>Birthday: {{ employee_info.birthday }}</li>
 
-      <li>Company info: </li>
-      <ul>
-        <li>Company: {{ employee_info.company_name }} (
-        {% if employee_info.short_name %}
-            {{employee_info.short_name}}
-        {% endif %})
-        </li>
-        <li>Department: {{ employee_info.department_name }}</li>
-        <li>Title: {{ employee_info.title }} 
-            {% if employee_info.k_title %}
-                ({{ employee_info.k_title }})
-            {% endif %}
-        </li>
-        <li>Office email: {{ employee_info.office_email }}</li>
-        <li>Office phone: {{ employee_info.office_phone }}</li>
-      </ul>
-      <li>Personal contact:</li>
-      <ul>
-        <li>Address: {{ employee_info.address }}</li> 
-        <li>City: {{ employee_info.city }}, {{ employee_info.state }}</li>
-        <li>Country : {{ employee_info.country }}</li>
-        <li>Postal Code: {{ employee_info.postal_code }}</li>
-        <li>Personal Email: {{ employee_info.personal_email }}</li>
-        <li>Mobile: {{ employee_info.country_code }}-{{ employee_info.mobile }}</li>
-        <li>Phone: {{ employee_info.country_code }}-{{ employee_info.phone }}</li>
-      </ul>
-      </br>
-      <li>Emergency Contact:</li>
-      <ul>
-        <li>Name: {{ employee_info.emergency_name }}</li>
-        <li>Number: {{ employee_info.emergency_phone }}</li>
-      </ul>
-      </br>
-      <li>Admin status: {{ employee_info.admin }}</li>
+          </ul>
 
-  </ul>
+          <li>Company info: </li>
+          <ul>
+            <li>Company: {{ employee_info.company_name }} (
+            {% if employee_info.short_name %}
+                {{employee_info.short_name}}
+            {% endif %})
+            </li>
+            <li>Department: {{ employee_info.department_name }}</li>
+            <li>Title: {{ employee_info.title }} 
+                {% if employee_info.k_title %}
+                    ({{ employee_info.k_title }})
+                {% endif %}
+            </li>
+            <li>Office email: {{ employee_info.office_email }}</li>
+            <li>Office phone: {{ employee_info.office_phone }}</li>
+          </ul>
+          <li>Personal contact:</li>
+          <ul>
+            <li>Address: {{ employee_info.address }}</li> 
+            <li>City: {{ employee_info.city }}, {{ employee_info.state }}</li>
+            <li>Country : {{ employee_info.country }}</li>
+            <li>Postal Code: {{ employee_info.postal_code }}</li>
+            <li>Personal Email: {{ employee_info.personal_email }}</li>
+            <li>Mobile: {{ employee_info.country_code }}-{{ employee_info.mobile }}</li>
+            <li>Phone: {{ employee_info.country_code }}-{{ employee_info.phone }}</li>
+          </ul>
+          </br>
+          <li>Emergency Contact:</li>
+          <ul>
+            <li>Name: {{ employee_info.emergency_name }}</li>
+            <li>Number: {{ employee_info.emergency_phone }}</li>
+          </ul>
+          </br>
+          <li>Admin status: {{ employee_info.admin }}</li>
+      </ul>
+    </div>
+  </section>
 
 {% endblock %}

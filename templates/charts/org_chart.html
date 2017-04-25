@@ -11,20 +11,27 @@
 
 {% block content %}
 
-  <div class="padding" id="padding"></br></br></br></br></br></div>
+  <section id="portfolio">
+    <div class="container">
 
-  <h3>Organizational Chart</h3></br>
+      <h3>Organizational Chart</h3></br>
 
-  Company Name:
-  <select name='company' id='company'>
-    {% for company in companies %}
-      <option value='{{ company }}'>
-        {{ company }}
-      </option>
-    {% endfor %}
-  </select>
+      Company Name:
+      <select name='company' id='company'>
+        {% for company in companies %}
+          <option value='{{ company }}'>
+            {{ company }}
+          </option>
+        {% endfor %}
+      </select>
 
-  <div id="chart-container"></div>
+      <div id="chart-container"></div>
+    </div>
+  </section>
+
+
+
+
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="/static/lib/org_chart/js/jquery.orgchart.js"></script>
 

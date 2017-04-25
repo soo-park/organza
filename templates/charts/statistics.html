@@ -6,45 +6,49 @@
 {% endblock %}
 
 {% block content %}
-  <div class="padding" id="padding"></br></br></br></br></br></div>
 
-  <!-- Projects Row -->
-  <div class="row">
-      <div class="col-md-6 portfolio-item">
-          <canvas id="numEmployeePerCompany" width="100" height="100"></canvas>
-          <h3>
-              <a href="#">Project One</a>
-          </h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-      </div>
-      <div class="col-md-6 portfolio-item">
-          <canvas id="myChart2" width="100" height="100"></canvas>
-          <h3>
-              <a href="#">Project Two</a>
-          </h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-      </div>
-  </div>
-  <!-- /.row -->
+  <section id="portfolio">
+    <div class="container">
 
-  <!-- Projects Row -->
-  <div class="row">
-      <div class="col-md-6 portfolio-item">
-          <canvas id="myChart3" width="100" height="100"></canvas>
-          <h3>
-              <a href="#">Project Three</a>
-          </h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      <!-- Projects Row -->
+      <div class="row">
+          <div class="col-md-6 portfolio-item">
+              <canvas id="numEmployeePerCompany" width="100" height="100"></canvas>
+              <h3>
+                  <a href="#">Project One</a>
+              </h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+          </div>
+          <div class="col-md-6 portfolio-item">
+              <canvas id="myChart2" width="100" height="100"></canvas>
+              <h3>
+                  <a href="#">Project Two</a>
+              </h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+          </div>
       </div>
-      <div class="col-md-6 portfolio-item">
-          <canvas id="myChart4" width="100" height="100"></canvas>
-          <h3>
-              <a href="#">Project Four</a>
-          </h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      <!-- /.row -->
+
+      <!-- Projects Row -->
+      <div class="row">
+          <div class="col-md-6 portfolio-item">
+              <canvas id="myChart3" width="100" height="100"></canvas>
+              <h3>
+                  <a href="#">Project Three</a>
+              </h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+          </div>
+          <div class="col-md-6 portfolio-item">
+              <canvas id="myChart4" width="100" height="100"></canvas>
+              <h3>
+                  <a href="#">Project Four</a>
+              </h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+          </div>
       </div>
-  </div>
-  <!-- /.row -->
+      <!-- /.row -->
+    </div>
+  </section>
 
   <script>
     var background1 = {{ background | safe }};

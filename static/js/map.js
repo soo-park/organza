@@ -190,35 +190,38 @@ function initMap() {
         $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+data.data[i].address+","+data.data[i].city+","+data.data[i].state+"&key=AIzaSyBFGHze_U0BhQWbzg_nsH38nLzsfnEvxhQ", 
         function(data2){
           var pos = data2.results[0].geometry.location;
-          var contentString = "<li>"+ data.data[i].office_name +"</li>"
-                                  + "<ul>"
-                                    + "<li> Address: "+ data.data[i].address +"</li>"
-                                    + "<li> City: "+ data.data[i].city +"</li>"
-                                    + "<li> State: "+ data.data[i].state +"</li>"
-                                    + "<li> Country: "+ data.data[i].country +"</li>"
-                                    + "<li> Postal code: "+ data.data[i].postal_code +"</li>"
-                                    + "<li> Phone: "+ data.data[i].phone +"</li>"
-                                    + "<li> Fax: "+ data.data[i].fax +"</li>"
-                                  + "</ul>";
-          var infowindow = new google.maps.InfoWindow({
-              content: contentString
-            });
-          var marker = new google.maps.Marker({
-              position: pos,
-              title: data.data[i].office_name,
-              map: map
+          if (data.data[i].office_name !== ""){
+            var contentString = "<div class='col-sm-6 col-md-4 portfolio-item'>"
+                                  + "<li class='company'>"+ data.data[i].office_name +"</li>"
+                                    + "<ul class='company'>"
+                                      + "<li> Address: "+ data.data[i].address +"</li>"
+                                      + "<li> City: "+ data.data[i].city +"</li>"
+                                      + "<li> State: "+ data.data[i].state +"</li>"
+                                      + "<li> Country: "+ data.data[i].country +"</li>"
+                                      + "<li> Postal code: "+ data.data[i].postal_code +"</li>"
+                                      + "<li> Phone: "+ data.data[i].phone +"</li>"
+                                      + "<li> Fax: "+ data.data[i].fax +"</li>"
+                                  + "</ul>"
+                                +"</div>";
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
               });
+            var marker = new google.maps.Marker({
+                position: pos,
+                title: data.data[i].office_name,
+                map: map
+                });
 
-          marker.addListener('mouseover', function(){
-            infowindow.open(map, this);
-          });
+            marker.addListener('mouseover', function(){
+              infowindow.open(map, this);
+            });
 
-          marker.addListener('mouseout', function() {
-            infowindow.close();
-          });
+            marker.addListener('mouseout', function() {
+              infowindow.close();
+            });
 
-          $("#company-list").append(contentString)
-
+            $("#company-list").append(contentString)
+          }
          });
       })(i)
     }

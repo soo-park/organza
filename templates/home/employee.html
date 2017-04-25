@@ -5,16 +5,52 @@
 {% endblock %}
 
 {% block content %}
+  <div class="padding" id="padding"></br></br></div>
+  <!-- Portfolio Grid Section -->
+  <section id="portfolio">
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Employee Menu</h2></br>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Offices: corporate map -->
+            <div class="col-sm-6 col-md-4 portfolio-item">
+                <a href="/map" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x">Corporate Locations</i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/cabin.png" class="img-responsive" alt="Cabin">
+                </a>
+            </div>
+            <!-- Employees: Employee data -->
+            <div class="col-sm-6 col-md-4 portfolio-item">
+                <a href="/employee/all" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x">Search Employees</i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/cake.png" class="img-responsive" alt="Slice of cake">
+                </a>
+            </div>
+            <!-- Organizational Chart: Company data -->
+            <div class="col-sm-6 col-md-4 portfolio-item">
+                <a href="/company/all" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x">Organization Chart</i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/game.png" class="img-responsive" alt="Game controller">
+                </a>
+            </div>
+          </div>
+      </div>
+  </section>
 
-    </br>
-    <label>Offices</label>
-    <p><a href="/map">Corporate map</a></p>
-    </br>
-    <label>Employees</label>
-    <p><a href="/employee/all">Employee data</a></p>
-    </br>
-    <label>Organizational Chart</label>
-    <p><a href="/company/all">Company data</a></p>
 
-{% include 'footer.html' %}
 {% endblock %} 
