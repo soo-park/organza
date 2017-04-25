@@ -6,32 +6,85 @@
 
 {% block content %}
 
-    </br>
-    <label>Offices</label>
-    <p><a href="/map">Corporate map</a></p>
-
-
-    </br>
-    <label>Employees</label>
-    <p><a href="/employee/all">Employee data</a></p>
-    </br>
-    <label>Employee Add</label>
-    <p><a href="/employee/add">Add employee</a></p>
-    </br>
-  <!--   <label>Employee Edit or Delete</label>
-    <p><a href="/employee/edit">Change employee info</a></p>
-    </br> -->
-  <!--   <label>Upload Employee data using Excel</label>
-    <p><a href="/employee_excel">Change employee info</a></p>  
-    </br> -->
-<!--     <label>Add company/department/title/office info</label>
-    <p><a href="/company/add">Change company info</a></p>  
-    </br> -->
-    <label>Organizational Chart</label>
-    <p><a href="/company/all">Company data</a></p>
-    </br>
-    <label>Company statistics</label>
-    <p><a href="/statistics">Statistics on employees</a></p>
+  <!-- Portfolio Grid Section -->
+  <section id="portfolio">
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Admin Menu</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <!-- Offices: corporate map -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/map" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/cabin.png" class="img-responsive" alt="Cabin">
+                </a>
+            </div>
+            <!-- Employees: Employee data -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/employee/all" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/cake.png" class="img-responsive" alt="Slice of cake">
+                </a>
+            </div>
+            <!-- Employee Add: Add employee -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/employee/add" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/circus.png" class="img-responsive" alt="Circus tent">
+                </a>
+            </div>
+            <!-- Organizational Chart: Company data -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/company/all" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/game.png" class="img-responsive" alt="Game controller">
+                </a>
+            </div>
+            <!-- Company statistics: Statistics on employees -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/statistics" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/safe.png" class="img-responsive" alt="Safe">
+                </a>
+            </div>
+            <!-- Make it contact us page -->
+            <div class="col-sm-4 portfolio-item">
+                <a href="/contacts" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="./static/lib/bootstrap/img/portfolio/submarine.png" class="img-responsive" alt="Submarine">
+                </a>
+            </div>
+          </div>
+      </div>
+  </section>
 
 
 {% endblock %} 

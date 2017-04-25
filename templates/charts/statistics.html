@@ -1,89 +1,117 @@
 {% extends 'base.html' %}
 
-
 {% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+  <script src="./../../static/lib/chartjs/src/chart.js"></script>
 {% endblock %}
 
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-<script src="./../../static/lib/chartjs/src/chart.js"></script>
+  <div class="padding" id="padding"></br></br></br></br></br></div>
 
-<canvas id="numEmployeePerCompany" width="100" height="100"></canvas>
-<p> What it means </p>
-<canvas id="myChart2" width="100" height="100"></canvas>
-<p> What it means </p>
-<canvas id="myChart3" width="100" height="100"></canvas>
-<p> What it means </p>
-<canvas id="myChart4" width="100" height="100"></canvas>
-<p> What it means </p>
+  <!-- Projects Row -->
+  <div class="row">
+      <div class="col-md-6 portfolio-item">
+          <canvas id="numEmployeePerCompany" width="100" height="100"></canvas>
+          <h3>
+              <a href="#">Project One</a>
+          </h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      </div>
+      <div class="col-md-6 portfolio-item">
+          <canvas id="myChart2" width="100" height="100"></canvas>
+          <h3>
+              <a href="#">Project Two</a>
+          </h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      </div>
+  </div>
+  <!-- /.row -->
 
+  <!-- Projects Row -->
+  <div class="row">
+      <div class="col-md-6 portfolio-item">
+          <canvas id="myChart3" width="100" height="100"></canvas>
+          <h3>
+              <a href="#">Project Three</a>
+          </h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      </div>
+      <div class="col-md-6 portfolio-item">
+          <canvas id="myChart4" width="100" height="100"></canvas>
+          <h3>
+              <a href="#">Project Four</a>
+          </h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+      </div>
+  </div>
+  <!-- /.row -->
 
-<script>
-  var background1 = {{ background | safe }};
-  var border1 = {{ border | safe }};
-  var data1 = {{ data | safe }};
-  var label1 = {{ labels | safe }};
+  <script>
+    var background1 = {{ background | safe }};
+    var border1 = {{ border | safe }};
+    var data1 = {{ data | safe }};
+    var label1 = {{ labels | safe }};
 
-  var ctx1 = document.getElementById("numEmployeePerCompany");
-  var numEmployeePerCompany = new Chart(ctx1, {
-      type: 'bar',
-      data: {
-          labels: label1,
-          datasets: [{
-              label: '# of employees per company',
-              data: data1,
-              backgroundColor: background1,
-              borderColor: border1,
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
+    var ctx1 = document.getElementById("numEmployeePerCompany");
+    var numEmployeePerCompany = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: label1,
+            datasets: [{
+                label: '# of employees per company',
+                data: data1,
+                backgroundColor: background1,
+                borderColor: border1,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+              }
             }
-          }
-        });
+          });
 
-  var ctx2 = document.getElementById("myChart2").getContext('2d');
-  var myChart2 = new Chart(ctx2, {
-    type: 'polarArea',
-    data: {
-      labels: label1,
-      datasets: [{
-        backgroundColor: background1,
-        data: data1
-      }]
-    }
-  });
+    var ctx2 = document.getElementById("myChart2").getContext('2d');
+    var myChart2 = new Chart(ctx2, {
+      type: 'polarArea',
+      data: {
+        labels: label1,
+        datasets: [{
+          backgroundColor: background1,
+          data: data1
+        }]
+      }
+    });
 
-  var ctx3 = document.getElementById("myChart3").getContext('2d');
-  var myChart3 = new Chart(ctx3, {
-    type: 'doughnut',
-    data: {
-      labels: label1,
-      datasets: [{
-        backgroundColor: background1,
-        data: data1
-      }]
-    }
-  });
+    var ctx3 = document.getElementById("myChart3").getContext('2d');
+    var myChart3 = new Chart(ctx3, {
+      type: 'doughnut',
+      data: {
+        labels: label1,
+        datasets: [{
+          backgroundColor: background1,
+          data: data1
+        }]
+      }
+    });
 
-  var ctx4 = document.getElementById("myChart4").getContext('2d');
-  var myChart4 = new Chart(ctx4, {
-    type: 'radar',
-    data: {
-      labels: label1,
-      datasets: [{
-        backgroundColor: background1,
-        data: data1
-      }]
-    }
-  });
+    var ctx4 = document.getElementById("myChart4").getContext('2d');
+    var myChart4 = new Chart(ctx4, {
+      type: 'radar',
+      data: {
+        labels: label1,
+        datasets: [{
+          backgroundColor: background1,
+          data: data1
+        }]
+      }
+    });
 
-</script>
+  </script>
 
 {% endblock %}

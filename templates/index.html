@@ -2,20 +2,36 @@
 
 {% block head %} 
   <title> Organza Home </title>
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <link rel="stylesheet" href="static/css/map.css"></style>
 {% endblock %}
 
 {% block content %}
+  <!-- Header -->
+  <header>
+    <div class="container" id="maincontent" tabindex="-1">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>
+            </br>
+            <img class="img-responsive" src="./static/lib/bootstrap/img/profile.png" alt="">
+            <div class="intro-text">
+              <h2 class="name">Welcome to Organza</h2>
+              <hr class="star-light">
+              <span class="skills">The fabric that holds your organization together</span></div></br>
+              <span> a global company employee directory </span>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <a href="#">Signup here</a><hr>
+  <!-- for Google Maps API -->
+  <div id='map'></div>
 
-
-    </br>
-        <h1> Welcome to Organza </h1>
-        <h2> The fabric that holds your organization together </h2>
-        <h3> a global company employee directory </h3>
-
-    <p><a href="/temp">EXPERIMNETS</a></p>  
-    </br>
-
+  <!-- for Google Maps API -->
+  <script src="static/js/map.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFGHze_U0BhQWbzg_nsH38nLzsfnEvxhQ&callback=initMap" defer></script>
 
 {% endblock %} 

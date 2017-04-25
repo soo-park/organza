@@ -2,12 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"> 
-
-      <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
-          rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/united/bootstrap.min.css"
-          rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
     <!-- jQuery -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -15,50 +13,100 @@
     <!-- JavaScript -->
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/static/css/project.css">
- 
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/united/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="./static/css/project.min.css" rel="stylesheet">
+    <link href="./static/css/project.css" rel="stylesheet">
+
     {% block head %}{% endblock %}
 
   </head>
 
   <body>
-    <h1><a href="/">Organza</a></h1>
-    {% if session.get('logged_in') %}
-        <form action="/logout" method="POST">
-            <button id="logout-button" type="submit" value="Logout">Logout</button>
-        </form>
-    {% else %}
-      <h2>Log in here: </h2>
-        <form action="/login" method="POST">
-          <input type="text" name="username" placeholder="Username">
-          <!-- The characters in a password field are masked 
-          (shown as asterisks or circles). -->
-          <input type="password" name="password" placeholder="Password">
-          <button type="submit" value="Login" id="login">Login</button>
-        </form>
-    {% endif %}
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+          </button>
+          <a class="navbar-brand" href="/">Organza</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="hidden">
+                <a href="#"></a>
+            </li>
+            <li class="page-scroll">
+              <a href="/map">
+                  {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                      <ul class=flashes>
+                      {% for message in messages %}
+                        <li>{{ message }}</li>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
+                  {% endwith %}
+              </a>
+            </li>                  
+            <li class="page-scroll">
+                <a href="/">Menu Home</a>
+            </li>
+            <li class="page-scroll">
+                <a href="/map">Locations</a>
+            </li>
+            <li class="page-scroll">
+              {% if session.get('logged_in') %}
+                <form action="/logout" method="POST">
+                    <button id="logout-button" type="submit" value="Logout"  class="btn btn-default" data-target="#logoutModal">Logout</button>
+                </form>
+              {% else %}
+                <!-- Modal -->
+                <form action="/login" method="POST">
+                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Login</button>
+                  <!-- Modal content-->
+                  <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Login</h4>
+                        </div>
+                        <div class="modal-body">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <input type="text" name="username" placeholder="Username">
+                          <input type="password" name="password" placeholder="Password">
+                          <button type="submit" value="Login" id="login">Login</button></div><br>
+                          <div class="modal-footer">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    
+    {% block content %}{% endblock %}
+    {% include 'footer.html' %}
 
-  {% block content %}{% endblock %}
-
-    <!-- Necessary code for bootstrap -->
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Logout script -->
     <script>
       $("#logout-button").on("click", function(){
         alert("You have been logged out.");
       })
     </script>
-
   </body>
 </html>
