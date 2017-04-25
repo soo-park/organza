@@ -70,7 +70,7 @@ def login():
     password = request.form.get('password')
     db_employees = Employee.query.filter_by(username=username).all()
     if len(db_employees) > 1:
-        flash("More than one user for the email found. Contact admin.")
+        flash("More than one same username. Contact admin.")
         return redirect("/")
     elif len(db_employees) == 1:
         db_employee = db_employees[0]
@@ -93,7 +93,7 @@ def login():
                 return redirect("/employee_logged")
             elif date_employeed and date_departed:
                 session["permission"] = "user"
-                flash('Welcome, general user. If you are an employee, please contact the admin.')
+                flash('If an employee, please contact admin.')
                 return redirect("/logged")
             else:
                 session["permission"] = "user"
@@ -154,7 +154,6 @@ def limit_list(offset, limit):
         else:
             pass
 
-    print criteria
     if not criteria:
         employees = (Employee.query.options(
                                 Load(Employee)
@@ -299,9 +298,6 @@ def allowed_file(filename):
 def add_employee():
     """Add employee to the db."""
 
-    # Unicode/datetime does not accept empty string. When user do not input 
-    # anyting, an empty string becomes the value. Thus, iterate to assign None. 
-    # Exception: checkbox will not be submitted if off. Thus, receive value directly
     all_input = request.form.items()
     result = {}
     for key, value in all_input:
@@ -345,7 +341,6 @@ def add_employee():
     # code below, along with the allowed_file function defined above, saves img
     # A <form> tag is marked with enctype=multipart/form-data and 
     # an <input type=file> is placed in that form.
-    # The following conditions did not stop the process and thus raised error
     if request.files.keys() or 'file' in request.files or file.filename != '':
         new_employee_query = Employee.query.all()[-1]
         file = request.files['file']
@@ -361,11 +356,7 @@ def add_employee():
         
         new_employee_query.photo_url = UPLOAD_FOLDER + '/employee_info_photo/' + filename
         db.session.commit()
-    #    
-    # The following will catch the error but will stop the following tables submit
-    # try:
-    # except UnboundLocalError:
-    #     pass
+
     ########################## For Flask file upload end #######################
 
     # add company to DB if there was a user input that has to do with the table
@@ -593,24 +584,6 @@ def list_companies():
     all_employee = employees.all()
     department_titles = Department_title.query.all()
 
-    ####### Below code is to display sudo names to view the org chart ##########
-    # titles_per_department = {
-    #     1: [11, 30], 
-    #     2: [2, 5, 6, 7, 10, 13, 16, 17, 20, 21, 22, 23, 25, 26, 27, 28, 34, 35, 36, 37, 38, 39, 41, 42, 46], 
-    #     3: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 20, 22, 23, 25, 26, 27, 35, 38, 39, 41, 42, 46], 
-    #     4: [2, 6, 38, 7, 41, 42, 39, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 10, 5], 
-    #     5: [2, 5, 6, 7, 10, 12, 13, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 29, 31, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 46], 
-    #     6: [2, 5, 6, 7, 38, 41, 42, 39, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 10], 
-    #     7: [2, 5, 6, 39, 38, 41, 10, 7, 13, 46, 16, 17, 20, 22, 23, 25, 26, 27, 42]
-    #     }
-
-    # for key in titles_per_department:
-    #     for i, number in enumerate(titles_per_department[key]):
-    #         for title in titles:
-    #             if number == title.title_id:
-    #                 titles_per_department[key][i] = title.title
-
-    # print titles_per_department
     count = 1
     for title in titles:
         title_id = title.title_id
@@ -909,15 +882,15 @@ def statistics():
                                                    , background=background
                                                    , border=border)
 
+################### END STATISTICS START LOADING APP ##########################
 
-@app.route('/temp')
-def temp():
-    """Show statistics and charts."""
+@app.route('/contacts')
+def contacts():
 
-    return render_template('temp.html')
-
+    return render_template('contacts.html')
 
 ################### END STATISTICS START LOADING APP ##########################
+
 
 
 if __name__ == '__main__':
