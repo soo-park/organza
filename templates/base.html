@@ -21,11 +21,19 @@
     <link href="/static/css/project.min.css" rel="stylesheet">
     <link href="/static/css/project.css" rel="stylesheet">
 
+
+
     {% block head %}{% endblock %}
 
   </head>
 
   <body>
+    {% if "permission" in session %}
+      <script>
+        var sessionScope = {};
+        sessionScope.permission = "{{session.permission}}";
+      </script>
+    {% endif %}
     <!-- Navigation -->
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
       <div class="container">
@@ -55,9 +63,7 @@
                   {% endwith %}
               </a>
             </li>                  
-            <li class="page-scroll">
-                <a href="/map">Locations</a>
-            </li>
+            <li class="page-scroll" id="menu-item"></li>
             <li class="page-scroll">
               {% if session.get('logged_in') %}
                 <form action="/logout" method="POST">
@@ -98,8 +104,11 @@
     
     {% block content %}{% endblock %}
     
-    <script src="/static/js/base.js" type="text/javascript"></script>
+    <!-- Custom Fonts -->
+    <link href="/static/lib/bootstrap/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
-    {% include 'footer.html' %}
+    <script src="/static/js/base.js" type="text/javascript"></script>
   </body>
 </html>
