@@ -28,7 +28,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # limits upload to 16mb
 from model import (Employee, Employee_company, Company, Department,Title,
                    Office, Company_department, Department_title, Hierarchy,
                    Office_department, connect_to_db, db)
-from employee_query import *
+
 from utilities import (get_map_from_sqlalchemy, change_sql_obj_into_dic, 
                         change_sql_sub_obj_into_dic, merge_dicts)
 

@@ -8,6 +8,8 @@
 body {
   /*font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
   overflow-x: hidden;
+  display:flex; 
+  flex-direction: column;
   
 }
 p {
@@ -69,11 +71,14 @@ hr.star-primary:after {
 .img-centered {
   margin: 0 auto;
 }
+
 header {
   text-align: center;
   background-image: url("/static/img/subtlepatterns_grey_wash_wall_@2X.png");
   background-color: #cccccc;
   color: white;
+  order:2;
+  flex-shrink:1;
 }
 header .container {
   padding-top: 100px;
@@ -105,6 +110,11 @@ header .intro-text .skills {
   header .intro-text .skills {
     font-size: 1.25em;
   }
+}
+
+.navbar {
+  order:1;
+  flex-shrink:1;
 }
 .navbar-custom {
   background: #2C3E50;
@@ -184,6 +194,8 @@ header .intro-text .skills {
 }
 section {
   padding: 100px 0;
+  order:3;
+  flex-grow: 5;
 }
 section h2 {
   margin: 0;
@@ -300,6 +312,8 @@ form .row:first-child .floating-label-form-group {
 }
 footer {
   color: white;
+  order: 4;
+  flex-shrink: 1;
 }
 footer h3 {
   margin-bottom: 10px;
