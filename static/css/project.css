@@ -94,7 +94,7 @@ header .intro-text .skills {
   font-size: 2em;
   font-weight: 300;
 }
-@media (min-width: 768px) {
+@media (min-width: 500px) {
   header .container {
     padding-top: 100px;
     padding-bottom: 50px;
@@ -532,7 +532,7 @@ canvas{
 
 li.company {
     list-style-type: kannada-moz-kannada;
-    padding: 10px 10px 10px 10px;
+    padding: 20px 10px 10px 10px;
     font-weight: bold;
 }
 
@@ -540,3 +540,22 @@ ul.company {
   color: #828282;
 }
 
+.myButton{
+  color: #828282;
+}
+
+#personal-info {
+  padding: 20px 10px 10px 10px;
+}
+
+#personal-info-title {
+  font-weight: bold;
+}
+
+#info-content {
+  color: #828282;
+}
+
+#hr-chart {
+  padding: 50px 50px 50px 50px;
+}
