@@ -24,7 +24,7 @@ Along with the basic features of segregated login, employee list view, and emplo
  
 ### Login
  
-The login feature has three credentials - admin, employee, user. Bootstrap nav var changes according to the credential.
+The login feature has three credentials - admin, employee, a user. Bootstrap nav var changes according to the credential.
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/login.gif?raw=true "Optional Title")
@@ -47,7 +47,7 @@ Layout dynamically changes according to the window size.
  
  
  
-Server side controlls search and pagination. The four-filter search use only one query by utilizing lazy-query of SQLAlchemy to save number of queries.
+Server side controls search and pagination. The four-filter search use only one query by utilizing lazy-query of SQLAlchemy to save a number of queries.
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/search.gif?raw=true "Optional Title")
@@ -59,7 +59,7 @@ Server side controlls search and pagination. The four-filter search use only one
  
  
  
-Features include employee photo upload, UTF-8 form and database to accomodate Asian and other characters, instant update on all relational tables on submit, and much more.
+Features include employee photo upload, UTF-8 form and database to accommodate Asian and other characters, an instant update on all relational tables on submit, and much more.
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/add_company.gif?raw=true "Optional Title")
@@ -71,7 +71,7 @@ Features include employee photo upload, UTF-8 form and database to accomodate As
  
  
  
-The markers in Google Map, the info modal window, and the information below all are dynamically generated from DB for scalablity.
+The markers in Google Map, the info modal window, and the information below all are dynamically generated from DB for scalability.
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/map.png?raw=true "Optional Title")
@@ -83,7 +83,7 @@ The markers in Google Map, the info modal window, and the information below all 
  
  
  
-JS plug-in generates the chart structure. A table of hierarchy exists in the data model to accomodate complicated organizational structural needs.
+JS plug-in generates the chart structure. A table of hierarchy exists in the data model to accommodate complicated organizational structural needs.
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/orgchart.gif?raw=true "Optional Title")
@@ -95,7 +95,7 @@ JS plug-in generates the chart structure. A table of hierarchy exists in the dat
  
  
  
-The data for these ChartJS data visualizations are generated in server side with full format of color schemes. If columns added, appropriate color schems will apply automatically. *** Better compatibility with Chrome than Safari
+The data for these ChartJS data visualizations are generated in server side with a full format of color schemes. If columns added, appropriate color schemes will apply automatically. *** Better compatibility with Chrome than Safari
  
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/stats.gif?raw=true "Optional Title")
@@ -109,7 +109,7 @@ The data for these ChartJS data visualizations are generated in server side with
  
 ### Data model
  
-The model for this project is built to accomodate company with subsidiaries that share certain properties, employees working for multiple subsidiaries at the same point of time, and many other many-to-many relationships.
+The model for this project is built to accommodate company with subsidiaries that share certain properties, employees working for multiple subsidiaries at the same point of time, and many other many-to-many relationships.
  
 
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/db_v010.png?raw=true "Optional Title")
@@ -175,32 +175,32 @@ Reason: to make the installation run in a limited space
 #### 3. Install requirements
 
 Command: pip install -r requirements.txt
-Reason: all needed installations are saved in requirements.txt. pip is command for Python to pick up necessary packages and install them.
+Reason: all needed installations are saved in requirements.txt. pip is a command for Python to pick up necessary packages and install them.
 
 #### 4. Generate db
 
 Command: dropdb intranet; createdb intranet
-Reason: createdb command will generate the database that will store the data. The database is named "intranet" inside the model.py file. (if ERROR "Database "intranet" already exists" raised: dropdb intranet is needed. Just to make sure that there is no pre-existing db, you can always go with dropdb intranet)
-Caution: this will delete the existing data from your db. If you want to "add" data, and not start a new, do not do this.
+Reason: createdb command will generate the database that will store the data. The database is named "intranet" inside the model.py file. (if ERROR "Database "intranet" already exists" raised: dropdb intranet is needed. Just to make sure that there is no pre-existing DB, you can always go with dropdb intranet)
+Caution: this will delete the existing data from your DB. If you want to "add" data, and not start a new, do not do this.
 
 #### 5. Run model
 
 Command: python model.py
-Reason: the model will be a base template for your db
+Reason: the model will be a base template for your DB
 
 #### 6. Run seed.py
 
 Command: python seed.py
-Reason: generate stating point for your db for testing
+Reason: generate starting point for your DB for testing
 The test seed will fill data tables with 17000 employees with full data.
 
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/seed.gif?raw=true "Optional Title")
 
-#### 7. Check if the db is loaded correctly
+#### 7. Check if the DB is loaded correctly
 
 Command: psql intranet
          \dt
-Reason: you want to see if the tables are generated. If the are generated, a chart containing the list of them wil show.
+Reason: you want to see if the tables are generated. If the are generated, a chart containing the list of them will show.
 
 #### 8. Run server
 
