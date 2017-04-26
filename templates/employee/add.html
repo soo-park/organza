@@ -10,33 +10,39 @@
   <section id="portfolio">
       <div class="container">
 
-      <div id='add_employee' id='add_employee'>
+      <div id='add_employee'>
         <h3>Employee Add</h3>
         <form action='/add_employee' method='POST' enctype=multipart/form-data>
           * fields are required.</br> 
           </br>
-          <fieldset>
 
-            <label>Photo:</label>
-            <p><input type='file' name='file'></br> 
+            <div class="form-group row">
+              <label>Photo:</label>
+              <input type='file' name='file'>
+            </div>
 
-            <label>Login information:</label>
-            <input type='text' name='username' id='username' placeholder='User Name'>*
-            <input type='text' name='password' id='password' placeholder='Password'>*</br>  
+            <div class="form-group row">
+              <label>Login information:</label>
+              <input type='text' name='username' id='username' placeholder='User Name'>*
+              <input type='text' name='password' id='password' placeholder='Password'>*</br>
+            </div>  
 
-          </fieldset>  
           
-          <fieldset>
-            <label>Name:</label>
-            <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
-            <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
-            <input type='text' name='last_name' id='last_name' placeholder='Last Name'></br>
-            <input type='text' name='k_name' id='k_name' placeholder='Korean name'>
-            <input type='text' name='kanji_name' id='kanji_name' placeholder='Kanji Name'></br>
-            </br>
+            <div class="form-group row">
+              <label>Name:</label>
+              <input type='text' name='first_name' id='first_name' placeholder='First Name'>*
+              <input type='text' name='mid_name' id='mid_name' placeholder='Middle name'>
+              <input type='text' name='last_name' id='last_name' placeholder='Last Name'></br>
+            </div>
+            <div class="form-group row">
+              <label>Foreign Name:</label>
+              <input type='text' name='k_name' id='k_name' placeholder='Korean name'>
+              <input type='text' name='kanji_name' id='kanji_name' placeholder='Kanji Name'></br>
+              </br>
+            </div>
 
             <label>Company:</label>
-            <div id='company_name'>
+            <span id='company_name'>
               <select name='company_name'>
                 <option></option>
                 {% for company in companies %}
@@ -46,11 +52,11 @@
                 {% endfor %}
               </select>
             <button type='button' id='company_add'>add company </button>
-            </div>
+            </span>
             </br>
 
             <label>Department:</label>
-            <div id='department_name'>
+            <span id='department_name'>
               <select name='department_name'>
               <option></option>
                 {% for department in departments %}
@@ -60,33 +66,33 @@
                 {% endfor %}
               </select>
             <button type='button' id='department_add'>add department </button>
-            </div>
+            </span>
             </br>
             <label>Title:</label>
-            <div id='title_name'>
-            <select name='title'>
-            <option></option>
-              {% for title in titles %}
-                <option value='{{ title.title }}'>
-                  {{ title.title }}
-                </oprion>
-              {% endfor %}
-            </select>
-            <button type='button' id='title_add'>add title </button>
-            </div>
+            <span id='title_name'>
+              <select name='title'>
+              <option></option>
+                {% for title in titles %}
+                  <option value='{{ title.title }}'>
+                    {{ title.title }}
+                  </oprion>
+                {% endfor %}
+              </select>
+              <button type='button' id='title_add'>add title </button>
+            </span>
             </br>
             <label>Office:</label>
-            <div id='office_name'>
-            <select name='office_name'>
-            <option></option>
-              {% for office in offices %}
-                <option value='{{ office.office_name }}'>
-                  {{ office.office_name }}
-                </oprion>
-              {% endfor %}
-            </select>
-            <button type='button' id='office_add'>add office </button>
-            </div>
+            <span id='office_name'>
+              <select name='office_name'>
+              <option></option>
+                {% for office in offices %}
+                  <option value='{{ office.office_name }}'>
+                    {{ office.office_name }}
+                  </oprion>
+                {% endfor %}
+              </select>
+              <button type='button' id='office_add'>add office </button>
+            </span>
             </br>
             </br>
 
@@ -141,7 +147,7 @@
         </form>
       </div>
     </div>
-  </option>
+</section>
 
 
 {% endblock %}
