@@ -25,11 +25,16 @@ Along with the basic features of segregated login, employee list view, and emplo
 ### Login
  
 The login feature has three credentials - admin, employee, a user. Bootstrap nav var changes according to the credential.
-* The password is saved as clear text for now, to be later on hashed.
- 
+With test seed data, try
+
+admin: ID: usera, Password: aaa123
+Employee1: ID: userb, Password: bbb123
+Employee2: ID: userc, Password: ccc123
+User: ID: userd, Password: ddd123
+
  
 ![Alt text](/NOT_FOR_DEPLOYMENT/production_screen_shots/login.gif?raw=true "Optional Title")
- 
+ * The password is saved as clear text for now, to be later on hashed.
  
  
  
