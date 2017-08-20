@@ -19,19 +19,19 @@ function initMap() {
         "elementType": "labels.text.fill",
         "stylers": [
           {
-              "color": "#ffffff"
+            "color": "#ffffff"
           },
           {
-              "weight": "0.20"
+            "weight": "0.20"
           },
           {
-              "lightness": "28"
+            "lightness": "28"
           },
           {
-              "saturation": "23"
+            "saturation": "23"
           },
           {
-              "visibility": "off"
+            "visibility": "off"
           }
         ]
       },
@@ -40,13 +40,13 @@ function initMap() {
         "elementType": "labels.text.stroke",
         "stylers": [
           {
-              "color": "#494949"
+            "color": "#494949"
           },
           {
-              "lightness": 13
+            "lightness": 13
           },
           {
-              "visibility": "off"
+            "visibility": "off"
           }
         ]
       },
@@ -55,7 +55,7 @@ function initMap() {
         "elementType": "labels.icon",
         "stylers": [
           {
-              "visibility": "off"
+            "visibility": "off"
           }
         ]
       },
@@ -64,7 +64,7 @@ function initMap() {
         "elementType": "geometry.fill",
         "stylers": [
           {
-              "color": "#000000"
+            "color": "#000000"
           }
         ]
       },
@@ -211,7 +211,7 @@ function initMap() {
                 position: pos,
                 title: data.data[i].office_name,
                 map: map
-                });
+              });
 
             marker.addListener('mouseover', function(){
               infowindow.open(map, this);
